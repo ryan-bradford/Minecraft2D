@@ -5,8 +5,10 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import player.player;
+import userControl.jump;
 import block.block;
 import map.map;
+import userControl.movePlayer;
 
 public class main {
 
@@ -38,6 +40,10 @@ public class main {
 		return null;
 	}
 	
+	public static Boolean getCreative() {
+		return map.creative;
+	}
+	
 	public static player getPlayer() {
 		return map.player;
 	}
@@ -57,12 +63,26 @@ public class main {
 				map.player.getBounds().height);
 	}
 	
+	public static jump getJumpingObject() {
+		return map.jump;
+	}
+	
+	public static void startjumping() {
+		map.jump = new jump();
+		map.jump.start();
+		map.jumping = true;
+	}
+	
 	public static Boolean getJumping() {
 		return map.jumping;
 	}
 	
 	public static void doneJumping() {
 		map.doneJumping();
+	}
+	
+	public static void setJumpNull() {
+		map.jump = null;
 	}
 	
 	public static double getJumpDistance() {
@@ -88,4 +108,62 @@ public class main {
 	public static Boolean getCollisionRight() {
 		return map.getCollisionRight();
 	}
+	
+	public static movePlayer getMoveLeft() {
+		return map.moveLeft;
+	}
+	
+	public static void startMoveLeft() {
+		map.moveLeft = new movePlayer(true, null);
+		map.moveLeft.start();
+	}
+	
+	public static void stopMoveLeft() {
+		map.moveLeft.stop();
+		map.moveLeft = null;
+	}
+	
+	public static movePlayer getMoveRight() {
+		return map.moveRight;
+	}
+	
+	
+	public static void startMoveRight() {
+		map.moveRight = new movePlayer(false, null);
+		map.moveRight.start();
+	}
+	
+	public static void stopMoveRight() {
+		map.moveRight.stop();
+		map.moveRight = null;
+	}
+	
+	public static movePlayer getMoveDown() {
+		return map.moveDown;
+	}
+	
+	public static void startMoveDown() {
+		map.moveDown = new movePlayer(null, false);
+		map.moveDown.start();
+	}
+	
+	public static void stopMoveDown() {
+		map.moveDown.stop();
+		map.moveDown = null;
+	}
+	
+	public static movePlayer getMoveUp() {
+		return map.moveUp;
+	}
+	
+	public static void startMoveUp() {
+		map.moveUp = new movePlayer(null, true);
+		map.moveUp.start();
+	}
+	
+	public static void stopMoveUp() {
+		map.moveUp.stop();
+		map.moveUp = null;
+	}
+	
 }

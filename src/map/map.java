@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class map extends JFrame {
-	ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1 tall
+	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1 tall
 	public player player;
 	public int blockHeight;
 	int mapHeightUntilAir;
@@ -25,15 +25,15 @@ public class map extends JFrame {
 	public int gravitySpeed;
 	public double jumpDistance;
 	public int walkSpeed;
-	jump jump;
-	movePlayer moveLeft;
-	movePlayer moveRight;
-	movePlayer moveUp;
-	movePlayer moveDown;
-	air air;
+	public jump jump;
+	public movePlayer moveLeft;
+	public movePlayer moveRight;
+	public movePlayer moveUp;
+	public movePlayer moveDown;
+	public air air;
 	public physicsEngine physics;
 	public Boolean jumping;
-	Boolean creative;
+	public Boolean creative;
 	double startTime = System.nanoTime();
 
 	public map(Boolean creative) {
@@ -139,7 +139,7 @@ public class map extends JFrame {
 	}
 
 	public void startUserControl() {
-		keyListener keyListener = new keyListener();
+		keyControls keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		this.setLayout(null);
 		System.out.println("User Controls Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
@@ -153,119 +153,6 @@ public class map extends JFrame {
 	public void startPhysics() {
 		physics.start();
 		System.out.println("Physics Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
-	}
-
-	public class keyListener implements KeyListener {
-		public void keyPressed(KeyEvent e) {
-
-			int key = e.getKeyCode();
-
-			if (key == KeyEvent.VK_W && physics.getColisionTop() == false) {
-				if (creative == false) {
-					if (jump == null && jumping == false
-							&& physics.getColisionBottom() == true) {
-						jump = new jump();
-						jump.start();
-						jumping = true;
-					}
-				} else {
-					if (moveUp != null) {
-						if (moveUp.getRunning() == false) {
-							moveUp = new movePlayer(null, true);
-							moveUp.start();
-						}
-					} else {
-						moveUp = new movePlayer(null, true);
-						moveUp.start();
-					}
-				}
-			}
-
-			if (key == KeyEvent.VK_D && physics.getColisionRight() == false) {
-				if (moveRight != null) {
-					if (moveRight.getRunning() == false) {
-						moveRight = new movePlayer(false, null);
-						moveRight.start();
-					}
-				} else {
-					moveRight = new movePlayer(false, null);
-					moveRight.start();
-				}
-			}
-
-			if (key == KeyEvent.VK_A && physics.getColisionLeft() == false) {
-				if (moveLeft != null) {
-					if (moveLeft.getRunning() == false) {
-						moveLeft = new movePlayer(true, null);
-						moveLeft.start();
-					}
-				} else {
-					moveLeft = new movePlayer(true, null);
-					moveLeft.start();
-				}
-			}
-
-			if (key == KeyEvent.VK_S && physics.getColisionBottom() == false) {
-				if (creative == true) {
-					if (moveDown != null) {
-						if (moveDown.getRunning() == false) {
-							moveDown = new movePlayer(null, false);
-							moveDown.start();
-						}
-					} else {
-						moveDown = new movePlayer(null, false);
-						moveDown.start();
-					}
-				}
-			}
-		}
-
-		@SuppressWarnings("deprecation")
-		public void keyReleased(KeyEvent e) {
-
-			int key = e.getKeyCode();
-
-			if (key == KeyEvent.VK_W) {
-				if (creative == false) {
-					jump = null;
-				} else {
-					if (moveUp != null) {
-						moveUp.stop();
-						moveUp = null;
-					}
-				}
-			}
-
-			if (key == KeyEvent.VK_D) {
-				if (moveRight != null) {
-					moveRight.stop();
-					moveRight = null;
-				}
-
-			}
-
-			if (key == KeyEvent.VK_A) {
-				if (moveLeft != null) {
-					moveLeft.stop();
-					moveLeft = null;
-				}
-			}
-
-			if (key == KeyEvent.VK_S) {
-				if (creative == true) {
-					if (moveDown != null) {
-						moveDown.stop();
-						moveDown = null;
-					}
-				}
-			}
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-
-		}
 	}
 
 	public void doneJumping() {
