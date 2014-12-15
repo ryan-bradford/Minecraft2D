@@ -23,7 +23,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class map extends JFrame {
-	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1 tall
+	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1
+												// tall
 	public player player;
 	public selectorBlock select;
 	public moveSelectorBlock selectThread;
@@ -58,6 +59,7 @@ public class map extends JFrame {
 	}
 
 	public void initVar(Boolean creativ) {
+		jumping = false;
 		blockHeight = 64; // Sets Block Pixel Height
 		mapHeightUntilAir = 5; // Sets Map Height From the Base to the grass in
 								// block width
@@ -77,23 +79,22 @@ public class map extends JFrame {
 		jumpSpeed = blockHeight * 2;// Pixels per Second
 		gravitySpeed = blockHeight * 2;// Pixels per Second
 		jumpDistance = 1.5; // In Block Width
-		jumping = false;
 		walkSpeed = blockHeight * 3;
+		creative = creativ;
+		System.out.println("Variables Initialized" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
+	}
+
+	public void drawMap() {
 		chunk = new ArrayList<ArrayList<block>>();
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.add(new ArrayList<block>());
 		}
-		creative = creativ;
-		player = new player();
-		air = new air();
-		System.out.println("Variables Initialized" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
-	}
-
-	public void drawMap() {
 		drawAir();
 		drawDirt();
 		drawGrass();
-		System.out.println("Map Drawn" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Map Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawDirt() {
@@ -113,11 +114,13 @@ public class map extends JFrame {
 			rowID = rowID + 1;
 
 		}
-		System.out.println("Dirt Drawn" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
-//		int chunkNum = 5;
-//		chunk.get(chunkNum).add(new block("dirt.jpg"));
-//		chunk.get(chunkNum).get(0).setBounds(600, (chunkNum*blockHeight), blockHeight, blockHeight);
-//		add(chunk.get(chunkNum).get(0),1);
+		System.out.println("Dirt Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		// int chunkNum = 5;
+		// chunk.get(chunkNum).add(new block("dirt.jpg"));
+		// chunk.get(chunkNum).get(0).setBounds(600, (chunkNum*blockHeight),
+		// blockHeight, blockHeight);
+		// add(chunk.get(chunkNum).get(0),1);
 	}
 
 	public void drawGrass() {
@@ -132,55 +135,68 @@ public class map extends JFrame {
 			add(chunk.get(rowID).get(current), 1);
 			current++;
 		}
-		System.out.println("Grass Drawn" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Grass Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawAir() {
+		air = new air();
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		add(air, 1);
-		System.out.println("Air Drawn" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Air Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawPlayer() {
+		player = new player();
 		player.setBounds(((main.screenWidth) / 2),
 				(((mapAir - 1) * 64) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
 		add(player, 0);
-		System.out.println("Player Drawn" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Player Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void startUserControl() {
 		startKeyControls();
 		startMouseControl();
-		System.out.println("User Controls Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("User Controls Started" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
-	
+
 	public void startKeyControls() {
 		keyControls keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		this.setLayout(null);
 	}
-	
+
 	public void startMouseControl() {
-		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-		    cursorImg, new Point(0, 0), "blank cursor");
-		super.getContentPane().setCursor(blankCursor);
+		//hideCursor();
 		select = new selectorBlock();
 		select.setBounds(128, 128, blockHeight, blockHeight);
-		add(select,0);
+		add(select, 0);
 		selectThread = new moveSelectorBlock();
 		selectThread.start();
+	}
+	
+	public void hideCursor() {
+		BufferedImage cursorImg = new BufferedImage(16, 16,
+				BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+				cursorImg, new Point(0, 0), "blank cursor");
+		super.getContentPane().setCursor(blankCursor);
 	}
 
 	public void initPhysics() {
 		physics = new physicsEngine(creative);
-		System.out.println("Physics Initalized" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Physics Initalized" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void startPhysics() {
 		physics.start();
-		System.out.println("Physics Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+		System.out.println("Physics Started" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void doneJumping() {
