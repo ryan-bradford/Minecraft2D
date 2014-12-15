@@ -1,4 +1,4 @@
-package userControl;
+package userControl.keyControls;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

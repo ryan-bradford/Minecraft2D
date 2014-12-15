@@ -1,14 +1,13 @@
 package main;
 
 import java.awt.Toolkit;
-
 import java.util.ArrayList;
 
 import player.player;
-import userControl.jump;
 import block.block;
 import map.map;
-import userControl.movePlayer;
+import userControl.keyControls.jump;
+import userControl.keyControls.movePlayer;
 
 public class main {
 
@@ -164,6 +163,10 @@ public class main {
 	public static void stopMoveUp() {
 		map.moveUp.stop();
 		map.moveUp = null;
+	}
+	
+	public static void moveSelectorBlock(int xCord, int yCord) {
+		map.select.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
 	}
 	
 }

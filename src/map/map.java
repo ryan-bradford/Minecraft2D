@@ -6,18 +6,29 @@ import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
 import block.air;
+import block.selectorBlock;
 import userControl.*;
+import userControl.keyControls.jump;
+import userControl.keyControls.keyControls;
+import userControl.keyControls.movePlayer;
+import userControl.mouseControl.moveSelectorBlock;
 import main.main;
 
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class map extends JFrame {
 	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1 tall
 	public player player;
+	public selectorBlock select;
+	public moveSelectorBlock selectThread;
 	public int blockHeight;
-	int mapHeightUntilAir;
+	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
 	public int mapAir;
@@ -34,15 +45,15 @@ public class map extends JFrame {
 	public physicsEngine physics;
 	public Boolean jumping;
 	public Boolean creative;
-	double startTime = System.nanoTime();
+	public double startTime = System.nanoTime();
 
 	public map(Boolean creative) {
 		initVar(creative);
 		drawPlayer();
 		drawMap();
-		startUserControl();
 		initPhysics();
 		startPhysics();
+		startUserControl();
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -139,10 +150,27 @@ public class map extends JFrame {
 	}
 
 	public void startUserControl() {
+		startKeyControls();
+		startMouseControl();
+		System.out.println("User Controls Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+	}
+	
+	public void startKeyControls() {
 		keyControls keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		this.setLayout(null);
-		System.out.println("User Controls Started" + " In " + (System.nanoTime()-startTime) + " Nanoseconds");
+	}
+	
+	public void startMouseControl() {
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+		    cursorImg, new Point(0, 0), "blank cursor");
+		super.getContentPane().setCursor(blankCursor);
+		select = new selectorBlock();
+		select.setBounds(128, 128, blockHeight, blockHeight);
+		add(select,0);
+		selectThread = new moveSelectorBlock();
+		selectThread.start();
 	}
 
 	public void initPhysics() {
