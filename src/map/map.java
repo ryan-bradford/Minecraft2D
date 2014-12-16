@@ -2,12 +2,12 @@ package map;
 
 import javax.swing.JFrame;
 
+
 import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
 import block.air;
 import block.selectorBlock;
-import userControl.*;
 import userControl.keyControls.jump;
 import userControl.keyControls.keyControls;
 import userControl.keyControls.movePlayer;
@@ -17,8 +17,6 @@ import main.main;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
