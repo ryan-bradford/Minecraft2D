@@ -8,15 +8,15 @@ import java.awt.event.MouseListener;
 import main.main;
 
 public class moveSelectorBlock extends Thread {
-	int selectorX;
-	int selectorRow;
-	int blockHeight;
-	int playerBlockX;
-	int playerX;
-	int playerHighY;
-	int playerLowY;
-	int playerMidY;
-	int playerLowBlockY;
+	public int selectorX;
+	public int selectorRow;
+	public int blockHeight;
+	public int playerBlockX;
+	public int playerX;
+	public int playerHighY;
+	public int playerLowY;
+	public int playerMidY;
+	public int playerLowBlockY;
 	
 	public void run() {
 		while (true) {

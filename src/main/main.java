@@ -171,12 +171,11 @@ public class main {
 	}
 
 	public static void placeBlock(int xCord, int row, String fileName) {
-		block additive = new block(fileName);
-		additive.setBounds(xCord, row*64, map.blockHeight, map.blockHeight);
-		map.chunk.get(row).add(additive);
+		map.drawNewBlock(xCord, row, fileName);
+		map.repaint();
 	}
 	
-	public static int getSelectorX() {
-		
+	public static void placeBlockAtMouse(String fileName) {
+		placeBlock(map.selectThread.selectorX, map.selectThread.selectorRow, fileName);
 	}
 }

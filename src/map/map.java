@@ -28,15 +28,6 @@ public class map extends JFrame {
 	public selectorBlock select;
 	public moveSelectorBlock selectThread;
 	public placeBlock placer;
-	public int blockHeight = 64;
-	public int mapHeightUntilAir;
-	public int mapWidth;
-	public int mapHeight;
-	public int mapAir;
-	public int jumpSpeed;
-	public int gravitySpeed;
-	public double jumpDistance;
-	public int walkSpeed;
 	public jump jump;
 	public movePlayer moveLeft;
 	public movePlayer moveRight;
@@ -46,6 +37,15 @@ public class map extends JFrame {
 	public physicsEngine physics;
 	public Boolean jumping = false;
 	public Boolean creative;
+	public int blockHeight = 64;
+	public int mapHeightUntilAir;
+	public int mapWidth;
+	public int mapHeight;
+	public int mapAir;
+	public int jumpSpeed;
+	public int gravitySpeed;
+	public double jumpDistance;
+	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
 	public map(Boolean creative) {
@@ -155,6 +155,14 @@ public class map extends JFrame {
 		add(player, 0);
 		System.out.println("Player Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
+	}
+	
+	public void drawNewBlock(int xCord, int yRow, String fileName) {
+		chunk.get(yRow).add(new block(fileName));
+		int yRowSize = chunk.get(yRow).size() - 1;
+		chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow*64, blockHeight, blockHeight);
+		add(chunk.get(yRow).get(yRowSize),1);
+		this.repaint();
 	}
 
 	public void startUserControl() {

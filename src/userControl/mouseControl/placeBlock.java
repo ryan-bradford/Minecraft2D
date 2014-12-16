@@ -9,7 +9,7 @@ public class placeBlock implements MouseListener{
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		main.placeBlock(selectorX, selectorRow, "dirt.jpg");
+
 	}
 
 	@Override
@@ -31,8 +31,7 @@ public class placeBlock implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		main.placeBlockAtMouse("dirt.jpg");		
 	}
 
 }
