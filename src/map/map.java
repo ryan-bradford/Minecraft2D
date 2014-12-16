@@ -7,18 +7,16 @@ import player.player;
 import block.block;
 import block.air;
 import block.selectorBlock;
-import userControl.*;
 import userControl.keyControls.jump;
 import userControl.keyControls.keyControls;
 import userControl.keyControls.movePlayer;
 import userControl.mouseControl.moveSelectorBlock;
+import userControl.mouseControl.placeBlock;
 import main.main;
 
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -28,7 +26,8 @@ public class map extends JFrame {
 	public player player;
 	public selectorBlock select;
 	public moveSelectorBlock selectThread;
-	public int blockHeight;
+	public placeBlock placer;
+	public int blockHeight = 64;
 	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
@@ -44,7 +43,7 @@ public class map extends JFrame {
 	public movePlayer moveDown;
 	public air air;
 	public physicsEngine physics;
-	public Boolean jumping;
+	public Boolean jumping = false;
 	public Boolean creative;
 	public double startTime = System.nanoTime();
 
@@ -59,7 +58,7 @@ public class map extends JFrame {
 	}
 
 	public void initVar(Boolean creativ) {
-		jumping = false;
+		//jumping = false;
 		blockHeight = 64; // Sets Block Pixel Height
 		mapHeightUntilAir = 5; // Sets Map Height From the Base to the grass in
 								// block width
@@ -177,6 +176,8 @@ public class map extends JFrame {
 		add(select, 0);
 		selectThread = new moveSelectorBlock();
 		selectThread.start();
+		placer = new placeBlock();
+		this.addMouseListener(placer);
 	}
 	
 	public void hideCursor() {

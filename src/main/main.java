@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Toolkit;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import player.player;
@@ -168,5 +169,14 @@ public class main {
 	public static void moveSelectorBlock(int xCord, int yCord) {
 		map.select.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
 	}
+
+	public static void placeBlock(int xCord, int row, String fileName) {
+		block additive = new block(fileName);
+		additive.setBounds(xCord, row*64, map.blockHeight, map.blockHeight);
+		map.chunk.get(row).add(additive);
+	}
 	
+	public static int getSelectorX() {
+		
+	}
 }

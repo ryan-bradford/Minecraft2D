@@ -2,10 +2,22 @@ package userControl.mouseControl;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import main.main;
 
 public class moveSelectorBlock extends Thread {
+	int selectorX;
+	int selectorRow;
+	int blockHeight;
+	int playerBlockX;
+	int playerX;
+	int playerHighY;
+	int playerLowY;
+	int playerMidY;
+	int playerLowBlockY;
+	
 	public void run() {
 		while (true) {
 			try {
@@ -14,32 +26,39 @@ public class moveSelectorBlock extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			int blockHeight = main.getBlockHeight();
-			int playerBlockX = (int) (main.getPlayer().getBounds().x / blockHeight);
-			int playerX = main.getPlayer().getBounds().x;
-			int playerHighY = main.getPlayer().getBounds().y;
-			int playerLowY = playerHighY - main.getPlayer().getHeight();
-			int playerMidY = playerLowY + 4* main.getBlockHeight();
-			int playerLowBlockY = (int) (playerLowY / blockHeight) + 1;		
+			blockHeight = main.getBlockHeight();
+			playerBlockX = (int) (main.getPlayer().getBounds().x / blockHeight);
+			playerX = main.getPlayer().getBounds().x;
+			playerHighY = main.getPlayer().getBounds().y;
+			playerLowY = playerHighY - main.getPlayer().getHeight();
+			playerMidY = playerLowY + 4 * main.getBlockHeight();
+			playerLowBlockY = (int) (playerLowY / blockHeight) + 1;
 			Point mouseInfo = MouseInfo.getPointerInfo().getLocation();
 			if (mouseInfo.x > playerX) {
 				if (mouseInfo.y > playerMidY) {
-					main.moveSelectorBlock((playerBlockX + 2) * blockHeight, (playerLowBlockY+3) * 64);
+					main.moveSelectorBlock((playerBlockX + 2) * blockHeight,
+							(playerLowBlockY + 3) * 64);
+					selectorRow = (playerLowBlockY + 3);
+					selectorX = (playerBlockX + 2)*64;
 				} else {
-					main.moveSelectorBlock((playerBlockX + 2) * blockHeight, (playerLowBlockY + 2) * 64);
+					main.moveSelectorBlock((playerBlockX + 2) * blockHeight,
+							(playerLowBlockY + 2) * 64);
+					selectorRow = (playerLowBlockY + 2);
+					selectorX = (playerBlockX + 2)*64;
 				}
 			} else {
 				if (mouseInfo.y > playerMidY) {
-					main.moveSelectorBlock(
-							(playerBlockX - 1) * blockHeight,
-							(playerLowBlockY+3) * 64);
+					main.moveSelectorBlock((playerBlockX - 1) * blockHeight,
+							(playerLowBlockY + 3) * 64);
+					selectorRow = (playerLowBlockY+3);
+					selectorX = (playerBlockX - 1)*64;
 				} else {
-					main.moveSelectorBlock(
-							(playerBlockX - 1) * blockHeight,
-							(playerLowBlockY+2) * 64);
+					main.moveSelectorBlock((playerBlockX - 1) * blockHeight,
+							(playerLowBlockY + 2) * 64);
+					selectorRow = (playerLowBlockY+2);
+					selectorX = (playerBlockX - 1)*64;
 				}
 			}
 		}
 	}
-
 }
