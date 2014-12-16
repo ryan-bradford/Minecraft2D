@@ -7,4 +7,6 @@ To add this repository to your IDE, download the source, a
 dd it to a blank project in your IDE of choice and drag the 
 image files into the project head.
 
-A JAR file will be added to the repository after version 1.0.0.0 (Or So) is finished.
+When excuting the .jar file, make sure to have the block
+texture files in the same folder as the .jar. If they 
+are not, no images will be drawn.
