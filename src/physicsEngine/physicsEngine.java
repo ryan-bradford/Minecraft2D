@@ -2,7 +2,6 @@ package physicsEngine;
 
 import java.util.ArrayList;
 
-
 import block.block;
 import main.main;
 
@@ -27,17 +26,16 @@ public class physicsEngine {
 
 		int playerLeftHighX = (int) (main.getPlayer().getPlayerWidth()
 				* ((1 + 1 / 3) * .1) + main.getPlayer().getBounds().x);
-		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x);
+		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x);
 		int playerHighY = (int) (main.getPlayer().getBounds().y);
-		int playerLowY = (int) (main.getPlayer().getBounds().y)
+		int playerLowY = main.getPlayer().getBounds().y
 				+ (main.getPlayer().getHeight()) - 4;
-		int playerMidY = (playerLowY + playerHighY)/2;
-		ArrayList<block> blocks = main.getBlocks(playerHighY / main.getBlockHeight());
-		ArrayList<block> lowBlocks = main.getBlocks(playerLowY
+		int[] playerYs = new int[] { playerLowY, (playerLowY + playerHighY) / 2 };
+		ArrayList<block> blocks = main.getBlocks(playerHighY
 				/ main.getBlockHeight());
-		ArrayList<block> midBlocks = main.getBlocks(playerMidY
-				/ main.getBlockHeight());
+		ArrayList<block> otherBlocks;
+
 		if (blocks != null) {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
@@ -52,42 +50,22 @@ public class physicsEngine {
 							return true;
 						}
 					}
-					if (blocks.get(i).getBounds().x < playerLeftLowX
-							&& blocks.get(i).getBounds().x + 64 > playerLeftLowX) { // Low
-																						// Blocks
-																						// Collision
-						if (blocks.get(i).getBounds().y + 3 < playerMidY
-								&& blocks.get(i).getBounds().y + 64 > playerMidY) {
-							return true;
-						}
-					}
 				}
 			}
-			if (lowBlocks != null) {
-				for (int i = 0; i < lowBlocks.size(); i++) {
-					if (lowBlocks.get(i) != null) {
-						if (lowBlocks.get(i).getBounds().x < playerLeftLowX
-								&& lowBlocks.get(i).getBounds().x + 64 > playerLeftLowX) { // Low
-																							// Blocks
-																							// Collision
-							if (lowBlocks.get(i).getBounds().y + 3 < playerLowY
-									&& lowBlocks.get(i).getBounds().y + 64 > playerLowY) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-			if (midBlocks != null) {
-				for (int i = 0; i < midBlocks.size(); i++) {
-					if (midBlocks.get(i) != null) {
-						if (midBlocks.get(i).getBounds().x < playerLeftLowX
-								&& midBlocks.get(i).getBounds().x + 64 > playerLeftLowX) { // Low
-																							// Blocks
-																							// Collision
-							if (midBlocks.get(i).getBounds().y < playerMidY
-									&& midBlocks.get(i).getBounds().y + 64 > playerMidY) {
-								return true;
+			for (int i = 0; i < playerYs.length; i++) {
+				otherBlocks = main.getBlocks(playerYs[i]
+						/ main.getBlockHeight());
+				if (otherBlocks != null) {
+					for (int x = 0; x < otherBlocks.size(); x++) {
+						if (otherBlocks.get(x) != null) {
+							if (otherBlocks.get(x).getBounds().x < playerLeftLowX
+									&& otherBlocks.get(x).getBounds().x + 64 > playerLeftLowX) { // Low
+																									// Blocks
+																									// Collision
+								if (otherBlocks.get(x).getBounds().y + 3 < playerYs[i]
+										&& otherBlocks.get(x).getBounds().y + 64 > playerYs[i]) {
+									return true;
+								}
 							}
 						}
 					}
@@ -104,15 +82,17 @@ public class physicsEngine {
 		int playerRightHighX = (int) (main.getPlayer().getPlayerWidth()
 				* ((1 + 1 / 3) * .1) + main.getPlayer().getBounds().x)
 				+ (int) (main.getPlayer().getPlayerWidth() / 1.2);
-		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x) + main.getPlayer().getPlayerWidth() / 2;
+		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x)
+				+ main.getPlayer().getPlayerWidth()
+				/ 2;
 		int playerHighY = (int) (main.getPlayer().getBounds().y);
-		int playerLowY = (int) (main.getPlayer().getBounds().y)
+		int playerLowY = main.getPlayer().getBounds().y
 				+ (main.getPlayer().getHeight()) - 4;
-		ArrayList<block> blocks = main
-				.getBlocks((playerHighY / main.getBlockHeight()));
-		ArrayList<block> lowBlocks = main.getBlocks(playerLowY
-				/ main.getBlockHeight());
+		int[] playerYs = new int[] { playerLowY, (playerLowY + playerHighY) / 2 };
+		ArrayList<block> blocks = main.getBlocks((playerHighY / main
+				.getBlockHeight()));
+		ArrayList<block> otherBlocks;
 		if (blocks != null) {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
@@ -128,16 +108,19 @@ public class physicsEngine {
 				}
 			}
 		}
-		if (lowBlocks != null) {
-			for (int i = 0; i < lowBlocks.size(); i++) {
-				if (lowBlocks.get(i) != null) {
-					if (lowBlocks.get(i).getBounds().x < playerRightLowX
-							&& lowBlocks.get(i).getBounds().x + 64 > playerRightLowX) {// Low
-																						// Blocks
-																						// Collision
-						if (lowBlocks.get(i).getBounds().y + 3 < playerLowY
-								&& lowBlocks.get(i).getBounds().y + 64 > playerLowY) {
-							return true;
+		for (int i = 0; i < playerYs.length; i++) {
+			otherBlocks = main.getBlocks(playerYs[i] / main.getBlockHeight());
+			if (otherBlocks != null) {
+				for (int x = 0; x < otherBlocks.size(); x++) {
+					if (otherBlocks.get(x) != null) {
+						if (otherBlocks.get(x).getBounds().x < playerRightLowX
+								&& otherBlocks.get(x).getBounds().x + 64 > playerRightLowX) { // Low
+																								// Blocks
+																								// Collision
+							if (otherBlocks.get(x).getBounds().y + 3 < playerYs[i]
+									&& otherBlocks.get(x).getBounds().y + 64 > playerYs[i]) {
+								return true;
+							}
 						}
 					}
 				}
@@ -149,14 +132,16 @@ public class physicsEngine {
 
 	public Boolean getColisionBottom() {
 
-		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x);
-		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x) + main.getPlayer().getPlayerWidth() / 2;
+		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x);
+		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x)
+				+ main.getPlayer().getPlayerWidth()
+				/ 2;
 		int playerLowY = (int) (main.getPlayer().getBounds().y)
 				+ (main.getPlayer().getHeight());
-		ArrayList<block> blocks = main
-				.getBlocks((playerLowY / main.getBlockHeight()));
+		ArrayList<block> blocks = main.getBlocks((playerLowY / main
+				.getBlockHeight()));
 		if (blocks != null) {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
@@ -176,15 +161,17 @@ public class physicsEngine {
 
 	public Boolean getColisionTop() {
 
-		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x);
-		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer()
-				.getBounds().x) + main.getPlayer().getPlayerWidth() / 2;
+		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x);
+		int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main
+				.getPlayer().getBounds().x)
+				+ main.getPlayer().getPlayerWidth()
+				/ 2;
 		int playerHighY = (int) (main.getPlayer().getBounds().y);
 		int playerLowY = (int) (main.getPlayer().getBounds().y)
 				+ (main.getPlayer().getHeight());
-		ArrayList<block> blocks = main
-				.getBlocks((playerHighY / main.getBlockHeight()));
+		ArrayList<block> blocks = main.getBlocks((playerHighY / main
+				.getBlockHeight()));
 		if (blocks != null) {
 
 			for (int i = 0; i < blocks.size(); i++) {
