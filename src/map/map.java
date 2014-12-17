@@ -227,7 +227,11 @@ public class map extends JFrame {
 	}
 
 	public Boolean getCollisionLeft() {
+		try {
 		return physics.getColisionLeft();
+		} catch(NullPointerException ex) {
+			return false;
+		}
 	}
 
 	public Boolean getCollisionRight() {

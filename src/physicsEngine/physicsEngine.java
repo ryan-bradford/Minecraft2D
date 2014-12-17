@@ -32,10 +32,12 @@ public class physicsEngine {
 		int playerHighY = (int) (main.getPlayer().getBounds().y);
 		int playerLowY = (int) (main.getPlayer().getBounds().y)
 				+ (main.getPlayer().getHeight()) - 4;
+		int playerMidY = (playerLowY + playerHighY)/2;
 		ArrayList<block> blocks = main.getBlocks(playerHighY / main.getBlockHeight());
 		ArrayList<block> lowBlocks = main.getBlocks(playerLowY
 				/ main.getBlockHeight());
-
+		ArrayList<block> midBlocks = main.getBlocks(playerMidY
+				/ main.getBlockHeight());
 		if (blocks != null) {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
@@ -50,6 +52,15 @@ public class physicsEngine {
 							return true;
 						}
 					}
+					if (blocks.get(i).getBounds().x < playerLeftLowX
+							&& blocks.get(i).getBounds().x + 64 > playerLeftLowX) { // Low
+																						// Blocks
+																						// Collision
+						if (blocks.get(i).getBounds().y + 3 < playerMidY
+								&& blocks.get(i).getBounds().y + 64 > playerMidY) {
+							return true;
+						}
+					}
 				}
 			}
 			if (lowBlocks != null) {
@@ -61,6 +72,21 @@ public class physicsEngine {
 																							// Collision
 							if (lowBlocks.get(i).getBounds().y + 3 < playerLowY
 									&& lowBlocks.get(i).getBounds().y + 64 > playerLowY) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+			if (midBlocks != null) {
+				for (int i = 0; i < midBlocks.size(); i++) {
+					if (midBlocks.get(i) != null) {
+						if (midBlocks.get(i).getBounds().x < playerLeftLowX
+								&& midBlocks.get(i).getBounds().x + 64 > playerLeftLowX) { // Low
+																							// Blocks
+																							// Collision
+							if (midBlocks.get(i).getBounds().y < playerMidY
+									&& midBlocks.get(i).getBounds().y + 64 > playerMidY) {
 								return true;
 							}
 						}
