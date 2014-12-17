@@ -35,9 +35,9 @@ public class map extends JFrame {
 	public movePlayer moveDown;
 	public air air;
 	public physicsEngine physics;
-	public Boolean jumping = false;
+	public Boolean jumping;
 	public Boolean creative;
-	public int blockHeight = 64;
+	public int blockHeight;
 	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
@@ -59,7 +59,7 @@ public class map extends JFrame {
 	}
 
 	public void initVar(Boolean creativ) {
-		//jumping = false;
+		jumping = false;
 		blockHeight = 64; // Sets Block Pixel Height
 		mapHeightUntilAir = 5; // Sets Map Height From the Base to the grass in
 								// block width

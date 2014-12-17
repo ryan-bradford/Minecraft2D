@@ -18,8 +18,8 @@ import javax.swing.JPanel;
  * @author ryanbradford
  */
 public class player extends JPanel {
-	int playerHeight = 150;
-	int playerWidth = 30;
+	int playerHeight;
+	int playerWidth;
 	int standardResolutionX;
 	int standardResolutionY;
 	double scaleFactorX;
@@ -29,7 +29,7 @@ public class player extends JPanel {
 	Color darkBlue;
 
 	public player() {
-		playerHeight = 160;
+		playerHeight = 128;
 		playerWidth = playerHeight/4;
 		darkBlue = new Color(25,25,112);
 		lightBlue = new Color(0,155,155);

@@ -17,7 +17,7 @@ public class moveSelectorBlock extends Thread {
 	public int playerLowY;
 	public int playerMidY;
 	public int playerLowBlockY;
-	
+
 	public void run() {
 		while (true) {
 			try {
@@ -31,33 +31,40 @@ public class moveSelectorBlock extends Thread {
 			playerX = main.getPlayer().getBounds().x;
 			playerHighY = main.getPlayer().getBounds().y;
 			playerLowY = playerHighY - main.getPlayer().getHeight();
-			playerMidY = playerLowY + 4 * main.getBlockHeight();
+			playerMidY = playerLowY + main.getBlockHeight();
 			playerLowBlockY = (int) (playerLowY / blockHeight) + 1;
 			Point mouseInfo = MouseInfo.getPointerInfo().getLocation();
-			if (mouseInfo.x > playerX) {
-				if (mouseInfo.y > playerMidY) {
-					main.moveSelectorBlock((playerBlockX + 2) * blockHeight,
-							(playerLowBlockY + 3) * 64);
-					selectorRow = (playerLowBlockY + 3);
-					selectorX = (playerBlockX + 2)*64;
+			if (mouseInfo.y < playerLowY + 4 * blockHeight
+					&& mouseInfo.y > (playerLowY - blockHeight + 4 * blockHeight)) { // Middle
+				if (mouseInfo.x > playerX) {
+					selectorRow = (int) ((playerLowY - blockHeight) / 64) + 4;
+					selectorX = playerX - (playerX - blockHeight) % 64
+							+ blockHeight * 2; // Right
+					main.moveSelectorBlock(selectorX, selectorRow * 64);
 				} else {
-					main.moveSelectorBlock((playerBlockX + 2) * blockHeight,
-							(playerLowBlockY + 2) * 64);
-					selectorRow = (playerLowBlockY + 2);
-					selectorX = (playerBlockX + 2)*64;
+					selectorRow = (int) ((playerLowY - blockHeight) / 64) + 4;
+					selectorX = playerX - blockHeight - (playerX - blockHeight)
+							% 64; // Left
+					main.moveSelectorBlock(selectorX, selectorRow * 64);
 				}
-			} else {
-				if (mouseInfo.y > playerMidY) {
-					main.moveSelectorBlock((playerBlockX - 1) * blockHeight,
-							(playerLowBlockY + 3) * 64);
-					selectorRow = (playerLowBlockY+3);
-					selectorX = (playerBlockX - 1)*64;
+			} else if (mouseInfo.y <= playerLowY - blockHeight + 4
+					* blockHeight) { // Highest
+				if (mouseInfo.x > playerX) {
+					selectorRow = (int) ((playerLowY - blockHeight * 2) / 64) + 4;
+					selectorX = playerX - (playerX - blockHeight) % 64
+							+ blockHeight * 2; // Right
+					main.moveSelectorBlock(selectorX, selectorRow * 64);
 				} else {
-					main.moveSelectorBlock((playerBlockX - 1) * blockHeight,
-							(playerLowBlockY + 2) * 64);
-					selectorRow = (playerLowBlockY+2);
-					selectorX = (playerBlockX - 1)*64;
+					selectorRow = (int) ((playerLowY - blockHeight * 2) / 64) + 4;
+					selectorX = playerX - blockHeight - (playerX - blockHeight)
+							% 64; // Left
+					main.moveSelectorBlock(selectorX, selectorRow * 64);
 				}
+			} else { // Lowest
+				selectorRow = (int) ((playerLowY) / 64) + 4;
+				selectorX = playerX - (playerX - blockHeight)
+						% 64; // Left
+				main.moveSelectorBlock(selectorX, selectorRow * 64);
 			}
 		}
 	}
