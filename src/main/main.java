@@ -17,11 +17,12 @@ public class main {
 	public static int screenHeight = Toolkit.getDefaultToolkit()
 			.getScreenSize().height;
 	private static ArrayList<block> blocks;
+	public static int blockHeight = 64;
 
-	public static void main(String[] args) {
+	public static void main(String[] args ) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false);
+		map = new map(false, blockHeight);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -45,7 +46,11 @@ public class main {
 	}
 	
 	public static player getPlayer() {
+		try {
 		return map.player;
+		} catch(NullPointerException ex) {
+			return new player();
+		}
 	}
 	
 	public static int getWalkSpeed() {
@@ -53,7 +58,7 @@ public class main {
 	}
 	
 	public static int getBlockHeight() {
-		return map.blockHeight;
+		return blockHeight;
 	}
 	
 	public static void movePlayer(int x, int y) {
@@ -74,7 +79,11 @@ public class main {
 	}
 	
 	public static Boolean getJumping() {
+		try {
 		return map.jumping;
+		} catch(NullPointerException ex) {
+			return false;
+		}
 	}
 	
 	public static void doneJumping() {

@@ -1,6 +1,6 @@
 package block;
 
-import java.awt.Color;
+import java.awt.Color; 
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -9,7 +9,7 @@ import main.main;
 
 public class air extends JPanel{
 	
-	public air() {
+	public air( ) {
 		
 	}
 	

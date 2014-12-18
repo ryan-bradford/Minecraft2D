@@ -8,10 +8,12 @@ package player;
 
 import java.awt.Color;
 
+
 import java.awt.Graphics;
 import java.awt.Toolkit;
 
 import javax.swing.JPanel;
+import main.main;
 
 /**
  *
@@ -29,7 +31,7 @@ public class player extends JPanel {
 	Color darkBlue;
 
 	public player() {
-		playerHeight = 128;
+		playerHeight = main.getBlockHeight( )*2;
 		playerWidth = playerHeight/4;
 		darkBlue = new Color(25,25,112);
 		lightBlue = new Color(0,155,155);

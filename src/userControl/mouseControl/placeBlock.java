@@ -13,7 +13,7 @@ public class placeBlock implements MouseListener{
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e ) {
 		// TODO Auto-generated method stub
 		
 	}

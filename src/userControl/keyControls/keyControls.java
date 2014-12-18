@@ -7,7 +7,7 @@ import main.main;
 public class keyControls implements KeyListener {
 		public void keyPressed(KeyEvent e) {
 
-			int key = e.getKeyCode();
+			int key = e.getKeyCode( );
 
 			if (key == KeyEvent.VK_W && main.getCollisionTop() == false) {
 				if (main.getCreative() == false) {

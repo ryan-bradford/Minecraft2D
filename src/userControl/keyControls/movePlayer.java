@@ -12,7 +12,7 @@ public class movePlayer extends Thread {
 	public movePlayer(Boolean leftOrRight1, Boolean UpOrDown1) {
 		leftOrRight = leftOrRight1;
 		upOrDown = UpOrDown1;
-		if (upOrDown != null) {
+		if (upOrDown != null ) {
 			if (upOrDown == true) {
 				yAmmount = -1;
 			} else {

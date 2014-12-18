@@ -37,7 +37,7 @@ public class map extends JFrame {
 	public physicsEngine physics;
 	public Boolean jumping;
 	public Boolean creative;
-	public int blockHeight;
+	public int blockHeight = 64;
 	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
@@ -48,19 +48,19 @@ public class map extends JFrame {
 	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
-	public map(Boolean creative) {
-		initVar(creative);
-		drawPlayer();
+	public map(Boolean creative, int blockHeight1) {
+		initVar(creative, blockHeight1 );
 		drawMap();
+		drawPlayer();
 		initPhysics();
 		startPhysics();
 		startUserControl();
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ) {
+	public void initVar(Boolean creativ, int blockHeight1) {
 		jumping = false;
-		blockHeight = 64; // Sets Block Pixel Height
+		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapHeightUntilAir = 5; // Sets Map Height From the Base to the grass in
 								// block width
 		mapWidth = (main.screenWidth) / blockHeight;
@@ -90,9 +90,9 @@ public class map extends JFrame {
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.add(new ArrayList<block>());
 		}
-		drawAir();
 		drawDirt();
 		drawGrass();
+		//drawAir();
 		System.out.println("Map Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -108,7 +108,7 @@ public class map extends JFrame {
 						.get(current)
 						.setBounds((x * blockHeight), ((rowID) * blockHeight),
 								blockHeight, blockHeight);
-				add(chunk.get(rowID).get(current), 1);
+				add(chunk.get(rowID).get(current), 0);
 				current++;
 			}
 			rowID = rowID + 1;
@@ -150,7 +150,7 @@ public class map extends JFrame {
 	public void drawPlayer() {
 		player = new player();
 		player.setBounds(((main.screenWidth) / 2),
-				(((mapAir - 1) * 64) - player.getPlayerHeight()),
+				(((mapAir - 1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
 		add(player, 0);
 		System.out.println("Player Drawn" + " In "
@@ -160,7 +160,7 @@ public class map extends JFrame {
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
 		chunk.get(yRow).add(new block(fileName));
 		int yRowSize = chunk.get(yRow).size() - 1;
-		chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow*64, blockHeight, blockHeight);
+		chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow*blockHeight, blockHeight, blockHeight);
 		add(chunk.get(yRow).get(yRowSize),1);
 		this.repaint();
 	}

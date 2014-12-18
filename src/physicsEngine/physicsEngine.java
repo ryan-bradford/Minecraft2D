@@ -40,13 +40,13 @@ public class physicsEngine {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
 					if (blocks.get(i).getBounds().x < playerLeftHighX
-							&& blocks.get(i).getBounds().x + 64 > playerLeftHighX) { // High
+							&& blocks.get(i).getBounds().x + main.getBlockHeight() > playerLeftHighX) { // High
 																						// Blocks
 																						// Collison
 						if (blocks.get(i).getBounds().y < playerHighY
-								&& blocks.get(i).getBounds().y + 64 > playerHighY
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerHighY
 								|| blocks.get(i).getBounds().y + 3 < playerLowY
-								&& blocks.get(i).getBounds().y + 64 > playerLowY) {
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerLowY) {
 							return true;
 						}
 					}
@@ -59,11 +59,11 @@ public class physicsEngine {
 					for (int x = 0; x < otherBlocks.size(); x++) {
 						if (otherBlocks.get(x) != null) {
 							if (otherBlocks.get(x).getBounds().x < playerLeftLowX
-									&& otherBlocks.get(x).getBounds().x + 64 > playerLeftLowX) { // Low
+									&& otherBlocks.get(x).getBounds().x + main.getBlockHeight() > playerLeftLowX) { // Low
 																									// Blocks
 																									// Collision
 								if (otherBlocks.get(x).getBounds().y + 3 < playerYs[i]
-										&& otherBlocks.get(x).getBounds().y + 64 > playerYs[i]) {
+										&& otherBlocks.get(x).getBounds().y + main.getBlockHeight() > playerYs[i]) {
 									return true;
 								}
 							}
@@ -97,9 +97,9 @@ public class physicsEngine {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
 					if ((blocks.get(i).getBounds().x < playerRightHighX && blocks
-							.get(i).getBounds().x + 64 > playerRightHighX)) {
+							.get(i).getBounds().x + main.getBlockHeight() > playerRightHighX)) {
 						if (blocks.get(i).getBounds().y < playerHighY
-								&& blocks.get(i).getBounds().y + 64 > playerHighY) {// High
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerHighY) {// High
 																					// Blocks
 																					// Collision
 							return true;
@@ -114,11 +114,11 @@ public class physicsEngine {
 				for (int x = 0; x < otherBlocks.size(); x++) {
 					if (otherBlocks.get(x) != null) {
 						if (otherBlocks.get(x).getBounds().x < playerRightLowX
-								&& otherBlocks.get(x).getBounds().x + 64 > playerRightLowX) { // Low
+								&& otherBlocks.get(x).getBounds().x + main.getBlockHeight() > playerRightLowX) { // Low
 																								// Blocks
 																								// Collision
-							if (otherBlocks.get(x).getBounds().y + 3 < playerYs[i]
-									&& otherBlocks.get(x).getBounds().y + 64 > playerYs[i]) {
+							if (otherBlocks.get(x ).getBounds().y + 3 < playerYs[i]
+									&& otherBlocks.get(x).getBounds().y + main.getBlockHeight() > playerYs[i]) {
 								return true;
 							}
 						}
@@ -146,9 +146,9 @@ public class physicsEngine {
 			for (int i = 0; i < blocks.size(); i++) {
 				if (blocks.get(i) != null) {
 					if (blocks.get(i).getBounds().x <= (playerRightLowX + playerLeftLowX) / 2
-							&& blocks.get(i).getBounds().x + 64 >= (playerRightLowX + playerLeftLowX) / 2) {
+							&& blocks.get(i).getBounds().x + main.getBlockHeight() >= (playerRightLowX + playerLeftLowX) / 2) {
 						if (blocks.get(i).getBounds().y < playerLowY
-								&& blocks.get(i).getBounds().y + 64 > playerLowY) {
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerLowY) {
 							return true;
 						}
 					}
@@ -178,11 +178,11 @@ public class physicsEngine {
 				if (blocks.get(i) != null) {
 
 					if (blocks.get(i).getBounds().x < (playerRightLowX + playerLeftLowX) / 2
-							&& blocks.get(i).getBounds().x + 64 > (playerRightLowX + playerLeftLowX) / 2) {
+							&& blocks.get(i).getBounds().x + main.getBlockHeight() > (playerRightLowX + playerLeftLowX) / 2) {
 						if (blocks.get(i).getBounds().y < playerHighY
-								&& blocks.get(i).getBounds().y + 64 > playerHighY
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerHighY
 								|| blocks.get(i).getBounds().y < playerLowY
-								&& blocks.get(i).getBounds().y + 64 > playerLowY) {
+								&& blocks.get(i).getBounds().y + main.getBlockHeight() > playerLowY) {
 							return true;
 						}
 					}

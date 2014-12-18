@@ -23,7 +23,7 @@ public class block extends JPanel {
     public block(String file) {
         f = new java.io.File(file); //Reads in the file
         try {
-            image = ImageIO.read(f);
+            image = ImageIO.read(f );
         } catch (IOException ex) {
             // handle exception...
         }

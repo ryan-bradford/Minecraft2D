@@ -6,7 +6,7 @@ public class jump extends Thread {
 	Boolean running = true;
 
 	public void run() {
-		for (int i = 0; i < (int) (main.getJumpDistance() * 64); i++) {
+		for (int i = 0; i < (int ) (main.getJumpDistance() * main.getBlockHeight()); i++) {
 			try {
 				jump.sleep((long) (1000 / main.getJumpSpeed()));
 			} catch (InterruptedException e) {
