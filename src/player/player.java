@@ -53,7 +53,7 @@ public class player extends JPanel {
 
 	public void drawArm(Graphics g) {
     	g.setColor(brown);
-    	g.fillRect(playerWidth/4, playerHeight*3/10, playerWidth/2, playerHeight*3/10);
+    	g.fillRect(playerWidth/4, playerHeight*3/10-1, playerWidth/2, playerHeight*3/10+2);
     	//3/10 of Height
     	//1/2 of Width
     }
@@ -76,7 +76,7 @@ public class player extends JPanel {
 		g.setColor(darkBlue);
 		g.fillRect(playerWidth/4, playerHeight*6/10, playerWidth/2, playerHeight*7/20);
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(playerWidth/4, playerHeight*19/20, playerWidth/2, playerHeight*1/20);		
+		g.fillRect(playerWidth/4, playerHeight*19/20-1, playerWidth/2, playerHeight*1/20+1);		
 		// 4/10 of Height
 		// Full Width
 	}

@@ -26,6 +26,7 @@ public class main {
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
+		map.setDefaultCloseOperation(map.EXIT_ON_CLOSE);
 	}
 
 	public static ArrayList<block> getBlocks(int height) {
@@ -186,5 +187,13 @@ public class main {
 	
 	public static void placeBlockAtMouse(String fileName) {
 		placeBlock(map.selectThread.selectorX, map.selectThread.selectorRow, fileName);
+	}
+
+	public static int getGravitySpeed() {
+		try {
+		return map.gravitySpeed;
+		} catch(NullPointerException ex) {
+			return 64;
+		}
 	}
 }

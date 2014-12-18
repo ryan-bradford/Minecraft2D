@@ -15,8 +15,8 @@ public class selectorBlock extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.BLUE );
-		g.drawRect(0,0,main.getBlockHeight(), main.getBlockHeight());
-		g.drawRect(1,1,main.getBlockHeight()-1, main.getBlockHeight()-1);
-		g.drawRect(2,2,main.getBlockHeight()-2, main.getBlockHeight()-2);		
+		g.drawRect(0,0,main.getBlockHeight()-3, main.getBlockHeight()-3);
+		//g.drawRect(1,1,main.getBlockHeight()-4, main.getBlockHeight()-4);
+		//g.drawRect(2,2,main.getBlockHeight()-5, main.getBlockHeight()-5);		
 	}
 }

@@ -2,7 +2,6 @@ package map;
 
 import javax.swing.JFrame;
 
-
 import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
@@ -37,7 +36,7 @@ public class map extends JFrame {
 	public physicsEngine physics;
 	public Boolean jumping;
 	public Boolean creative;
-	public int blockHeight = 64;
+	public int blockHeight;
 	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
@@ -49,7 +48,7 @@ public class map extends JFrame {
 	public double startTime = System.nanoTime();
 
 	public map(Boolean creative, int blockHeight1) {
-		initVar(creative, blockHeight1 );
+		initVar(creative, blockHeight1);
 		drawMap();
 		drawPlayer();
 		initPhysics();
@@ -61,8 +60,6 @@ public class map extends JFrame {
 	public void initVar(Boolean creativ, int blockHeight1) {
 		jumping = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
-		mapHeightUntilAir = 5; // Sets Map Height From the Base to the grass in
-								// block width
 		mapWidth = (main.screenWidth) / blockHeight;
 		mapHeight = (main.screenHeight) // Calculates
 										// the
@@ -74,6 +71,7 @@ public class map extends JFrame {
 										// in
 										// blocks
 				/ blockHeight;
+		mapHeightUntilAir = mapHeight/2 -1; // Sets Map Height From the Base to the grass in block width
 		mapAir = mapHeight - mapHeightUntilAir; // Calculates the height of the
 												// amount of air
 		jumpSpeed = blockHeight * 2;// Pixels per Second
@@ -86,13 +84,14 @@ public class map extends JFrame {
 	}
 
 	public void drawMap() {
+		System.out.println(mapHeight);
 		chunk = new ArrayList<ArrayList<block>>();
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.add(new ArrayList<block>());
 		}
+		drawAir();
 		drawDirt();
 		drawGrass();
-		//drawAir();
 		System.out.println("Map Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -108,6 +107,7 @@ public class map extends JFrame {
 						.get(current)
 						.setBounds((x * blockHeight), ((rowID) * blockHeight),
 								blockHeight, blockHeight);
+				chunk.get(rowID).get(current).setOpaque(false);
 				add(chunk.get(rowID).get(current), 0);
 				current++;
 			}
@@ -132,6 +132,7 @@ public class map extends JFrame {
 					.get(current)
 					.setBounds((x * blockHeight), ((mapAir - 1) * blockHeight),
 							blockHeight, blockHeight);
+			chunk.get(rowID).get(current).setOpaque(false);
 			add(chunk.get(rowID).get(current), 1);
 			current++;
 		}
@@ -142,7 +143,8 @@ public class map extends JFrame {
 	public void drawAir() {
 		air = new air();
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
-		add(air, 1);
+	    air.setOpaque(false);
+		add(air, 0);
 		System.out.println("Air Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -152,16 +154,18 @@ public class map extends JFrame {
 		player.setBounds(((main.screenWidth) / 2),
 				(((mapAir - 1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
+	    player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
-	
+
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
 		chunk.get(yRow).add(new block(fileName));
 		int yRowSize = chunk.get(yRow).size() - 1;
-		chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow*blockHeight, blockHeight, blockHeight);
-		add(chunk.get(yRow).get(yRowSize),1);
+		chunk.get(yRow).get(yRowSize)
+				.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
+		add(chunk.get(yRow).get(yRowSize), 1);
 		this.repaint();
 	}
 
@@ -179,16 +183,17 @@ public class map extends JFrame {
 	}
 
 	public void startMouseControl() {
-		//hideCursor();
+		// hideCursor();
 		select = new selectorBlock();
 		select.setBounds(128, 128, blockHeight, blockHeight);
+	    select.setOpaque(false);
 		add(select, 0);
 		selectThread = new moveSelectorBlock();
 		selectThread.start();
 		placer = new placeBlock();
 		this.addMouseListener(placer);
 	}
-	
+
 	public void hideCursor() {
 		BufferedImage cursorImg = new BufferedImage(16, 16,
 				BufferedImage.TYPE_INT_ARGB);
@@ -228,8 +233,8 @@ public class map extends JFrame {
 
 	public Boolean getCollisionLeft() {
 		try {
-		return physics.getColisionLeft();
-		} catch(NullPointerException ex) {
+			return physics.getColisionLeft();
+		} catch (NullPointerException ex) {
 			return false;
 		}
 	}
