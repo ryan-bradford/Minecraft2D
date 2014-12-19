@@ -198,7 +198,7 @@ public class physicsEngine {
 		public void run() {
 			while (true) {
 				while (runnable == true) {
-					int gravitySpeed = main.getGravitySpeed();
+					int gravitySpeed = main.getGravitySpeed(); //
 						try {
 							gravity.sleep(1000/gravitySpeed);
 						} catch (InterruptedException e1) {
