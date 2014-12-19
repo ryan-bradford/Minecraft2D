@@ -50,14 +50,14 @@ public class map extends JFrame {
 	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
-	public map(Boolean creative, int blockHeight1) {
+	public map(Boolean creative, int blockHeight1, int inventoryBlock, int inventoryGap, int inventoryExtra) {
 		initVar(creative, blockHeight1);
 		drawMap();
 		drawPlayer();
-		drawInventoryBar();
 		initPhysics();
 		startPhysics();
 		startUserControl();
+		drawInventoryBar(inventoryBlock, inventoryGap, inventoryExtra);
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -171,10 +171,13 @@ public class map extends JFrame {
 		add(chunk.get(yRow).get(yRowSize), 1);
 	}
 
-	public void drawInventoryBar() {
-		inventoryBar = new inventoryBar();
-		inventoryBar.setBounds((int)(main.screenWidth-(main.screenHeight/2-main.screenWidth/3)), (int)(main.blockHeight*1.3), (int)(main.screenWidth/3), (int)(main.blockHeight*1.3));
-		add(inventoryBar);
+	public void drawInventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
+		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra);
+		int width = inventoryBar.width;
+		int height = inventoryBar.height;
+		System.out.println(main.screenHeight - height);
+		inventoryBar.setBounds((main.screenWidth/2 - width/2), main.screenHeight - height*3, width, height);
+		add(inventoryBar, 0);
 		System.out.println("Inventory Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}

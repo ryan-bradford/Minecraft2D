@@ -18,11 +18,15 @@ public class main {
 			.getScreenSize().height;
 	private static ArrayList<block> blocks;
 	public static int blockHeight = 64;
+	public static int inventoryGap = 4;
+	public static int inventoryBlockNumber = 8;
+	public static int inventoryExtra = 4;
+
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight);
+		map = new map(false, blockHeight, inventoryBlockNumber, inventoryGap, inventoryExtra);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
