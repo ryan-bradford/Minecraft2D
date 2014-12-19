@@ -2,6 +2,7 @@ package map;
 
 import javax.swing.JFrame;
 
+
 import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
@@ -12,6 +13,7 @@ import userControl.keyControls.keyControls;
 import userControl.keyControls.movePlayer;
 import userControl.mouseControl.moveSelectorBlock;
 import userControl.mouseControl.placeBlock;
+import inventory.inventoryBar;
 import main.main;
 
 import java.awt.Cursor;
@@ -26,6 +28,7 @@ public class map extends JFrame {
 	public player player;
 	public selectorBlock select;
 	public moveSelectorBlock selectThread;
+	public inventoryBar inventoryBar;
 	public placeBlock placer;
 	public jump jump;
 	public movePlayer moveLeft;
@@ -51,6 +54,7 @@ public class map extends JFrame {
 		initVar(creative, blockHeight1);
 		drawMap();
 		drawPlayer();
+		drawInventoryBar();
 		initPhysics();
 		startPhysics();
 		startUserControl();
@@ -84,7 +88,6 @@ public class map extends JFrame {
 	}
 
 	public void drawMap() {
-		System.out.println(mapHeight);
 		chunk = new ArrayList<ArrayList<block>>();
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.add(new ArrayList<block>());
@@ -166,7 +169,14 @@ public class map extends JFrame {
 		chunk.get(yRow).get(yRowSize)
 				.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
 		add(chunk.get(yRow).get(yRowSize), 1);
-		this.repaint();
+	}
+
+	public void drawInventoryBar() {
+		inventoryBar = new inventoryBar();
+		inventoryBar.setBounds((int)(main.screenWidth-(main.screenHeight/2-main.screenWidth/3)), (int)(main.blockHeight*1.3), (int)(main.screenWidth/3), (int)(main.blockHeight*1.3));
+		add(inventoryBar);
+		System.out.println("Inventory Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void startUserControl() {

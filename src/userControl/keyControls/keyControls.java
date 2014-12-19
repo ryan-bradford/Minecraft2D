@@ -59,7 +59,6 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		public void keyReleased(KeyEvent e) {
 
 			int key = e.getKeyCode();
