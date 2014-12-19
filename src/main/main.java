@@ -184,7 +184,12 @@ public class main {
 	}
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
-		map.select.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
+		try {
+			map.select
+					.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
+		} catch (NullPointerException ex) {
+
+		}
 	}
 
 	public static void placeBlock(int xCord, int row, String fileName) {
