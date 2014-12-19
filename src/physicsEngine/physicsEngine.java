@@ -201,7 +201,7 @@ public class physicsEngine {
 					int gravitySpeed = main.getGravitySpeed();
 					if(1000/gravitySpeed - 10 > 0) {
 						try {
-							gravity.sleep(1000/gravitySpeed);
+							gravity.sleep(1000/gravitySpeed); //
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
