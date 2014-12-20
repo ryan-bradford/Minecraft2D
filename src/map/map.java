@@ -166,13 +166,16 @@ public class map extends JFrame {
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
-		if (!selectedBlockKind.equals(new String(""))) {
+		if (!selectedBlockKind.equals(new String(""))
+				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
 			int yRowSize = chunk.get(yRow).size() - 1;
 			chunk.get(yRow)
 					.get(yRowSize)
 					.setBounds(xCord, yRow * blockHeight, blockHeight,
 							blockHeight);
+			inventoryBar.setBlockAmmount(inventoryBar.selected,
+					inventoryBar.blockAmmount[inventoryBar.selected] - 1);
 			add(chunk.get(yRow).get(yRowSize), 2);
 		}
 	}
