@@ -18,7 +18,7 @@ public class main {
 			.getScreenSize().height;
 	private static ArrayList<block> blocks;
 	public static int blockHeight = 64;
-	public static int inventoryGap = 4;
+	public static int inventoryGap = 8;
 	public static int inventoryBlockNumber = 8;
 	public static int inventoryExtra = 4;
 
