@@ -53,7 +53,6 @@ public class inventoryBar extends JPanel {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		// System.out.println("Drawn");
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.black);
 		for (int i = 0; i < blockNumber; i++) {
@@ -69,7 +68,6 @@ public class inventoryBar extends JPanel {
 			int imageCornerY = height / 2 - (rectangleWidth) / 2
 					+ (rectangleWidth - main.blockHeight) / 2;
 			g.drawImage(images[i], imageCornerX, imageCornerY, null);
-			// see javadoc for more info on the parameters
 			if (!files[i].equals("")) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
 				g.setColor(Color.BLACK);
