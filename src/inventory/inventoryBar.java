@@ -1,22 +1,21 @@
 package inventory;
 
 import java.awt.Color;
-
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import main.main;
 
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class inventoryBar extends JPanel {
-	private BufferedImage[] images;
 	public String[] files;
 	public Integer[] blockAmmount;
 	public java.io.File f;
+	public JButton[] inventoryBarButtons;
+	public ImageIcon[] images;
 	public int gaps;
 	public int blockNumber;
 	public int rectangleWidth;
@@ -25,30 +24,24 @@ public class inventoryBar extends JPanel {
 	public int selected;
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
+		setLayout(null);
 		f = null;
 		gaps = inventoryGap;
 		blockNumber = inventoryBlock;
 		rectangleWidth = main.blockHeight + inventoryExtra;
-		images = new BufferedImage[blockNumber];
 		files = new String[blockNumber];
 		blockAmmount = new Integer[blockNumber];
+		inventoryBarButtons = new JButton[blockNumber];
 		for (int i = 0; i < blockNumber; i++) {
 			blockAmmount[i] = 64;
-			files[i] = "";
+			files[i] = "blank.jpg";
 		}
 		files[0] = "dirt.jpg";
 		files[1] = "grass.jpg";
 		selected = 0;
 		height = (int) (rectangleWidth + (gaps) * 2);
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
-		for (int i = 0; i < blockNumber; i++) {
-			f = new java.io.File(files[i]); // Reads in the file
-			try {
-				images[i] = ImageIO.read(f);
-			} catch (IOException ex) {
-				// handle exception...
-			}
-		}
+		images = new ImageIcon[blockNumber];
 	}
 
 	@Override
@@ -67,8 +60,16 @@ public class inventoryBar extends JPanel {
 					+ (rectangleWidth - main.blockHeight) / 2;
 			int imageCornerY = height / 2 - (rectangleWidth) / 2
 					+ (rectangleWidth - main.blockHeight) / 2;
-			g.drawImage(images[i], imageCornerX, imageCornerY, null);
-			if (!files[i].equals("")) {
+			images[i] = new ImageIcon(files[i]);
+			inventoryBarButtons[i] = new JButton(images[i]);
+			inventoryBarButtons[i].setBounds(imageCornerX, imageCornerY,
+					main.blockHeight, main.blockHeight);
+			inventoryBarButtons[i].setOpaque(false);
+			inventoryBarButtons[i].setContentAreaFilled(false);
+			inventoryBarButtons[i].setBorderPainted(false);
+			inventoryBarButtons[i].setFocusable(false);
+			add(inventoryBarButtons[i]);
+			if (!files[i].equals("blank.jpg")) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
 				g.setColor(Color.BLACK);
 				g.drawString(blockAmmount[i].toString(), imageCornerX + 5,

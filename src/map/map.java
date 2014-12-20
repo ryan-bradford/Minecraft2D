@@ -170,7 +170,7 @@ public class map extends JFrame {
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
-		if (!selectedBlockKind.equals(new String(""))
+		if (!selectedBlockKind.equals(new String("blank.jpg"))
 				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0 && main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
 			int yRowSize = chunk.get(yRow).size() - 1;
@@ -200,6 +200,7 @@ public class map extends JFrame {
 		height = inventory.height;
 		inventory.setBounds((main.screenWidth-inventory.width)/2, (main.screenHeight-inventory.height)/2, width, height);
 		inventory.setVisible(false);
+		inventoryBar.setFocusable(false);
 		add(inventory, 0);
 		System.out.println("Inventory Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
@@ -298,7 +299,7 @@ public class map extends JFrame {
 	
 	public void hideInventory() {
 		inventory.setVisible(false);
-		inventoryOpen = false;		
+		inventoryOpen = false;	
 	}
 	
 	public Boolean getInventoryState() {
