@@ -9,7 +9,7 @@ public class keyControls implements KeyListener {
 
 		int key = e.getKeyCode();
 
-		if (key == KeyEvent.VK_W && main.getCollisionTop() == false) {
+		if (key == KeyEvent.VK_W && main.getCollisionTop() == false && main.getInventoryState() == false) {
 			if (main.getCreative() == false) {
 				if (main.getJumpingObject() == null
 						&& main.getJumping() == false
@@ -27,7 +27,7 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		if (key == KeyEvent.VK_D && main.getCollisionRight() == false) {
+		if (key == KeyEvent.VK_D && main.getCollisionRight() == false && main.getInventoryState() == false) {
 			if (main.getMoveRight() != null) {
 				if (main.getMoveRight().getRunning() == false) {
 					main.startMoveRight();
@@ -37,7 +37,7 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		if (key == KeyEvent.VK_A && main.getCollisionLeft() == false) {
+		if (key == KeyEvent.VK_A && main.getCollisionLeft() == false && main.getInventoryState() == false) {
 			if (main.getMoveLeft() != null) {
 				if (main.getMoveLeft().getRunning() == false) {
 					main.startMoveLeft();
@@ -47,7 +47,7 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		if (key == KeyEvent.VK_S && main.getCollisionBottom() == false) {
+		if (key == KeyEvent.VK_S && main.getCollisionBottom() == false && main.getInventoryState() == false) {
 			if (main.getCreative() == true) {
 				if (main.getMoveDown() != null) {
 					if (main.getMoveDown().getRunning() == false) {
@@ -59,36 +59,44 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		if (key == KeyEvent.VK_1) {
+		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) {
 			main.setSelected(0);
 		}
 
-		if (key == KeyEvent.VK_2) {
+		if (key == KeyEvent.VK_2 && main.getInventoryState() == false) {
 			main.setSelected(1);
 		}
 
-		if (key == KeyEvent.VK_3) {
+		if (key == KeyEvent.VK_3 && main.getInventoryState() == false) {
 			main.setSelected(2);
 		}
 
-		if (key == KeyEvent.VK_4) {
+		if (key == KeyEvent.VK_4 && main.getInventoryState() == false) {
 			main.setSelected(3);
 		}
 
-		if (key == KeyEvent.VK_5) {
+		if (key == KeyEvent.VK_5 && main.getInventoryState() == false) {
 			main.setSelected(4);
 		}
 
-		if (key == KeyEvent.VK_6) {
+		if (key == KeyEvent.VK_6 && main.getInventoryState() == false) {
 			main.setSelected(5);
 		}
 
-		if (key == KeyEvent.VK_7) {
+		if (key == KeyEvent.VK_7 && main.getInventoryState() == false) {
 			main.setSelected(6);
 		}
 
-		if (key == KeyEvent.VK_8) {
+		if (key == KeyEvent.VK_8 && main.getInventoryState() == false) {
 			main.setSelected(7);
+		}
+		
+		if(key == KeyEvent.VK_E) {
+			if(main.getInventoryState() == true) {
+				main.hideInventory();
+			} else {
+				main.showInventory();
+			}
 		}
 	}
 

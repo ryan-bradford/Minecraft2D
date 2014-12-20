@@ -14,6 +14,7 @@ import userControl.mouseControl.moveSelectorBlock;
 import userControl.mouseControl.placeBlock;
 import inventory.inventoryBar;
 import main.main;
+import inventory.inventory;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -28,6 +29,7 @@ public class map extends JFrame {
 	public selectorBlock selectMapBlock;
 	public moveSelectorBlock selectMapBlockThread;
 	public inventoryBar inventoryBar;
+	public inventory inventory;
 	public placeBlock placer;
 	public jump jump;
 	public movePlayer moveLeft;
@@ -39,6 +41,7 @@ public class map extends JFrame {
 	public String selectedBlockKind;
 	public Boolean jumping;
 	public Boolean creative;
+	public Boolean inventoryOpen;
 	public int blockHeight;
 	public int mapHeightUntilAir;
 	public int mapWidth;
@@ -51,19 +54,20 @@ public class map extends JFrame {
 	public double startTime = System.nanoTime();
 
 	public map(Boolean creative, int blockHeight1, int inventoryBlock,
-			int inventoryGap, int inventoryExtra) {
+			int inventoryGap, int inventoryExtra, int inventoryHeight) {
 		initVar(creative, blockHeight1);
 		drawMap();
 		drawPlayer();
 		initPhysics();
 		startPhysics();
 		startUserControl();
-		drawInventoryBar(inventoryBlock, inventoryGap, inventoryExtra);
+		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight);
 		System.out.println("The Game Has Begun!");
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1) {
 		jumping = false;
+		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
 		mapHeight = (main.screenHeight) // Calculates
@@ -167,7 +171,7 @@ public class map extends JFrame {
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
 		if (!selectedBlockKind.equals(new String(""))
-				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0) {
+				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0 && main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
 			int yRowSize = chunk.get(yRow).size() - 1;
 			chunk.get(yRow)
@@ -180,8 +184,8 @@ public class map extends JFrame {
 		}
 	}
 
-	public void drawInventoryBar(int inventoryBlock, int inventoryGap,
-			int inventoryExtra) {
+	public void initAndDrawInventory(int inventoryBlock, int inventoryGap,
+			int inventoryExtra, int inventoryHeight) {
 		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap,
 				inventoryExtra);
 		int width = inventoryBar.width;
@@ -190,6 +194,13 @@ public class map extends JFrame {
 				main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
+		inventory = new inventory(inventoryBlock, inventoryGap,
+				inventoryExtra, inventoryHeight);
+		width = inventory.width;
+		height = inventory.height;
+		inventory.setBounds((main.screenWidth-inventory.width)/2, (main.screenHeight-inventory.height)/2, width, height);
+		inventory.setVisible(false);
+		add(inventory, 0);
 		System.out.println("Inventory Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -278,6 +289,20 @@ public class map extends JFrame {
 
 	public void setSelected(int i) {
 		selectedBlockKind = inventoryBar.setSelected(i);
+	}
+	
+	public void showInventory() {
+		inventory.setVisible(true);
+		inventoryOpen = true;
+	}
+	
+	public void hideInventory() {
+		inventory.setVisible(false);
+		inventoryOpen = false;		
+	}
+	
+	public Boolean getInventoryState() {
+		return inventoryOpen;
 	}
 
 }

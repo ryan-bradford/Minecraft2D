@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.Toolkit;
-
 import java.util.ArrayList;
 
 import player.player;
@@ -21,12 +20,13 @@ public class main {
 	public static int inventoryGap = 8;
 	public static int inventoryBlockNumber = 8;
 	public static int inventoryExtra = 4;
+	public static int inventoryHeight = 4;
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		map = new map(false, blockHeight, inventoryBlockNumber, inventoryGap,
-				inventoryExtra);
+				inventoryExtra, inventoryHeight);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -188,11 +188,13 @@ public class main {
 	}
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
-		try {
-			map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
-					map.blockHeight);
-		} catch (NullPointerException ex) {
+		if (map.getInventoryState() == false) {
+			try {
+				map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
+						map.blockHeight);
+			} catch (NullPointerException ex) {
 
+			}
 		}
 	}
 
@@ -216,5 +218,17 @@ public class main {
 
 	public static void setSelected(int i) {
 		map.setSelected(i);
+	}
+
+	public static void showInventory() {
+		map.showInventory();
+	}
+
+	public static void hideInventory() {
+		map.hideInventory();
+	}
+
+	public static Boolean getInventoryState() {
+		return map.getInventoryState();
 	}
 }
