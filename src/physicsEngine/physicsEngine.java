@@ -198,15 +198,13 @@ public class physicsEngine {
 		public void run() {
 			while (true) {
 				while (runnable == true) {
-					int gravitySpeed = main.getGravitySpeed();
-					if(1000/gravitySpeed - 10 > 0) {
+					int gravitySpeed = main.getGravitySpeed(); //
 						try {
 							gravity.sleep(1000/gravitySpeed); //
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}						
-					}
 					if (main.getJumping() == false) {
 						if (getColisionBottom() == false) {
 							main.movePlayer(0, 1);

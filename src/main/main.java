@@ -1,7 +1,7 @@
 package main;
 
 import java.awt.Toolkit;
-import java.awt.event.MouseListener;
+
 import java.util.ArrayList;
 
 import player.player;
@@ -18,11 +18,15 @@ public class main {
 			.getScreenSize().height;
 	private static ArrayList<block> blocks;
 	public static int blockHeight = 64;
+	public static int inventoryGap = 8;
+	public static int inventoryBlockNumber = 8;
+	public static int inventoryExtra = 4;
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight);
+		map = new map(false, blockHeight, inventoryBlockNumber, inventoryGap,
+				inventoryExtra);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -184,7 +188,12 @@ public class main {
 	}
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
-		map.select.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
+		try {
+			map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
+					map.blockHeight);
+		} catch (NullPointerException ex) {
+
+		}
 	}
 
 	public static void placeBlock(int xCord, int row, String fileName) {
@@ -193,8 +202,8 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		placeBlock(map.selectThread.selectorX, map.selectThread.selectorRow,
-				fileName);
+		placeBlock(map.selectMapBlockThread.selectorX,
+				map.selectMapBlockThread.selectorRow, fileName);
 	}
 
 	public static int getGravitySpeed() {
@@ -203,5 +212,9 @@ public class main {
 		} catch (NullPointerException ex) {
 			return 64;
 		}
+	}
+
+	public static void setSelected(int i) {
+		map.setSelected(i);
 	}
 }

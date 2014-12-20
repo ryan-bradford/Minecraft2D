@@ -27,6 +27,7 @@ public class moveSelectorBlock extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//System.out.println("Move Selector");
 			verticalShift = main.getPlayer().getHeight() / main.blockHeight * 2;
 			blockHeight = main.getBlockHeight();
 			playerBlockX = (int) (main.getPlayer().getBounds().x / blockHeight);

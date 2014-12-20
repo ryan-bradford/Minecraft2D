@@ -36,6 +36,7 @@ public class movePlayer extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//System.out.println("Move Player");
 			if (upOrDown != null) {
 				if (upOrDown == true) {
 					if (main.getCollisionTop() == true) {
