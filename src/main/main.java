@@ -189,7 +189,7 @@ public class main {
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
 		try {
-			map.select
+			map.selectMapBlock
 					.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
 		} catch (NullPointerException ex) {
 
@@ -202,7 +202,7 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		placeBlock(map.selectThread.selectorX, map.selectThread.selectorRow,
+		placeBlock(map.selectMapBlockThread.selectorX, map.selectMapBlockThread.selectorRow,
 				fileName);
 	}
 
@@ -212,5 +212,9 @@ public class main {
 		} catch (NullPointerException ex) {
 			return 64;
 		}
+	}
+	
+	public static void setSelected(int i) {
+		map.setSelected(i);
 	}
 }

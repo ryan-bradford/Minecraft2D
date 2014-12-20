@@ -57,6 +57,38 @@ public class keyControls implements KeyListener {
 					}
 				}
 			}
+			
+			if(key == KeyEvent.VK_1) {
+				main.setSelected(0);
+			}
+			
+			if(key == KeyEvent.VK_2) {
+				main.setSelected(1);
+			}
+			
+			if(key == KeyEvent.VK_3) {
+				main.setSelected(2);
+			}
+			
+			if(key == KeyEvent.VK_4) {
+				main.setSelected(3);
+			}
+			
+			if(key == KeyEvent.VK_5) {
+				main.setSelected(4);
+			}
+			
+			if(key == KeyEvent.VK_6) {
+				main.setSelected(5);
+			}
+			
+			if(key == KeyEvent.VK_7) {
+				main.setSelected(6);
+			}
+			
+			if(key == KeyEvent.VK_8) {
+				main.setSelected(7);
+			}
 		}
 
 		public void keyReleased(KeyEvent e) {

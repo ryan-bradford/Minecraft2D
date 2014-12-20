@@ -36,8 +36,8 @@ public class player extends JPanel {
 		darkBlue = new Color(25,25,112);
 		lightBlue = new Color(0,155,155);
 		brown = new Color(139, 69, 19);
-		standardResolutionY = 720;
-		standardResolutionX = 1280;
+		standardResolutionY = 1080;
+		standardResolutionX = 1920;
 		scaleFactorX = Toolkit.getDefaultToolkit().getScreenSize().getWidth()
 				/ standardResolutionX;
 		scaleFactorY = Toolkit.getDefaultToolkit().getScreenSize().getHeight()

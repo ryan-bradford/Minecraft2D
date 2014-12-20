@@ -19,6 +19,7 @@ public class inventoryBar extends JPanel {
 	public int rectangleWidth;
 	public int width;
 	public int height;
+	public int selected;
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
 		f = null;
@@ -28,10 +29,11 @@ public class inventoryBar extends JPanel {
 		images = new BufferedImage[blockNumber];
 		files = new String[blockNumber];
 		for (int i = 0; i < blockNumber; i++) {
-			files[i] = " ";
+			files[i] = "";
 		}
 		files[0] = "dirt.jpg";
 		files[1] = "grass.jpg";
+		selected = 0;
 		height = (int) (rectangleWidth + (gaps) * 2);
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
 		for (int i = 0; i < blockNumber; i++) {
@@ -47,10 +49,14 @@ public class inventoryBar extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		// System.out.println("Drawn");
-		g.setColor(Color.gray);
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.black);
 		for (int i = 0; i < blockNumber; i++) {
+			if(i == selected) {
+				g.setColor(Color.blue);
+			} else {
+				g.setColor(Color.gray);
+			}
 			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2
 					- (rectangleWidth) / 2, rectangleWidth, rectangleWidth);
 			int imageCornerX = (rectangleWidth + gaps) * i + gaps  + (rectangleWidth - main.blockHeight) / 2;
@@ -63,5 +69,10 @@ public class inventoryBar extends JPanel {
 			// parameters
 		}
 
+	}
+	public String setSelected(int i) {
+		selected = i;
+		repaint();
+		return files[selected];
 	}
 }

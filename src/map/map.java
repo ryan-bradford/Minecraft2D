@@ -2,7 +2,6 @@ package map;
 
 import javax.swing.JFrame;
 
-
 import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
@@ -26,8 +25,8 @@ public class map extends JFrame {
 	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1
 												// tall
 	public player player;
-	public selectorBlock select;
-	public moveSelectorBlock selectThread;
+	public selectorBlock selectMapBlock;
+	public moveSelectorBlock selectMapBlockThread;
 	public inventoryBar inventoryBar;
 	public placeBlock placer;
 	public jump jump;
@@ -37,6 +36,7 @@ public class map extends JFrame {
 	public movePlayer moveDown;
 	public air air;
 	public physicsEngine physics;
+	public String selectedBlockKind;
 	public Boolean jumping;
 	public Boolean creative;
 	public int blockHeight;
@@ -50,7 +50,8 @@ public class map extends JFrame {
 	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
-	public map(Boolean creative, int blockHeight1, int inventoryBlock, int inventoryGap, int inventoryExtra) {
+	public map(Boolean creative, int blockHeight1, int inventoryBlock,
+			int inventoryGap, int inventoryExtra) {
 		initVar(creative, blockHeight1);
 		drawMap();
 		drawPlayer();
@@ -75,7 +76,8 @@ public class map extends JFrame {
 										// in
 										// blocks
 				/ blockHeight;
-		mapHeightUntilAir = mapHeight/2 -1; // Sets Map Height From the Base to the grass in block width
+		mapHeightUntilAir = mapHeight / 2 - 1; // Sets Map Height From the Base
+												// to the grass in block width
 		mapAir = mapHeight - mapHeightUntilAir; // Calculates the height of the
 												// amount of air
 		jumpSpeed = blockHeight * 2;// Pixels per Second
@@ -146,7 +148,7 @@ public class map extends JFrame {
 	public void drawAir() {
 		air = new air();
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
-	    air.setOpaque(false);
+		air.setOpaque(false);
 		add(air, 0);
 		System.out.println("Air Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
@@ -157,27 +159,34 @@ public class map extends JFrame {
 		player.setBounds(((main.screenWidth) / 2),
 				(((mapAir - 1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
-	    player.setOpaque(false);
+		player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
-		chunk.get(yRow).add(new block(fileName));
-		int yRowSize = chunk.get(yRow).size() - 1;
-		chunk.get(yRow).get(yRowSize)
-				.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
-		add(chunk.get(yRow).get(yRowSize), 1);
+		if (!selectedBlockKind.equals(new String(""))) {
+			chunk.get(yRow).add(new block(selectedBlockKind));
+			int yRowSize = chunk.get(yRow).size() - 1;
+			chunk.get(yRow)
+					.get(yRowSize)
+					.setBounds(xCord, yRow * blockHeight, blockHeight,
+							blockHeight);
+			add(chunk.get(yRow).get(yRowSize), 2);
+		}
 	}
 
-	public void drawInventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
-		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra);
+	public void drawInventoryBar(int inventoryBlock, int inventoryGap,
+			int inventoryExtra) {
+		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap,
+				inventoryExtra);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
-		System.out.println(main.screenHeight - height);
-		inventoryBar.setBounds((main.screenWidth/2 - width/2), main.screenHeight - height*3, width, height);
+		inventoryBar.setBounds((main.screenWidth / 2 - width / 2),
+				main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
+		selectedBlockKind = inventoryBar.setSelected(0);
 		System.out.println("Inventory Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -197,12 +206,12 @@ public class map extends JFrame {
 
 	public void startMouseControl() {
 		// hideCursor();
-		select = new selectorBlock();
-		select.setBounds(128, 128, blockHeight, blockHeight);
-	    select.setOpaque(false);
-		add(select, 0);
-		selectThread = new moveSelectorBlock();
-		selectThread.start();
+		selectMapBlock = new selectorBlock();
+		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
+		selectMapBlock.setOpaque(false);
+		add(selectMapBlock, 0);
+		selectMapBlockThread = new moveSelectorBlock();
+		selectMapBlockThread.start();
 		placer = new placeBlock();
 		this.addMouseListener(placer);
 	}
@@ -262,6 +271,10 @@ public class map extends JFrame {
 
 	public Boolean getCollisionBottom() {
 		return physics.getColisionBottom();
+	}
+
+	public void setSelected(int i) {
+		selectedBlockKind = inventoryBar.setSelected(i);
 	}
 
 }
