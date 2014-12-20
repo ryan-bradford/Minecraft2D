@@ -15,4 +15,4 @@ When excuting the .jar file, make sure to have the block
 texture files in the same folder as the .jar. If they 
 are not, no images will be drawn.
 
-The .jar file will be updated ever y.x.0.0 versions.
+The .jar file will be updated ever x.y.z.0 versions.
