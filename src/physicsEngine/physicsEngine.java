@@ -8,7 +8,7 @@ import main.main;
 public class physicsEngine {
 
 	gravity gravity;
-	Boolean runnable = false; // Do you want to run the physics engine?
+	Boolean runnable = false; // Do you want to run the physics engine? //
 	Boolean crative;
 
 	public physicsEngine(Boolean creative) {
