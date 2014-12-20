@@ -26,10 +26,12 @@ public class inventory extends JPanel {
 	public int width;
 	public int height;
 	public int selected;
+	public buttonListener listen;
 
 	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra,
 			int inventoryHeight1) {
 		setLayout(null);
+		listen = new buttonListener();
 		f = null;
 		gaps = inventoryGap;
 		blockNumber = inventoryBlock;
@@ -56,15 +58,16 @@ public class inventory extends JPanel {
 				blockAmmount[x][y] = new Integer(64);
 				files[x][y] = "blank.jpg";
 				inventoryButtons[x][y] = new JButton(new ImageIcon(files[x][y]));
-				inventoryButtons[x][y].setBounds((rectangleWidth + gaps) * (x) + gaps,
-						(rectangleWidth + gaps) * (y) + gaps, rectangleWidth,
-						rectangleWidth);
+				inventoryButtons[x][y].setBounds((rectangleWidth + gaps) * (x)
+						+ gaps, (rectangleWidth + gaps) * (y) + gaps,
+						rectangleWidth, rectangleWidth);
 				inventoryButtons[x][y].setOpaque(false);
 				inventoryButtons[x][y].setContentAreaFilled(false);
 				inventoryButtons[x][y].setBorderPainted(false);
 				inventoryButtons[x][y].setFocusable(false);
+				inventoryButtons[x][y].addActionListener(listen);
 				add(inventoryButtons[x][y]);
-				
+
 			}
 		}
 	}

@@ -188,6 +188,7 @@ public class main {
 	}
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
+		try {
 		if (map.getInventoryState() == false) {
 			try {
 				map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
@@ -195,6 +196,9 @@ public class main {
 			} catch (NullPointerException ex) {
 
 			}
+		}
+		} catch(NullPointerException ex) {
+			
 		}
 	}
 
