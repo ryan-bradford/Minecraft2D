@@ -26,12 +26,10 @@ public class inventory extends JPanel {
 	public int width;
 	public int height;
 	public int selected;
-	public buttonListener listen;
 
 	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra,
 			int inventoryHeight1) {
 		setLayout(null);
-		listen = new buttonListener();
 		f = null;
 		gaps = inventoryGap;
 		blockNumber = inventoryBlock;
@@ -65,7 +63,7 @@ public class inventory extends JPanel {
 				inventoryButtons[x][y].setContentAreaFilled(false);
 				inventoryButtons[x][y].setBorderPainted(false);
 				inventoryButtons[x][y].setFocusable(false);
-				inventoryButtons[x][y].addActionListener(listen);
+				inventoryButtons[x][y].addActionListener(new buttonListener(x, y, true));
 				add(inventoryButtons[x][y]);
 
 			}

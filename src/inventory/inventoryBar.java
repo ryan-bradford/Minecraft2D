@@ -22,12 +22,10 @@ public class inventoryBar extends JPanel {
 	public int width;
 	public int height;
 	public int selected;
-	public buttonListener listen;
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
 		setLayout(null);
 		f = null;
-		listen = new buttonListener();
 		gaps = inventoryGap;
 		blockNumber = inventoryBlock;
 		rectangleWidth = main.blockHeight + inventoryExtra;
@@ -70,7 +68,7 @@ public class inventoryBar extends JPanel {
 			inventoryBarButtons[i].setContentAreaFilled(false);
 			inventoryBarButtons[i].setBorderPainted(false);
 			inventoryBarButtons[i].setFocusable(false);
-			inventoryBarButtons[i].addActionListener(listen);
+			inventoryBarButtons[i].addActionListener(new buttonListener(i, 0, false));
 			add(inventoryBarButtons[i]);
 			if (!files[i].equals("blank.jpg")) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
