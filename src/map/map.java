@@ -22,6 +22,11 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/* Notes: 
+ * Math.abs(dirtRows-mapHeight)-1; is where the grass is drawn.
+ * Math.abs(dirtRows-mapHeight) is the top of the dirt.
+ * Chunk 0 is the bottom row. */
+
 public class map extends JFrame {
 	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1
 												// tall
@@ -43,19 +48,18 @@ public class map extends JFrame {
 	public Boolean creative;
 	public Boolean inventoryOpen;
 	public int blockHeight;
-	public int mapHeightUntilAir;
 	public int mapWidth;
 	public int mapHeight;
-	public int mapAir;
 	public int jumpSpeed;
 	public int gravitySpeed;
+	public int dirtRows;
 	public double jumpDistance;
 	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
-	public map(Boolean creative, int blockHeight1, int inventoryBlock,
+	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock,
 			int inventoryGap, int inventoryExtra, int inventoryHeight) {
-		initVar(creative, blockHeight1);
+		initVar(creative, blockHeight1, dirtHeightInBlocks);
 		drawMap();
 		drawPlayer();
 		initPhysics();
@@ -65,25 +69,13 @@ public class map extends JFrame {
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1) {
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks) {
 		jumping = false;
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
-		mapHeight = (main.screenHeight) // Calculates
-										// the
-										// total(top
-										// to
-										// bottom)
-										// map
-										// height
-										// in
-										// blocks
-				/ blockHeight;
-		mapHeightUntilAir = mapHeight / 2 - 1; // Sets Map Height From the Base
-												// to the grass in block width
-		mapAir = mapHeight - mapHeightUntilAir; // Calculates the height of the
-												// amount of air
+		mapHeight = (main.screenHeight)/blockHeight;
+		dirtRows = dirtHeightInBlocks;
 		jumpSpeed = blockHeight * 2;// Pixels per Second
 		gravitySpeed = blockHeight * 2;// Pixels per Second
 		jumpDistance = 1.5; // In Block Width
@@ -106,40 +98,30 @@ public class map extends JFrame {
 	}
 
 	public void drawDirt() {
-		int current = 0;
-		int rowID = (mapAir);
-		for (int i = 0; i < mapHeight - mapAir; i++) {
-			current = 0;
+		for (int i = Math.abs(dirtRows-mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(rowID).add(new block("dirt.jpg"));
-				chunk.get(rowID)
-						.get(current)
-						.setBounds((x * blockHeight), ((rowID) * blockHeight),
+				chunk.get(i).add(new block("dirt.jpg"));
+				chunk.get(i)
+						.get(x)
+						.setBounds((x * blockHeight), ((i) * blockHeight),
 								blockHeight, blockHeight);
-				chunk.get(rowID).get(current).setOpaque(false);
-				add(chunk.get(rowID).get(current), 0);
-				current++;
+				chunk.get(i).get(x).setOpaque(false);
+				add(chunk.get(i).get(x), 0);
 			}
-			rowID = rowID + 1;
 
 		}
 		System.out.println("Dirt Drawn" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
-		// int chunkNum = 5;
-		// chunk.get(chunkNum).add(new block("dirt.jpg"));
-		// chunk.get(chunkNum).get(0).setBounds(600, (chunkNum*blockHeight),
-		// blockHeight, blockHeight);
-		// add(chunk.get(chunkNum).get(0),1);
 	}
 
 	public void drawGrass() {
 		int current = 0;
-		int rowID = (mapAir - 1);
+		int rowID = Math.abs(dirtRows-mapHeight)-1;
 		for (int x = 0; x < mapWidth; x++) {
 			chunk.get(rowID).add(new block("grass.jpg"));
 			chunk.get(rowID)
 					.get(current)
-					.setBounds((x * blockHeight), ((mapAir - 1) * blockHeight),
+					.setBounds((x * blockHeight), ((rowID) * blockHeight),
 							blockHeight, blockHeight);
 			chunk.get(rowID).get(current).setOpaque(false);
 			add(chunk.get(rowID).get(current), 1);
@@ -161,7 +143,7 @@ public class map extends JFrame {
 	public void drawPlayer() {
 		player = new player();
 		player.setBounds(((main.screenWidth) / 2),
-				(((mapAir - 1) * blockHeight) - player.getPlayerHeight()),
+				(((Math.abs(dirtRows-mapHeight)-1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
 		player.setOpaque(false);
 		add(player, 0);
@@ -173,7 +155,7 @@ public class map extends JFrame {
 		if (!selectedBlockKind.equals(new String("blank.jpg"))
 				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0 && main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
-			int yRowSize = chunk.get(yRow).size() - 1;
+			int yRowSize = (chunk.get(yRow).size()-1);
 			chunk.get(yRow)
 					.get(yRowSize)
 					.setBounds(xCord, yRow * blockHeight, blockHeight,

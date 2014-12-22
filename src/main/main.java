@@ -21,11 +21,12 @@ public class main {
 	public static int inventoryBlockNumber = 8;
 	public static int inventoryExtra = 4;
 	public static int inventoryHeight = 4;
+	public static int dirtHeightInBlocks = ((main.screenHeight)/blockHeight)/2 -1;
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight, inventoryBlockNumber, inventoryGap,
+		map = new map(false, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
 				inventoryExtra, inventoryHeight);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
