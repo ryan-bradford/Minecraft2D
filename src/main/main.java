@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
@@ -21,13 +22,26 @@ public class main {
 	public static int inventoryBlockNumber = 8;
 	public static int inventoryExtra = 4;
 	public static int inventoryHeight = 4;
-	public static int dirtHeightInBlocks = ((main.screenHeight)/blockHeight)/2 -1;
+	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1;
+	public static Color defaultBoxColor = Color.gray;
+	public static Color swapBoxColor = Color.yellow;
+	public static Color selectedBoxColor = Color.blue;
+	public static Color backgroundColor = Color.darkGray;
+	public static Color textColor = Color.black;
+	public static Color airColor = new Color(135, 206, 250);
+	public static Color skinColor = new Color(139, 69, 19);
+	public static Color pantsColor = new Color(25, 25, 112);
+	public static Color shirtColor = new Color(0, 155, 155);
+	public static Color shoeColor = Color.darkGray;
+
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
-				inventoryExtra, inventoryHeight);
+		map = new map(false, blockHeight, dirtHeightInBlocks,
+				inventoryBlockNumber, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor,
+				selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -58,7 +72,7 @@ public class main {
 		try {
 			return map.player;
 		} catch (NullPointerException ex) {
-			return new player();
+			return new player(null, null, null, null);
 		}
 	}
 
@@ -190,16 +204,16 @@ public class main {
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
 		try {
-		if (map.getInventoryState() == false) {
-			try {
-				map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
-						map.blockHeight);
-			} catch (NullPointerException ex) {
+			if (map.getInventoryState() == false) {
+				try {
+					map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
+							map.blockHeight);
+				} catch (NullPointerException ex) {
 
+				}
 			}
-		}
-		} catch(NullPointerException ex) {
-			
+		} catch (NullPointerException ex) {
+
 		}
 	}
 

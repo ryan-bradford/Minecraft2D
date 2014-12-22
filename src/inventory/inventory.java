@@ -26,11 +26,20 @@ public class inventory extends JPanel {
 	public int width;
 	public int height;
 	public int selected;
+	public Color defaultColor;
+	public Color swapBoxColor;
+	public Color backgroundColor;
+	public Color textColor;
 
 	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra,
-			int inventoryHeight1) {
+			int inventoryHeight1, Color defaultColor1, Color swapBoxColor1,
+			Color backgroundColor1, Color textColor1) {
 		setLayout(null);
 		f = null;
+		defaultColor = defaultColor1;
+		swapBoxColor = swapBoxColor1;
+		backgroundColor = backgroundColor1;
+		textColor = textColor1;
 		gaps = inventoryGap;
 		blockNumber = inventoryBlock;
 		inventoryHeight = inventoryHeight1;
@@ -46,8 +55,9 @@ public class inventory extends JPanel {
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		g.setColor(backgroundColor);
 		g.fillRect(0, 0, width, height);
-		g.setColor(Color.gray);
+		g.setColor(defaultColor);
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				g.drawRect((rectangleWidth + gaps) * (x) + gaps,

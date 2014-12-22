@@ -22,11 +22,22 @@ public class inventoryBar extends JPanel {
 	public int width;
 	public int height;
 	public int selected;
+	public Color defaultColor;
+	public Color swapBoxColor;
+	public Color selectedBoxColor;
+	public Color backgroundColor;
+	public Color textColor;
 
-	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra) {
+	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra, Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
+			Color backgroundColor1, Color textColor1) {
 		setLayout(null);
 		f = null;
 		gaps = inventoryGap;
+		defaultColor = defaultColor1;
+		swapBoxColor = swapBoxColor1;
+		selectedBoxColor = selectedBoxColor1;
+		backgroundColor = backgroundColor1;
+		textColor = textColor1;
 		blockNumber = inventoryBlock;
 		rectangleWidth = main.blockHeight + inventoryExtra;
 		files = new String[blockNumber];
@@ -46,13 +57,13 @@ public class inventoryBar extends JPanel {
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		g.setColor(backgroundColor);
 		g.fillRect(0, 0, width, height);
-		g.setColor(Color.black);
 		for (int i = 0; i < blockNumber; i++) {
 			if (i == selected) {
-				g.setColor(Color.blue);
+				g.setColor(selectedBoxColor);
 			} else {
-				g.setColor(Color.gray);
+				g.setColor(defaultColor);
 			}
 			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2
 					- (rectangleWidth) / 2, rectangleWidth, rectangleWidth);
@@ -72,7 +83,7 @@ public class inventoryBar extends JPanel {
 			add(inventoryBarButtons[i]);
 			if (!files[i].equals("blank.jpg")) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
-				g.setColor(Color.BLACK);
+				g.setColor(textColor);
 				g.drawString(blockAmmount[i].toString(), imageCornerX + 5,
 						imageCornerY + main.blockHeight - 5);
 			}

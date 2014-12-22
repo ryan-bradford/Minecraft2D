@@ -16,6 +16,7 @@ import inventory.inventoryBar;
 import main.main;
 import inventory.inventory;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -25,7 +26,10 @@ import java.util.ArrayList;
 /* Notes: 
  * Math.abs(dirtRows-mapHeight)-1; is where the grass is drawn.
  * Math.abs(dirtRows-mapHeight) is the top of the dirt.
- * Chunk 0 is the bottom row. */
+ * Chunk 0 is the bottom row. 
+ * 
+ * To Do:
+ * Send file names in the constructors*/
 
 public class map extends JFrame {
 	public ArrayList<ArrayList<block>> chunk; // Horizonatal Rows that are 1
@@ -57,24 +61,30 @@ public class map extends JFrame {
 	public int walkSpeed;
 	public double startTime = System.nanoTime();
 
-	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock,
-			int inventoryGap, int inventoryExtra, int inventoryHeight) {
+	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks,
+			int inventoryBlock, int inventoryGap, int inventoryExtra,
+			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
+			Color selectedBoxColor, Color backgroundColor, Color textColor,
+			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks);
-		drawMap();
-		drawPlayer();
+		drawMap(airColor);
+		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
 		startPhysics();
 		startUserControl();
-		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight);
+		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor,
+				selectedBoxColor, backgroundColor, textColor);
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks) {
+	public void initVar(Boolean creativ, int blockHeight1,
+			int dirtHeightInBlocks) {
 		jumping = false;
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
-		mapHeight = (main.screenHeight)/blockHeight;
+		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks;
 		jumpSpeed = blockHeight * 2;// Pixels per Second
 		gravitySpeed = blockHeight * 2;// Pixels per Second
@@ -85,12 +95,12 @@ public class map extends JFrame {
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawMap() {
+	public void drawMap(Color airColor) {
 		chunk = new ArrayList<ArrayList<block>>();
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.add(new ArrayList<block>());
 		}
-		drawAir();
+		drawAir(airColor);
 		drawDirt();
 		drawGrass();
 		System.out.println("Map Drawn" + " In "
@@ -98,7 +108,7 @@ public class map extends JFrame {
 	}
 
 	public void drawDirt() {
-		for (int i = Math.abs(dirtRows-mapHeight); i < mapHeight; i++) {
+		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
 				chunk.get(i).add(new block("dirt.jpg"));
 				chunk.get(i)
@@ -116,7 +126,7 @@ public class map extends JFrame {
 
 	public void drawGrass() {
 		int current = 0;
-		int rowID = Math.abs(dirtRows-mapHeight)-1;
+		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
 			chunk.get(rowID).add(new block("grass.jpg"));
 			chunk.get(rowID)
@@ -131,8 +141,8 @@ public class map extends JFrame {
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawAir() {
-		air = new air();
+	public void drawAir(Color airColor) {
+		air = new air(airColor);
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		air.setOpaque(false);
 		add(air, 0);
@@ -140,10 +150,10 @@ public class map extends JFrame {
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawPlayer() {
-		player = new player();
-		player.setBounds(((main.screenWidth) / 2),
-				(((Math.abs(dirtRows-mapHeight)-1) * blockHeight) - player.getPlayerHeight()),
+	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) {
+		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
+		player.setBounds(((main.screenWidth) / 2), (((Math.abs(dirtRows
+				- mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
 		player.setOpaque(false);
 		add(player, 0);
@@ -153,9 +163,10 @@ public class map extends JFrame {
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
 		if (!selectedBlockKind.equals(new String("blank.jpg"))
-				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0 && main.getInventoryState() == false) {
+				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0
+				&& main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
-			int yRowSize = (chunk.get(yRow).size()-1);
+			int yRowSize = (chunk.get(yRow).size() - 1);
 			chunk.get(yRow)
 					.get(yRowSize)
 					.setBounds(xCord, yRow * blockHeight, blockHeight,
@@ -167,20 +178,25 @@ public class map extends JFrame {
 	}
 
 	public void initAndDrawInventory(int inventoryBlock, int inventoryGap,
-			int inventoryExtra, int inventoryHeight) {
+			int inventoryExtra, int inventoryHeight, Color defaultBoxColor,
+			Color swapBoxColor, Color selectedBoxColor, Color backgroundColor,
+			Color textColor) {
 		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap,
-				inventoryExtra);
+				inventoryExtra, defaultBoxColor, swapBoxColor,
+				selectedBoxColor, backgroundColor, textColor);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
 		inventoryBar.setBounds((main.screenWidth / 2 - width / 2),
 				main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
-		inventory = new inventory(inventoryBlock, inventoryGap,
-				inventoryExtra, inventoryHeight);
+		inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor,
+				backgroundColor, textColor);
 		width = inventory.width;
 		height = inventory.height;
-		inventory.setBounds((main.screenWidth-inventory.width)/2, (main.screenHeight-inventory.height)/2, width, height);
+		inventory.setBounds((main.screenWidth - inventory.width) / 2,
+				(main.screenHeight - inventory.height) / 2, width, height);
 		inventory.setVisible(false);
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);
@@ -273,17 +289,17 @@ public class map extends JFrame {
 	public void setSelected(int i) {
 		selectedBlockKind = inventoryBar.setSelected(i);
 	}
-	
+
 	public void showInventory() {
 		inventory.setVisible(true);
 		inventoryOpen = true;
 	}
-	
+
 	public void hideInventory() {
 		inventory.setVisible(false);
-		inventoryOpen = false;	
+		inventoryOpen = false;
 	}
-	
+
 	public Boolean getInventoryState() {
 		return inventoryOpen;
 	}

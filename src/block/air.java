@@ -8,14 +8,14 @@ import javax.swing.JPanel;
 import main.main;
 
 public class air extends JPanel{
-	
-	public air( ) {
-		
+	Color airColor;
+	public air(Color airColor1) {
+		airColor = airColor1;
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		g.setColor(new Color(135,206,250));
+		g.setColor(airColor);
 		g.fillRect(0, 0, main.screenWidth,
 				main.screenHeight);
 	}
