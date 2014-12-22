@@ -64,7 +64,7 @@ public class inventory extends JPanel {
 						(rectangleWidth + gaps) * (y) + gaps, rectangleWidth,
 						rectangleWidth);
 				blockAmmount[x][y] = new Integer(64);
-				files[x][y] = "blank.jpg";
+				files[x][y] = main.getImageFileNames()[0];
 				inventoryButtons[x][y] = new JButton(new ImageIcon(files[x][y]));
 				inventoryButtons[x][y].setBounds((rectangleWidth + gaps) * (x)
 						+ gaps, (rectangleWidth + gaps) * (y) + gaps,

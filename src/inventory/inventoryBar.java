@@ -45,10 +45,10 @@ public class inventoryBar extends JPanel {
 		inventoryBarButtons = new JButton[blockNumber];
 		for (int i = 0; i < blockNumber; i++) {
 			blockAmmount[i] = 64;
-			files[i] = "blank.jpg";
+			files[i] = main.getImageFileNames()[0];
 		}
-		files[0] = "dirt.jpg";
-		files[1] = "grass.jpg";
+		files[0] = main.getImageFileNames()[1];
+		files[1] = main.getImageFileNames()[2];
 		selected = 0;
 		height = (int) (rectangleWidth + (gaps) * 2);
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
@@ -81,7 +81,7 @@ public class inventoryBar extends JPanel {
 			inventoryBarButtons[i].setFocusable(false);
 			inventoryBarButtons[i].addActionListener(new buttonListener(i, 0, false));
 			add(inventoryBarButtons[i]);
-			if (!files[i].equals("blank.jpg")) {
+			if (!files[i].equals(main.getImageFileNames()[0])) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
 				g.setColor(textColor);
 				g.drawString(blockAmmount[i].toString(), imageCornerX + 5,

@@ -51,6 +51,7 @@ public class map extends JFrame {
 	public Boolean jumping;
 	public Boolean creative;
 	public Boolean inventoryOpen;
+	public String[] imageFileNames;
 	public int blockHeight;
 	public int mapWidth;
 	public int mapHeight;
@@ -65,8 +66,8 @@ public class map extends JFrame {
 			int inventoryBlock, int inventoryGap, int inventoryExtra,
 			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
 			Color selectedBoxColor, Color backgroundColor, Color textColor,
-			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) {
-		initVar(creative, blockHeight1, dirtHeightInBlocks);
+			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames) {
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames);
 		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
@@ -79,8 +80,9 @@ public class map extends JFrame {
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1,
-			int dirtHeightInBlocks) {
+			int dirtHeightInBlocks, String[] imageFileNames1) {
 		jumping = false;
+		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
@@ -110,7 +112,7 @@ public class map extends JFrame {
 	public void drawDirt() {
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(i).add(new block("dirt.jpg"));
+				chunk.get(i).add(new block(imageFileNames[1]));
 				chunk.get(i)
 						.get(x)
 						.setBounds((x * blockHeight), ((i) * blockHeight),
@@ -128,7 +130,7 @@ public class map extends JFrame {
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(rowID).add(new block("grass.jpg"));
+			chunk.get(rowID).add(new block(imageFileNames[2]));
 			chunk.get(rowID)
 					.get(current)
 					.setBounds((x * blockHeight), ((rowID) * blockHeight),
@@ -162,7 +164,7 @@ public class map extends JFrame {
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
-		if (!selectedBlockKind.equals(new String("blank.jpg"))
+		if (!selectedBlockKind.equals(new String(imageFileNames[0]))
 				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0
 				&& main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));

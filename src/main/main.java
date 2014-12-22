@@ -33,6 +33,12 @@ public class main {
 	public static Color pantsColor = new Color(25, 25, 112);
 	public static Color shirtColor = new Color(0, 155, 155);
 	public static Color shoeColor = Color.darkGray;
+	
+	public static String[] imageFileNames = new String[] {"blank.jpg", "dirt.jpg", "grass.jpg"};
+	/* 0 is blank
+	 * 1 is dirt
+	 * 2 is grass
+	 */
 
 
 	public static void main(String[] args) {
@@ -41,7 +47,7 @@ public class main {
 		map = new map(false, blockHeight, dirtHeightInBlocks,
 				inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor);
+				selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor, imageFileNames);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -249,5 +255,9 @@ public class main {
 
 	public static Boolean getInventoryState() {
 		return map.getInventoryState();
+	}
+	
+	public static String[] getImageFileNames() {
+		return imageFileNames;
 	}
 }
