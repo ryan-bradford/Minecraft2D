@@ -2,7 +2,7 @@ package userControl.keyControls;
 
 import main.main;
 
-public class movePlayer extends Thread {
+public class movePlayer extends Thread { //The object that can be set to move in any direction
 	Boolean running = true;
 	Boolean leftOrRight; // True is left Null is neither
 	Boolean upOrDown; // True is up Null is neither

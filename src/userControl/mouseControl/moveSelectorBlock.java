@@ -7,8 +7,8 @@ import java.awt.event.MouseListener;
 
 import main.main;
 
-public class moveSelectorBlock extends Thread {
-	public int selectorX;
+public class moveSelectorBlock extends Thread { //The thread that controls where the selector will go
+	public int selectorX;						//Moves it on a grid that has squares the size of blocks
 	public int selectorRow;
 	public int blockHeight;
 	public int playerBlockX;

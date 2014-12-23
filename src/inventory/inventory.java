@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 
 import main.main;
 
-public class inventory extends JPanel {
-	public inventoryButton[][] inventoryButtons;
+public class inventory extends JPanel { //Same as the inventoryBar, except this has a height and a width 
+	public inventoryButton[][] inventoryButtons; //Also, it has no placement selector box
 	public java.io.File f;
 	public int gaps;
 	public int blockNumber;

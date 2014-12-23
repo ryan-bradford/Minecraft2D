@@ -1,15 +1,15 @@
 package inventory;
 
 import java.awt.Color;
+
 import java.awt.Graphics;
 import java.awt.Image;
 
 import main.main;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class inventoryButton extends JButton {
+public class inventoryButton extends JButton { //The object that is the buttons in the inventory
 	private int amount = 0;
 	private int blockID;
 	public double serialID;
@@ -23,14 +23,14 @@ public class inventoryButton extends JButton {
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) { //Draws its image and the block amount it stores
 		g.drawImage(image, 0, 0, main.blockHeight, main.blockHeight, null);
 		g.setColor(Color.black);
 		g.drawString(Integer.toString(amount), 5, main.blockHeight - 5);
 	}
 
-	public int addBlock(int add, int blockID1) {
-		int space = 64 - amount;
+	public int addBlock(int add, int blockID1) { //Adds an amount of blocks to the variables	
+		int space = 64 - amount;				 //Returns what it cannot add
 		int extra = add - space;
 		if (blockID == 0) {
 			amount = add;
@@ -51,7 +51,7 @@ public class inventoryButton extends JButton {
 		return 0;
 	}
 
-	public void setValue(int value, int blockID1) {
+	public void setValue(int value, int blockID1) { //Overwrites the before set variables
 		amount = value;
 		blockID = blockID1;
 	}

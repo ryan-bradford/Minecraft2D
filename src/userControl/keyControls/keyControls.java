@@ -4,13 +4,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import main.main;
 
-public class keyControls implements KeyListener {
+public class keyControls implements KeyListener { //The thing that controls the keys
 	public void keyPressed(KeyEvent e) {
 
 		int key = e.getKeyCode();
 
-		if (key == KeyEvent.VK_W && main.getCollisionTop() == false && main.getInventoryState() == false) {
-			if (main.getCreative() == false) {
+		if (key == KeyEvent.VK_W && main.getCollisionTop() == false && main.getInventoryState() == false) { 
+			if (main.getCreative() == false) {	//Checks colision and moves also, if the player is in creative, he will not jump, but fly
 				if (main.getJumpingObject() == null
 						&& main.getJumping() == false
 						&& main.getCollisionBottom() == true) {
@@ -28,7 +28,7 @@ public class keyControls implements KeyListener {
 		}
 
 		if (key == KeyEvent.VK_D && main.getCollisionRight() == false && main.getInventoryState() == false) {
-			if (main.getMoveRight() != null) {
+			if (main.getMoveRight() != null) { //Checks colision and moves
 				if (main.getMoveRight().getRunning() == false) {
 					main.startMoveRight();
 				}
@@ -38,7 +38,7 @@ public class keyControls implements KeyListener {
 		}
 
 		if (key == KeyEvent.VK_A && main.getCollisionLeft() == false && main.getInventoryState() == false) {
-			if (main.getMoveLeft() != null) {
+			if (main.getMoveLeft() != null) { //Checks colision and moves
 				if (main.getMoveLeft().getRunning() == false) {
 					main.startMoveLeft();
 				}
@@ -48,7 +48,7 @@ public class keyControls implements KeyListener {
 		}
 
 		if (key == KeyEvent.VK_S && main.getCollisionBottom() == false && main.getInventoryState() == false) {
-			if (main.getCreative() == true) {
+			if (main.getCreative() == true) { //Checks colision and only works if the player is in creative
 				if (main.getMoveDown() != null) {
 					if (main.getMoveDown().getRunning() == false) {
 						main.startMoveDown();
@@ -59,7 +59,7 @@ public class keyControls implements KeyListener {
 			}
 		}
 
-		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) {
+		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) { //Moves the block selector for placement
 			main.setSelected(0);
 		}
 
@@ -91,7 +91,7 @@ public class keyControls implements KeyListener {
 			main.setSelected(7);
 		}
 		
-		if(key == KeyEvent.VK_E) {
+		if(key == KeyEvent.VK_E) { //Opens and closes the inventory
 			if(main.getInventoryState() == true) {
 				main.hideInventory();
 			} else {
@@ -100,7 +100,7 @@ public class keyControls implements KeyListener {
 		}
 	}
 
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) { //Stops the above started threads
 
 		int key = e.getKeyCode();
 

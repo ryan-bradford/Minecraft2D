@@ -30,7 +30,7 @@ public class player extends JPanel {
 	Color pantsColor;
 	Color shoeColor;
 
-	public player(Color skinColor1, Color pantsColor1, Color shirtColor1, Color shoeColor1) {
+	public player(Color skinColor1, Color pantsColor1, Color shirtColor1, Color shoeColor1) { //Draws the player
 		skinColor = skinColor1;
 		shirtColor = shirtColor1;
 		pantsColor = pantsColor1;

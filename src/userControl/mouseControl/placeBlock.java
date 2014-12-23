@@ -5,7 +5,7 @@ import java.awt.event.MouseListener;
 
 import main.main;
 
-public class placeBlock implements MouseListener{
+public class placeBlock implements MouseListener{ //Listens for a mouse click and places when it finds one
 
 	@Override
 	public void mouseEntered(MouseEvent e) {

@@ -7,8 +7,8 @@ import main.main;
 
 import javax.swing.JPanel;
 
-public class selectorBlock extends JPanel{
-	public selectorBlock() {
+public class selectorBlock extends JPanel{ //The box that follows the mouse
+	public selectorBlock() {			   //Where a block will be placed
 		
 	}
 	
