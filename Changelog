@@ -1,0 +1,30 @@
+Change Log:
+
+Beta 0.5.0:
+  1. Fixed many bugs.
+  2. Made the code more efficient in places.
+  3. Added comments to the code.
+  4. Added an inventory.
+  5. Added the ability for the player to switch their active block(the block
+     they will place).
+  6. Added a full inventory management system. You can now move blocks
+     throughout your inventory in many ways!
+     
+Beta 0.4.0
+  1. This version was accidentaly skipped.
+     
+Beta 0.3.0:
+  1. Fixed most initilization bugs with NullPointerException errors.
+  2. Fixed the bug where closing the window did not close the program.
+  3. Worked to make the program easily changable and modular.
+  4. Added a mid body colision point.
+  5. Changed the look of the selector block.
+  6. Changed the player height.
+
+Beta 0.2.0:
+  1. Added the ability to select blocks and place blocks.
+  
+Beta 0.1.0
+  1. Drew the map.
+  2. Added a physics engine.
+
