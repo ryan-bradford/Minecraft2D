@@ -27,8 +27,9 @@ public class inventoryBar extends JPanel {
 	public Color textColor;
 	public Integer switchedNum;
 
-	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra, Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
-			Color backgroundColor1, Color textColor1) {
+	public inventoryBar(int inventoryBlock, int inventoryGap,
+			int inventoryExtra, Color defaultColor1, Color swapBoxColor1,
+			Color selectedBoxColor1, Color backgroundColor1, Color textColor1) {
 		setLayout(null);
 		f = null;
 		switchedNum = null;
@@ -45,6 +46,13 @@ public class inventoryBar extends JPanel {
 		height = (int) (rectangleWidth + (gaps) * 2);
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
 		images = new ImageIcon[blockNumber];
+		for (int i = 0; i < blockNumber; i++) {
+			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
+			images[i] = new ImageIcon(main.getImageFileNames()[0]);
+			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
+			standardButtonAction(i);
+		}
+
 	}
 
 	@Override
@@ -54,33 +62,22 @@ public class inventoryBar extends JPanel {
 		for (int i = 0; i < blockNumber; i++) {
 			if (i == selected) {
 				g.setColor(selectedBoxColor);
-			} else if(switchedNum != null && i == switchedNum){
+			} else if (switchedNum != null && i == switchedNum) {
 				g.setColor(swapBoxColor);
 			} else {
 				g.setColor(defaultColor);
 			}
-			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2
-					- (rectangleWidth) / 2, rectangleWidth, rectangleWidth);
 			int imageCornerX = (rectangleWidth + gaps) * i + gaps
 					+ (rectangleWidth - main.blockHeight) / 2;
 			int imageCornerY = height / 2 - (rectangleWidth) / 2
 					+ (rectangleWidth - main.blockHeight) / 2;
-			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
-			images[i] = new ImageIcon(main.getImageFileNames()[0]);
-			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
-			inventoryBarButtons[i].setBounds(imageCornerX, imageCornerY,
-					main.blockHeight, main.blockHeight);
-			inventoryBarButtons[i].setOpaque(false);
-			inventoryBarButtons[i].setContentAreaFilled(false);
-			inventoryBarButtons[i].setBorderPainted(false);
-			inventoryBarButtons[i].setFocusable(false);
-			inventoryBarButtons[i].addActionListener(new buttonListener(i, 0, false));
-			add(inventoryBarButtons[i]);
-			if (inventoryBarButtons[i].blockID != 0) {
+			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2
+					- (rectangleWidth) / 2, rectangleWidth, rectangleWidth);
+			if (inventoryBarButtons[i].getBlockID() != 0) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
 				g.setColor(textColor);
-				g.drawString(inventoryBarButtons[i].amount.toString(), imageCornerX + 5,
-						imageCornerY + main.blockHeight - 5);
+				g.drawString((Integer.toString(inventoryBarButtons[i].getAmount())),
+						imageCornerX + 5, imageCornerY + main.blockHeight - 5);
 			}
 		}
 
@@ -88,28 +85,56 @@ public class inventoryBar extends JPanel {
 
 	public String setSelected(int i) {
 		try {
-		selected = i;
-		repaint();
-		return main.getImageFileNames()[inventoryBarButtons[selected].blockID];
-		} catch(NullPointerException ex) {
-			
+			selected = i;
+			repaint();
+			return main.getImageFileNames()[inventoryBarButtons[selected].getBlockID()];
+		} catch (NullPointerException ex) {
+
 		}
 		return "blank.jpg";
 	}
 
-	public void setBlockAmmount(int which, int ammount) {
-		inventoryBarButtons[which].amount = ammount;
-		repaint();
-	}
-	
-	public void setSwitch(int id, Boolean selected, Boolean inveotOrBar) { //True is inventory
-		if(main.selected == false) {
-			 switchedNum = id;
-			 repaint();
+	public void setSwitch(int id, Boolean selected, Boolean inveotOrBar) { // True																	// inventory
+		if (main.selected == false) {
+			switchedNum = id;
+			repaint();
 		} else {
 			switchedNum = null;
 			repaint();
 		}
 	}
 	
+	public void setAsNewButton(int id) {
+		remove(inventoryBarButtons[id]);
+		inventoryBarButtons[id].setVisible(false);
+		int amount = inventoryBarButtons[id].getAmount();
+		int blockID = inventoryBarButtons[id].getBlockID();
+		ImageIcon icon = new ImageIcon(main.getImageFileNames()[blockID]);
+		inventoryBarButtons[id] = new inventoryButton(icon, amount, blockID);
+		standardButtonAction(id);
+	}
+	
+	public void removeButton(int id) {
+		remove(inventoryBarButtons[id]);
+		inventoryBarButtons[id].setVisible(false);
+		inventoryBarButtons[id] = new inventoryButton(new ImageIcon(main.getImageFileNames()[0]),0,0);
+		standardButtonAction(id);
+		
+	}
+	
+	public void standardButtonAction(int id) {
+		int imageCornerX = (rectangleWidth + gaps) * id + gaps
+				+ (rectangleWidth - main.blockHeight) / 2;
+		int imageCornerY = height / 2 - (rectangleWidth) / 2
+				+ (rectangleWidth - main.blockHeight) / 2;
+		inventoryBarButtons[id].setBounds(imageCornerX, imageCornerY,
+				main.blockHeight, main.blockHeight);
+		inventoryBarButtons[id].setOpaque(false);
+		inventoryBarButtons[id].setContentAreaFilled(false);
+		inventoryBarButtons[id].setBorderPainted(false);
+		inventoryBarButtons[id].setFocusable(false);
+		inventoryBarButtons[id].addActionListener(new buttonListener(id, 0,
+				false));
+		add(inventoryBarButtons[id]);
+	}
 }

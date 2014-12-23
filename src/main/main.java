@@ -37,12 +37,12 @@ public class main {
 	public static Integer lastClickedX = null;
 	public static Integer lastClickedY = null;
 	public static Boolean lastClickedInventOrBar = null;
-	public static String[] imageFileNames = new String[] {"blank.jpg", "dirt.jpg", "grass.jpg"};
-	/* 0 is blank
-	 * 1 is dirt
-	 * 2 is grass
-	 */
+	public static String[] imageFileNames = new String[] { "blank.jpg",
+			"dirt.jpg", "grass.jpg" };
 
+	/*
+	 * 0 is blank 1 is dirt 2 is grass
+	 */
 
 	public static void main(String[] args) {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -50,7 +50,8 @@ public class main {
 		map = new map(false, blockHeight, dirtHeightInBlocks,
 				inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor, imageFileNames);
+				selectedBoxColor, backgroundColor, textColor, airColor,
+				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -259,24 +260,50 @@ public class main {
 	public static Boolean getInventoryState() {
 		return map.getInventoryState();
 	}
-	
+
 	public static String[] getImageFileNames() {
 		return imageFileNames;
 	}
-	
+
 	public static void setSwapInvent(int x, int y, Boolean inventOrBar) {
-		if(inventOrBar == true) {
-			if(selected == true) {
+		if (inventOrBar == true) {
+			if (selected == true) {
 				map.inventory.setSwitch(x, y, selected, inventOrBar);
 				map.inventoryBar.setSwitch(x, selected, inventOrBar);
-				if(lastClickedInventOrBar == true) {
-					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].amount;
-					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].blockID;
-					map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);							
+				if (lastClickedInventOrBar == true) {
+					int leftOver;
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(
+							toAdd, blockID);
+					map.inventory.setAsNewButton(x, y);
+					if (leftOver == 0) {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.removeButton(lastClickedX);
+						} else {
+							map.inventory.removeButton(lastClickedX,
+									lastClickedY);
+						}
+					}
 				} else {
-					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].amount;
-					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].blockID;
-					map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);					
+					int leftOver;
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(
+							toAdd, blockID);
+					map.inventory.setAsNewButton(x, y);
+					if (leftOver == 0) {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.removeButton(lastClickedX);
+						} else {
+							map.inventory.removeButton(lastClickedX,
+									lastClickedY);
+						}
+					}
 				}
 				selected = false;
 			} else {
@@ -285,19 +312,45 @@ public class main {
 				lastClickedY = y;
 				lastClickedInventOrBar = true;
 				selected = true;
-			}			
+			}
 		} else {
-			if(selected == true) {
+			if (selected == true) {
 				map.inventory.setSwitch(x, y, selected, inventOrBar);
 				map.inventoryBar.setSwitch(x, selected, inventOrBar);
-				if(lastClickedInventOrBar == true) {
-					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].amount;
-					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].blockID;
-					map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);					
+				if (lastClickedInventOrBar == true) {
+					int leftOver;
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x]
+							.addBlock(toAdd, blockID);
+					map.inventoryBar.setAsNewButton(x);
+					if (leftOver == 0) {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.removeButton(lastClickedX);
+						} else {
+							map.inventory.removeButton(lastClickedX,
+									lastClickedY);
+						}
+					}
 				} else {
-					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].amount;
-					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].blockID;
-					map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);					
+					int leftOver;
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x]
+							.addBlock(toAdd, blockID);
+					map.inventoryBar.setAsNewButton(x);
+					if (leftOver == 0) {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.removeButton(lastClickedX);
+						} else {
+							map.inventory.removeButton(lastClickedX,
+									lastClickedY);
+						}
+					}
 				}
 				selected = false;
 			} else {
@@ -306,7 +359,7 @@ public class main {
 				lastClickedY = y;
 				lastClickedInventOrBar = false;
 				selected = true;
-			}			
+			}
 		}
 	}
 }
