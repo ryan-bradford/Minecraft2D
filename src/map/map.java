@@ -29,7 +29,8 @@ import java.util.ArrayList;
  * Chunk 0 is the bottom row. 
  * 
  * To Do:
- * Send file names in the constructors*/
+ * Fix the bug where you can place multiple blocks in one spot
+ * */
 
 public class map extends JFrame { // The main panel of display
 	public ArrayList<ArrayList<block>> chunk; // Horizontal Row
@@ -162,20 +163,29 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) { // Draws a new block when requested
-		selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected]
-				.getBlockID()]; // Gets what block you have selected in your inventory
-		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if the block in your inventory isn't a blank file block
-				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
-				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(yRow).add(new block(selectedBlockKind));
-			int yRowSize = (chunk.get(yRow).size() - 1);
-			chunk.get(yRow).get(yRowSize)
-					.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
-			inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
-			add(chunk.get(yRow).get(yRowSize), 2);
-			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
-				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar if you have 0 left
-			}// To Add:Check if block already exists
+		Boolean runnable = true;
+		for (int i = 0; i < chunk.get(yRow).size(); i++) {
+			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a block already exists
+				runnable = false;
+				break;
+			}
+		}
+		if (runnable == true) {
+			selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected]
+					.getBlockID()]; // Gets what block you have selected in your inventory
+			if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if the block in your inventory isn't a blank file block
+					&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
+					&& main.getInventoryState() == false) { // Checks if your inventory is closed
+				chunk.get(yRow).add(new block(selectedBlockKind));
+				int yRowSize = (chunk.get(yRow).size() - 1);
+				chunk.get(yRow).get(yRowSize)
+						.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
+				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
+				add(chunk.get(yRow).get(yRowSize), 2);
+				if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
+					inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar if you have 0 left
+				}// To Add:Check if block already exists
+			}
 		}
 	}
 
@@ -203,20 +213,20 @@ public class map extends JFrame { // The main panel of display
 				+ " Nanoseconds");
 	}
 
-	public void startUserControl() { //Starts the user controls
+	public void startUserControl() { // Starts the user controls
 		startKeyControls();
 		startMouseControl();
 		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime)
 				+ " Nanoseconds");
 	}
 
-	public void startKeyControls() { //Adds the key listner
+	public void startKeyControls() { // Adds the key listner
 		keyControls keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		this.setLayout(null);
 	}
 
-	public void startMouseControl() { //Starts the thread that can move the map block selector
+	public void startMouseControl() { // Starts the thread that can move the map block selector
 		// hideCursor();
 		selectMapBlock = new selectorBlock();
 		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
@@ -228,30 +238,30 @@ public class map extends JFrame { // The main panel of display
 		this.addMouseListener(placer);
 	}
 
-	public void hideCursor() { //Hides the cursor, undecided if this should be done
+	public void hideCursor() { // Hides the cursor, undecided if this should be done
 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg,
 				new Point(0, 0), "blank cursor");
 		super.getContentPane().setCursor(blankCursor);
 	}
 
-	public void initPhysics() { //Initializes the physics
+	public void initPhysics() { // Initializes the physics
 		physics = new physicsEngine(creative);
 		System.out.println("Physics Initalized" + " In " + (System.nanoTime() - startTime)
 				+ " Nanoseconds");
 	}
 
-	public void startPhysics() { //Starts the physics
+	public void startPhysics() { // Starts the physics
 		physics.start();
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime)
 				+ " Nanoseconds");
 	}
 
-	public void doneJumping() { //Called when the jump thread is done excuting
+	public void doneJumping() { // Called when the jump thread is done excuting
 		jumping = false;
 	}
 
-	public block getBlock(int i, int x) { //Gets the information of a block 
+	public block getBlock(int i, int x) { // Gets the information of a block
 		try {
 			if (chunk.get(i).get(0).equals(null)) {
 				return null;
@@ -264,7 +274,7 @@ public class map extends JFrame { // The main panel of display
 		return null;
 	}
 
-	//The below methods should be self explanatory, ask for explanation if needed
+	// The below methods should be self explanatory, ask for explanation if needed
 	public Boolean getCollisionLeft() {
 		try {
 			return physics.getColisionLeft();
