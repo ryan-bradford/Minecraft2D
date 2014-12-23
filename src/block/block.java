@@ -7,6 +7,7 @@
 package block;
 
 import java.awt.Graphics;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -30,7 +31,7 @@ public class block extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) { //Draws the texture of the block
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters    
     }         

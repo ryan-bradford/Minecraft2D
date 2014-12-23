@@ -1,7 +1,7 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Toolkit;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import player.player;
@@ -13,22 +13,51 @@ import userControl.keyControls.movePlayer;
 public class main {
 
 	static map map;
-	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-	public static int screenHeight = Toolkit.getDefaultToolkit()
+	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
+	public static int screenHeight = Toolkit.getDefaultToolkit() // In pixels
 			.getScreenSize().height;
-	private static ArrayList<block> blocks;
-	public static int blockHeight = 64;
+	private static ArrayList<block> blocks; // The blocks that will be passed through, gerarally used to select one row of blocks
+	public static int blockHeight = 64; // Height of a block
+	public static int inventoryGap = 4; // The gap between boxes in the inventory
+	public static int inventoryBlockNumber = 8; // Amount of slots in the ivnentory
+	public static int inventoryExtra = 4; // How much larger the background box is on each side of the inventory boxes
+	public static int inventoryHeight = 4; // How many boxes there are in the veritcal of the inventory
+	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1; // How much dirt
+	public static Color defaultBoxColor = Color.gray; // COLORS!
+	public static Color swapBoxColor = Color.yellow;
+	public static Color selectedBoxColor = Color.blue;
+	public static Color backgroundColor = Color.darkGray;
+	public static Color textColor = Color.black;
+	public static Color airColor = new Color(135, 206, 250);
+	public static Color skinColor = new Color(139, 69, 19);
+	public static Color pantsColor = new Color(25, 25, 112);
+	public static Color shirtColor = new Color(0, 155, 155);
+	public static Color shoeColor = Color.darkGray;
+	public static Boolean selected = false; // Whether a inventory box has alread been slected, True is yes
+	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
+	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
+	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
+	public static String[] imageFileNames = new String[] { "blank.jpg", // The block image file names
+			"dirt.jpg", "grass.jpg" };
 
-	public static void main(String[] args) {
+	/*
+	 * 0 is blank 1 is dirt 2 is grass
+	 */
+
+	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight);
+		map = new map(false, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
+				inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
+				backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
+				imageFileNames);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
 		map.setDefaultCloseOperation(map.EXIT_ON_CLOSE);
 	}
 
+	// From here:
 	public static ArrayList<block> getBlocks(int height) {
 		try {
 			try {
@@ -53,7 +82,7 @@ public class main {
 		try {
 			return map.player;
 		} catch (NullPointerException ex) {
-			return new player();
+			return new player(null, null, null, null);
 		}
 	}
 
@@ -67,11 +96,8 @@ public class main {
 
 	public static void movePlayer(int x, int y) {
 		try {
-			map.player
-					.setBounds(map.player.getBounds().x + x,
-							(map.player.getBounds().y) + y,
-							map.player.getBounds().width,
-							map.player.getBounds().height);
+			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y,
+					map.player.getBounds().width, map.player.getBounds().height);
 		} catch (NullPointerException ex) {
 
 		}
@@ -184,7 +210,17 @@ public class main {
 	}
 
 	public static void moveSelectorBlock(int xCord, int yCord) {
-		map.select.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
+		try {
+			if (map.getInventoryState() == false) {
+				try {
+					map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
+				} catch (NullPointerException ex) {
+
+				}
+			}
+		} catch (NullPointerException ex) {
+
+		}
 	}
 
 	public static void placeBlock(int xCord, int row, String fileName) {
@@ -193,7 +229,7 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		placeBlock(map.selectThread.selectorX, map.selectThread.selectorRow,
+		placeBlock(map.selectMapBlockThread.selectorX, map.selectMapBlockThread.selectorRow,
 				fileName);
 	}
 
@@ -202,6 +238,168 @@ public class main {
 			return map.gravitySpeed;
 		} catch (NullPointerException ex) {
 			return 64;
+		}
+	}
+
+	public static void setSelected(int i) {
+		map.setSelected(i);
+	}
+
+	public static void showInventory() {
+		map.showInventory();
+	}
+
+	public static void hideInventory() {
+		map.hideInventory();
+	}
+
+	public static Boolean getInventoryState() {
+		return map.getInventoryState();
+	}
+
+	public static String[] getImageFileNames() {
+		return imageFileNames;
+	}
+
+	// To here is used for basic passing of variables and preforming basic methods
+	public static void setSwapInvent(int x, int y, Boolean inventOrBar) { // The thing that controls how the blocks are moved throughout the inventory
+		if (inventOrBar == true) { // True is inventory false is bar
+			if (selected == true) { // If one was already selected
+				map.inventory.setSwitch(x, y, selected, inventOrBar); // Clears both selectors and gathers some data
+				map.inventoryBar.setSwitch(x, selected, inventOrBar); // Clears both selectors and gathers some data
+				if (lastClickedInventOrBar == true) { // Checks whether the last one was inventory or bar
+					int leftOver;
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);
+					map.inventory.repaintButton(x, y); // Adds the amounts to the button objects
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y,
+							blockID, inventOrBar);
+				} else { // Same thing, but runs if the last clicked was the bar
+					int leftOver;
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);
+					map.inventory.repaintButton(x, y);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y,
+							blockID, inventOrBar);
+				}
+				selected = false;
+			} else { // Sets the swap box to the proper place
+				map.inventory.setSwitch(x, y, selected, inventOrBar);
+				lastClickedX = x;
+				lastClickedY = y;
+				lastClickedInventOrBar = true;
+				selected = true;
+			}
+		} else { // Same thing but runs of the final clicked was the bar
+			if (selected == true) {
+				map.inventory.setSwitch(x, y, selected, inventOrBar);
+				map.inventoryBar.setSwitch(x, selected, inventOrBar);
+				if (lastClickedInventOrBar == true) {
+					int leftOver;
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
+					map.inventoryBar.rapaintButton(x);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y,
+							blockID, inventOrBar);
+
+				} else {
+					int leftOver;
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
+					map.inventoryBar.rapaintButton(x);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y,
+							blockID, inventOrBar);
+				}
+				selected = false;
+			} else {
+				map.inventoryBar.setSwitch(x, selected, inventOrBar);
+				lastClickedX = x;
+				lastClickedY = y;
+				lastClickedInventOrBar = false;
+				selected = true;
+			}
+		}
+	}
+
+	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX,
+			Boolean lastClickedInventOrBar, int x, int y, int blockID, Boolean selected) {
+		if (leftOver == 0) { // If all of the amount could be passed, clear the button
+			if (lastClickedInventOrBar == false) {
+				map.inventoryBar.removeButton(lastClickedX);
+			} else {
+				map.inventory.removeButton(lastClickedX, lastClickedY);
+			}
+		} else if (leftOver == toAdd) {
+			if (lastClickedInventOrBar == false) { // Change the vaule to the leftover
+				if (selected == false) {
+					int lastBarBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getBlockID();
+					int lastBarAmount = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getAmount();
+					int barBlockAmount = map.inventoryBar.inventoryBarButtons[x].getAmount();
+					int barBlockID = map.inventoryBar.inventoryBarButtons[x].getBlockID();
+					map.inventoryBar.inventoryBarButtons[x].setValue(lastBarAmount, lastBarBlockID);
+					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(barBlockAmount,
+							barBlockID);
+					map.inventoryBar.rapaintButton(lastClickedX);
+					map.inventoryBar.rapaintButton(x);
+				} else {
+					int barBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
+							.getBlockID();
+					int barAmount = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[x][y].getAmount();
+					int inventoryBlockID = map.inventory.inventoryButtons[x][y].getBlockID();
+					map.inventory.inventoryButtons[x][y].setValue(barAmount, barBlockID);
+					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(
+							inventoryBlockAmount, inventoryBlockID);
+					map.inventoryBar.rapaintButton(lastClickedX);
+					map.inventory.repaintButton(x, y);
+				}
+			} else {
+				if (selected == true) {
+					int barBlockID = map.inventory.inventoryButtons[x][y].getBlockID();
+					int barAmount = map.inventory.inventoryButtons[x][y].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(barAmount,
+							barBlockID);
+					map.inventory.inventoryButtons[x][y].setValue(inventoryBlockAmount,
+							inventorylockID);
+					map.inventory.repaintButton(lastClickedX, lastClickedY);
+					map.inventory.repaintButton(x,y);
+				} else {
+					int barBlockID = map.inventoryBar.inventoryBarButtons[x].getBlockID();
+					int barAmount = map.inventoryBar.inventoryBarButtons[y].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getAmount();
+					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
+							.getBlockID();
+					map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(barAmount,
+							barBlockID);
+					map.inventoryBar.inventoryBarButtons[x].setValue(inventoryBlockAmount,
+							inventorylockID);
+					map.inventory.repaintButton(lastClickedX, lastClickedY);
+					map.inventoryBar.rapaintButton(x);
+				}
+			}
+		} else { // If some couldn't
+
+			if (lastClickedInventOrBar == false) { // Change the vaule to the leftover
+				map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
+			} else {
+				map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver,
+						blockID);
+			}
 		}
 	}
 }

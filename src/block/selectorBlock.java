@@ -7,15 +7,15 @@ import main.main;
 
 import javax.swing.JPanel;
 
-public class selectorBlock extends JPanel{
-	public selectorBlock() {
+public class selectorBlock extends JPanel{ //The box that follows the mouse
+	public selectorBlock() {			   //Where a block will be placed
 		
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.BLUE );
-		g.drawRect(0,0,main.getBlockHeight()-3, main.getBlockHeight()-3);
+		g.drawRect(0,0,main.getBlockHeight()-1, main.getBlockHeight()-1);
 		//g.drawRect(1,1,main.getBlockHeight()-4, main.getBlockHeight()-4);
 		//g.drawRect(2,2,main.getBlockHeight()-5, main.getBlockHeight()-5);		
 	}

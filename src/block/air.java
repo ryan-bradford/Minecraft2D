@@ -7,15 +7,16 @@ import javax.swing.JPanel;
 
 import main.main;
 
-public class air extends JPanel{
-	
-	public air( ) {
-		
+public class air extends JPanel { 
+	Color airColor;
+	public air(Color airColor1) {
+		airColor = airColor1;
 	}
 	
 	@Override
-	protected void paintComponent(Graphics g) {
-		g.setColor(new Color(135,206,250));
+	protected void paintComponent(Graphics g) { //Draws a large(fills the whole screen)
+												//panel of the requested color
+		g.setColor(airColor);
 		g.fillRect(0, 0, main.screenWidth,
 				main.screenHeight);
 	}
