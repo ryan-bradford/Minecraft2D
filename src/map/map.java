@@ -27,9 +27,12 @@ import java.util.ArrayList;
  * Math.abs(dirtRows-mapHeight)-1; is where the grass is drawn.
  * Math.abs(dirtRows-mapHeight) is the top of the dirt.
  * Chunk 0 is the bottom row. 
- * 
+ * Map:
+ * Row 3:	|_|_|_|
+ * Row 2:	|_|_|_|
+ * Row 1:	|_|_|_|
+ * Row 0:   |_|_|_|
  * To Do:
- * Fix the bug where you can place multiple blocks in one spot
  * */
 
 public class map extends JFrame { // The main panel of display
