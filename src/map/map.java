@@ -165,7 +165,7 @@ public class map extends JFrame {
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) {
 		if (!selectedBlockKind.equals(new String(imageFileNames[0]))
-				&& inventoryBar.blockAmmount[inventoryBar.selected] > 0
+				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].amount > 0
 				&& main.getInventoryState() == false) {
 			chunk.get(yRow).add(new block(selectedBlockKind));
 			int yRowSize = (chunk.get(yRow).size() - 1);
@@ -174,7 +174,7 @@ public class map extends JFrame {
 					.setBounds(xCord, yRow * blockHeight, blockHeight,
 							blockHeight);
 			inventoryBar.setBlockAmmount(inventoryBar.selected,
-					inventoryBar.blockAmmount[inventoryBar.selected] - 1);
+					inventoryBar.inventoryBarButtons[inventoryBar.selected].amount - 1);
 			add(chunk.get(yRow).get(yRowSize), 2);
 		}
 	}

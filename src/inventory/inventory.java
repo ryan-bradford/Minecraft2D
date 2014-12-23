@@ -15,9 +15,7 @@ import main.main;
 
 public class inventory extends JPanel {
 	private BufferedImage[] images;
-	public String[][] files;
-	public Integer[][] blockAmmount;
-	public JButton[][] inventoryButtons;
+	public inventoryButton[][] inventoryButtons;
 	public java.io.File f;
 	public int gaps;
 	public int blockNumber;
@@ -30,12 +28,16 @@ public class inventory extends JPanel {
 	public Color swapBoxColor;
 	public Color backgroundColor;
 	public Color textColor;
-
+	public Integer switchedNumX;
+	public Integer switchedNumY;
+	
 	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra,
 			int inventoryHeight1, Color defaultColor1, Color swapBoxColor1,
 			Color backgroundColor1, Color textColor1) {
 		setLayout(null);
 		f = null;
+		switchedNumX = null;
+		switchedNumY = null;
 		defaultColor = defaultColor1;
 		swapBoxColor = swapBoxColor1;
 		backgroundColor = backgroundColor1;
@@ -45,9 +47,7 @@ public class inventory extends JPanel {
 		inventoryHeight = inventoryHeight1;
 		rectangleWidth = main.blockHeight + inventoryExtra;
 		images = new BufferedImage[blockNumber];
-		files = new String[blockNumber][inventoryHeight];
-		inventoryButtons = new JButton[blockNumber][inventoryHeight];
-		blockAmmount = new Integer[blockNumber][inventoryHeight];
+		inventoryButtons = new inventoryButton[blockNumber][inventoryHeight];
 		selected = 0;
 		height = (rectangleWidth + gaps) * (inventoryHeight) + gaps;
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
@@ -60,12 +60,15 @@ public class inventory extends JPanel {
 		g.setColor(defaultColor);
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
+				if(switchedNumX != null && switchedNumY != null && switchedNumX == x&& switchedNumY == y) {
+					g.setColor(swapBoxColor);
+				} else {
+					g.setColor(defaultColor);
+				}
 				g.drawRect((rectangleWidth + gaps) * (x) + gaps,
 						(rectangleWidth + gaps) * (y) + gaps, rectangleWidth,
 						rectangleWidth);
-				blockAmmount[x][y] = new Integer(64);
-				files[x][y] = main.getImageFileNames()[0];
-				inventoryButtons[x][y] = new JButton(new ImageIcon(files[x][y]));
+				inventoryButtons[x][y] = new inventoryButton(new ImageIcon(main.getImageFileNames()[2]), 64, 2);
 				inventoryButtons[x][y].setBounds((rectangleWidth + gaps) * (x)
 						+ gaps, (rectangleWidth + gaps) * (y) + gaps,
 						rectangleWidth, rectangleWidth);
@@ -77,6 +80,18 @@ public class inventory extends JPanel {
 				add(inventoryButtons[x][y]);
 
 			}
+		}
+	}
+	
+	public void setSwitch(int idX, int idY, Boolean selected, Boolean inveotOrBar) {//True is inventory
+		if(main.selected == false) {
+			 switchedNumX = idX;
+			 switchedNumY = idY;
+			 repaint();
+		} else {
+			switchedNumX = null;
+			switchedNumY = null;
+			repaint();
 		}
 	}
 }

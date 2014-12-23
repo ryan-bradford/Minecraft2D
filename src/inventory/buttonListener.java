@@ -1,6 +1,8 @@
 package inventory;
 
 import java.awt.event.ActionEvent;
+
+import main.main;
 import java.awt.event.ActionListener;
 
 public class buttonListener implements ActionListener {
@@ -17,7 +19,11 @@ public class buttonListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		if(inventOrBar == true) {
+			main.setSwapInvent(idX, idY, true);
+		} else {
+			main.setSwapInvent(idX, 0, false);
+		}
 	}
 
 }

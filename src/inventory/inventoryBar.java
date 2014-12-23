@@ -11,10 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class inventoryBar extends JPanel {
-	public String[] files;
-	public Integer[] blockAmmount;
 	public java.io.File f;
-	public JButton[] inventoryBarButtons;
+	public inventoryButton[] inventoryBarButtons;
 	public ImageIcon[] images;
 	public int gaps;
 	public int blockNumber;
@@ -27,11 +25,13 @@ public class inventoryBar extends JPanel {
 	public Color selectedBoxColor;
 	public Color backgroundColor;
 	public Color textColor;
+	public Integer switchedNum;
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra, Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
 			Color backgroundColor1, Color textColor1) {
 		setLayout(null);
 		f = null;
+		switchedNum = null;
 		gaps = inventoryGap;
 		defaultColor = defaultColor1;
 		swapBoxColor = swapBoxColor1;
@@ -40,15 +40,7 @@ public class inventoryBar extends JPanel {
 		textColor = textColor1;
 		blockNumber = inventoryBlock;
 		rectangleWidth = main.blockHeight + inventoryExtra;
-		files = new String[blockNumber];
-		blockAmmount = new Integer[blockNumber];
-		inventoryBarButtons = new JButton[blockNumber];
-		for (int i = 0; i < blockNumber; i++) {
-			blockAmmount[i] = 64;
-			files[i] = main.getImageFileNames()[0];
-		}
-		files[0] = main.getImageFileNames()[1];
-		files[1] = main.getImageFileNames()[2];
+		inventoryBarButtons = new inventoryButton[blockNumber];
 		selected = 0;
 		height = (int) (rectangleWidth + (gaps) * 2);
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
@@ -62,6 +54,8 @@ public class inventoryBar extends JPanel {
 		for (int i = 0; i < blockNumber; i++) {
 			if (i == selected) {
 				g.setColor(selectedBoxColor);
+			} else if(switchedNum != null && i == switchedNum){
+				g.setColor(swapBoxColor);
 			} else {
 				g.setColor(defaultColor);
 			}
@@ -71,8 +65,9 @@ public class inventoryBar extends JPanel {
 					+ (rectangleWidth - main.blockHeight) / 2;
 			int imageCornerY = height / 2 - (rectangleWidth) / 2
 					+ (rectangleWidth - main.blockHeight) / 2;
-			images[i] = new ImageIcon(files[i]);
-			inventoryBarButtons[i] = new JButton(images[i]);
+			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
+			images[i] = new ImageIcon(main.getImageFileNames()[0]);
+			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0);
 			inventoryBarButtons[i].setBounds(imageCornerX, imageCornerY,
 					main.blockHeight, main.blockHeight);
 			inventoryBarButtons[i].setOpaque(false);
@@ -81,10 +76,10 @@ public class inventoryBar extends JPanel {
 			inventoryBarButtons[i].setFocusable(false);
 			inventoryBarButtons[i].addActionListener(new buttonListener(i, 0, false));
 			add(inventoryBarButtons[i]);
-			if (!files[i].equals(main.getImageFileNames()[0])) {
+			if (inventoryBarButtons[i].blockID != 0) {
 				g.setFont(new Font("TimesRoman", Font.BOLD, 15));
 				g.setColor(textColor);
-				g.drawString(blockAmmount[i].toString(), imageCornerX + 5,
+				g.drawString(inventoryBarButtons[i].amount.toString(), imageCornerX + 5,
 						imageCornerY + main.blockHeight - 5);
 			}
 		}
@@ -92,14 +87,29 @@ public class inventoryBar extends JPanel {
 	}
 
 	public String setSelected(int i) {
+		try {
 		selected = i;
 		repaint();
-		return files[selected];
+		return main.getImageFileNames()[inventoryBarButtons[selected].blockID];
+		} catch(NullPointerException ex) {
+			
+		}
+		return "blank.jpg";
 	}
 
 	public void setBlockAmmount(int which, int ammount) {
-		blockAmmount[which] = ammount;
+		inventoryBarButtons[which].amount = ammount;
 		repaint();
+	}
+	
+	public void setSwitch(int id, Boolean selected, Boolean inveotOrBar) { //True is inventory
+		if(main.selected == false) {
+			 switchedNum = id;
+			 repaint();
+		} else {
+			switchedNum = null;
+			repaint();
+		}
 	}
 	
 }
