@@ -1,10 +1,12 @@
 package inventory;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import main.main;
@@ -47,7 +49,12 @@ public class inventory extends JPanel {
 		width = (rectangleWidth + gaps) * blockNumber + gaps;
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
-				inventoryButtons[x][y] = new inventoryButton(new ImageIcon(main.getImageFileNames()[2]), 64, 2);
+				try {
+					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[2])), 32, 2);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				standardButtonAction(x,y);
 			}
 		}
@@ -89,22 +96,33 @@ public class inventory extends JPanel {
 		inventoryButtons[idX][idY].setVisible(false);
 		int amount = inventoryButtons[idX][idY].getAmount();
 		int blockID = inventoryButtons[idX][idY].getBlockID();
-		ImageIcon icon = new ImageIcon(main.getImageFileNames()[blockID]);
-		inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID);
+		Image icon;
+		try {
+			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
+			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		standardButtonAction(idX, idY);
 	}
 	
 	public void removeButton(int idX, int idY) {
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
-		inventoryButtons[idX][idY] = new inventoryButton(new ImageIcon(main.getImageFileNames()[0]),0,0);
+		try {
+			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])),0,0);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 		standardButtonAction(idX, idY);
 		
 	}
 	
 	public void standardButtonAction(int idX, int idY) {
 		inventoryButtons[idX][idY].setBounds((rectangleWidth + gaps) * (idX)
-				+ gaps, (rectangleWidth + gaps) * (idY) + gaps,
+				+ gaps + (rectangleWidth-main.blockHeight)/2, (rectangleWidth + gaps) * (idY) + gaps + (rectangleWidth-main.blockHeight)/2,
 				rectangleWidth, rectangleWidth);
 		inventoryButtons[idX][idY].setOpaque(false);
 		inventoryButtons[idX][idY].setContentAreaFilled(false);

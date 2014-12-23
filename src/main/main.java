@@ -286,6 +286,12 @@ public class main {
 							map.inventory.removeButton(lastClickedX,
 									lastClickedY);
 						}
+					} else {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
+						} else {
+							map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);
+						}						
 					}
 				} else {
 					int leftOver;
@@ -303,6 +309,12 @@ public class main {
 							map.inventory.removeButton(lastClickedX,
 									lastClickedY);
 						}
+					} else {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
+						} else {
+							map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);
+						}						
 					}
 				}
 				selected = false;
@@ -333,6 +345,12 @@ public class main {
 							map.inventory.removeButton(lastClickedX,
 									lastClickedY);
 						}
+					} else {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
+						} else {
+							map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);
+						}						
 					}
 				} else {
 					int leftOver;
@@ -350,6 +368,12 @@ public class main {
 							map.inventory.removeButton(lastClickedX,
 									lastClickedY);
 						}
+					} else {
+						if (lastClickedInventOrBar == false) {
+							map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
+						} else {
+							map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);
+						}						
 					}
 				}
 				selected = false;

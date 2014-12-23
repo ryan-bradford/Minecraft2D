@@ -163,7 +163,8 @@ public class map extends JFrame {
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawNewBlock(int xCord, int yRow, String fileName) {
+	public void drawNewBlock(int xCord, int yRow, String fileName) { //Check if block already exists
+		selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID()];
 		if (!selectedBlockKind.equals(new String(imageFileNames[0]))
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0
 				&& main.getInventoryState() == false) {
@@ -175,6 +176,9 @@ public class map extends JFrame {
 							blockHeight);
 					inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
 			add(chunk.get(yRow).get(yRowSize), 2);
+			if(inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
+				inventoryBar.removeButton(inventoryBar.selected);
+			}
 		}
 	}
 
