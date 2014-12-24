@@ -33,6 +33,12 @@ import java.util.ArrayList;
  * Row 1:	|_|_|_|
  * Row 0:   |_|_|_|
  * To Do:
+ * 1. Add the ability to gather blocks
+ * 2. Add a mouse action method
+ * 		Two Methods
+ * 			Place Block: Called if a block does not exist in the clicked area
+ * 			Break Block: Called if a block does exist in the clicked area
+ * 3. 
  * */
 
 public class map extends JFrame { // The main panel of display
@@ -166,14 +172,14 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void drawNewBlock(int xCord, int yRow, String fileName) { // Draws a new block when requested
-		Boolean runnable = true;
+		Boolean blockExists = true;
 		for (int i = 0; i < chunk.get(yRow).size(); i++) {
 			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a block already exists
-				runnable = false;
+				blockExists = false;
 				break;
 			}
 		}
-		if (runnable == true) {
+		if (blockExists == true) {
 			selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected]
 					.getBlockID()]; // Gets what block you have selected in your inventory
 			if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if the block in your inventory isn't a blank file block
@@ -183,7 +189,9 @@ public class map extends JFrame { // The main panel of display
 				int yRowSize = (chunk.get(yRow).size() - 1);
 				chunk.get(yRow).get(yRowSize)
 						.setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
-				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
+				if (creative == false) {
+					inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
+				}
 				add(chunk.get(yRow).get(yRowSize), 2);
 				if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
 					inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar if you have 0 left

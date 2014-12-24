@@ -47,7 +47,7 @@ public class main {
 	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(false, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
+		map = new map(true, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
 				inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
 				imageFileNames);
