@@ -25,12 +25,14 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 	public Color backgroundColor; //The color of the background
 	public Color textColor; //The color of the text(As of now is not used)
 	public Integer switchedNum; //The int that shows which box has been clicked on
+	public int stackHeight;
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra,
 			Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
-			Color backgroundColor1, Color textColor1) {
+			Color backgroundColor1, Color textColor1, int stackHeight1) {
 		setLayout(null); //Allows for boxes to be moved
 		switchedNum = null;
+		stackHeight = stackHeight1;
 		gaps = inventoryGap;
 		defaultColor = defaultColor1;
 		swapBoxColor = swapBoxColor1;
@@ -47,13 +49,13 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		for (int i = 0; i < blockNumber; i++) {
 			try {
 				inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main
-						.getImageFileNames()[1])), 1, 1);
+						.getImageFileNames()[1])), 1, 1, stackHeight);
 				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[1]));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			inventoryBarButtons[i] = new inventoryButton(images[i], 1, 1);
+			inventoryBarButtons[i] = new inventoryButton(images[i], 1, 1, stackHeight);
 			standardButtonAction(i);
 		}
 
@@ -107,7 +109,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		Image icon;
 		try {
 			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
-			inventoryBarButtons[id] = new inventoryButton(icon, amount, blockID);
+			inventoryBarButtons[id] = new inventoryButton(icon, amount, blockID, stackHeight);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,7 +122,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		inventoryBarButtons[id].setVisible(false);
 		try {
 			inventoryBarButtons[id] = new inventoryButton(ImageIO.read(new java.io.File(main
-					.getImageFileNames()[0])), 0, 0);
+					.getImageFileNames()[0])), 0, 0, stackHeight);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

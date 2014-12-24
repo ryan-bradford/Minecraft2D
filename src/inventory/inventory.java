@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 
 import main.main;
 
-public class inventory extends JPanel { //Same as the inventoryBar, except this has a height and a width 
-	public inventoryButton[][] inventoryButtons; //Also, it has no placement selector box
+public class inventory extends JPanel { // Same as the inventoryBar, except this has a height and a width
+	public inventoryButton[][] inventoryButtons; // Also, it has no placement selector box
 	public java.io.File f;
 	public int gaps;
 	public int blockNumber;
@@ -27,12 +27,13 @@ public class inventory extends JPanel { //Same as the inventoryBar, except this 
 	public Color textColor;
 	public Integer switchedNumX;
 	public Integer switchedNumY;
-	
-	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra,
-			int inventoryHeight1, Color defaultColor1, Color swapBoxColor1,
-			Color backgroundColor1, Color textColor1) {
+	public int stackHeight;
+
+	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight1, Color defaultColor1, Color swapBoxColor1,
+			Color backgroundColor1, Color textColor1, int stackHeight1) {
 		setLayout(null);
 		f = null;
+		stackHeight = stackHeight1;
 		switchedNumX = null;
 		switchedNumY = null;
 		defaultColor = defaultColor1;
@@ -50,12 +51,12 @@ public class inventory extends JPanel { //Same as the inventoryBar, except this 
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				try {
-					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[2])), 32, 2);
+					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[2])), 32, 2, stackHeight);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				standardButtonAction(x,y);
+				standardButtonAction(x, y);
 			}
 		}
 	}
@@ -67,30 +68,28 @@ public class inventory extends JPanel { //Same as the inventoryBar, except this 
 		g.setColor(defaultColor);
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
-				if(switchedNumX != null && switchedNumY != null && switchedNumX == x&& switchedNumY == y) {
+				if (switchedNumX != null && switchedNumY != null && switchedNumX == x && switchedNumY == y) {
 					g.setColor(swapBoxColor);
 				} else {
 					g.setColor(defaultColor);
 				}
-				g.drawRect((rectangleWidth + gaps) * (x) + gaps,
-						(rectangleWidth + gaps) * (y) + gaps, rectangleWidth,
-						rectangleWidth);
+				g.drawRect((rectangleWidth + gaps) * (x) + gaps, (rectangleWidth + gaps) * (y) + gaps, rectangleWidth, rectangleWidth);
 			}
 		}
 	}
-	
-	public void setSwitch(int idX, int idY, Boolean selected, Boolean inveotOrBar) {//True is inventory
-		if(main.selected == false) {
-			 switchedNumX = idX;
-			 switchedNumY = idY;
-			 repaint();
+
+	public void setSwitch(int idX, int idY, Boolean selected, Boolean inveotOrBar) {// True is inventory
+		if (main.selected == false) {
+			switchedNumX = idX;
+			switchedNumY = idY;
+			repaint();
 		} else {
 			switchedNumX = null;
 			switchedNumY = null;
 			repaint();
 		}
 	}
-	
+
 	public void repaintButton(int idX, int idY) {
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
@@ -99,37 +98,35 @@ public class inventory extends JPanel { //Same as the inventoryBar, except this 
 		Image icon;
 		try {
 			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
-			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID);
+			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID, stackHeight);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		standardButtonAction(idX, idY);
 	}
-	
+
 	public void removeButton(int idX, int idY) {
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
 		try {
-			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])),0,0);
+			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight);
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 		standardButtonAction(idX, idY);
-		
+
 	}
-	
+
 	public void standardButtonAction(int idX, int idY) {
-		inventoryButtons[idX][idY].setBounds((rectangleWidth + gaps) * (idX)
-				+ gaps + (rectangleWidth-main.blockHeight)/2, (rectangleWidth + gaps) * (idY) + gaps + (rectangleWidth-main.blockHeight)/2,
-				rectangleWidth, rectangleWidth);
+		inventoryButtons[idX][idY].setBounds((rectangleWidth + gaps) * (idX) + gaps + (rectangleWidth - main.blockHeight) / 2,
+				(rectangleWidth + gaps) * (idY) + gaps + (rectangleWidth - main.blockHeight) / 2, rectangleWidth, rectangleWidth);
 		inventoryButtons[idX][idY].setOpaque(false);
 		inventoryButtons[idX][idY].setContentAreaFilled(false);
 		inventoryButtons[idX][idY].setBorderPainted(false);
 		inventoryButtons[idX][idY].setFocusable(false);
-		inventoryButtons[idX][idY].addActionListener(new buttonListener(idX, idY,
-				true));
+		inventoryButtons[idX][idY].addActionListener(new buttonListener(idX, idY, true));
 		add(inventoryButtons[idX][idY]);
 	}
 }

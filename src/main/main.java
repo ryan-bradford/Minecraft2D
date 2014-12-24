@@ -39,6 +39,8 @@ public class main {
 	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
 	public static String[] imageFileNames = new String[] { "blank.jpg", // The block image file names
 			"dirt.jpg", "grass.jpg" };
+	public static Boolean creative = false;
+	public static int stackHeight = 64; //How many blocks can go in one "stack" in the inventory
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -47,10 +49,10 @@ public class main {
 	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(true, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
+		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
 				inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
-				imageFileNames);
+				imageFileNames, stackHeight);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
