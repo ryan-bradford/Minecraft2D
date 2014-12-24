@@ -41,6 +41,10 @@ public class main {
 			"dirt.jpg", "grass.jpg" };
 	public static Boolean creative = false;
 	public static int stackHeight = 64; //How many blocks can go in one "stack" in the inventory
+	public static int jumpDistance = 2;
+	public static int jumpSpeed = (int)(blockHeight*2.5);
+	public static int gravitySpeed = blockHeight*2;
+	public static int walkSpeed = blockHeight*3;
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -52,7 +56,7 @@ public class main {
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap,
 				inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
-				imageFileNames, stackHeight);
+				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);

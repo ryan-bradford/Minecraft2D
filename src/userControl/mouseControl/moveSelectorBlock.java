@@ -67,9 +67,9 @@ public class moveSelectorBlock extends Thread { //The thread that controls where
 					main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
 				}
 			} else { // Lowest
-				selectorRow = (int) ((playerLowY) / blockHeight)
+				selectorRow = (int) ((playerLowY+40) / blockHeight)
 						+ verticalShift;
-				selectorX = playerX - (playerX - blockHeight) % blockHeight; // Left
+				selectorX = playerX - (playerX - blockHeight) % blockHeight;
 				main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
 			}
 		}

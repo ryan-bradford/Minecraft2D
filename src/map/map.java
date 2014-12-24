@@ -76,8 +76,9 @@ public class map extends JFrame { // The main panel of display
 			int inventoryBlock, int inventoryGap,
 			int inventoryExtra, // For all intensive porposes, this is the main class
 			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
-			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight) {
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames);
+			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight,
+			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1) {
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
 		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
@@ -88,7 +89,8 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1) { // Sets all the variables to their desired values
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
+			int walkSpeed1) { // Sets all the variables to their desired values
 		jumping = false;
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
@@ -96,10 +98,10 @@ public class map extends JFrame { // The main panel of display
 		mapWidth = (main.screenWidth) / blockHeight;
 		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks;
-		jumpSpeed = blockHeight * 2;// Pixels per Second
-		gravitySpeed = blockHeight * 2;// Pixels per Second
-		jumpDistance = 1.5; // In Block Width
-		walkSpeed = blockHeight * 3;
+		jumpSpeed = jumpSpeed1;// Pixels per Second
+		gravitySpeed = gravitySpeed1;// Pixels per Second
+		jumpDistance = jumpDistance1; // In Block Width
+		walkSpeed = walkSpeed1;
 		creative = creativ;
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
