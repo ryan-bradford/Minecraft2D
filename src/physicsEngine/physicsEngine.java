@@ -7,20 +7,8 @@ import main.main;
 
 public class physicsEngine { // The physics engine
 
-	gravity gravity;
 	Boolean runnable = false; // Do you want to run the physics engine?
 	Boolean crative;
-
-	public physicsEngine(Boolean creative) {
-		init(creative);
-	}
-
-	public void init(Boolean creative) {
-		if (creative == false) {
-			gravity = new gravity();
-			gravity.start();
-		}
-	}
 
 	public Boolean getColisionLeft() { // Checks for colision on the left side
 
@@ -172,36 +160,6 @@ public class physicsEngine { // The physics engine
 
 		return false;
 
-	}
-
-	public class gravity extends Thread { //Pulls the player down at the "speed of gravity" if it does not find a block below
-		public void run() {				  //Seems(strong empasis on seems) to break when the player is standing on the crack between two blocks
-			while (true) {
-				while (runnable == true) {
-					int gravitySpeed = main.getGravitySpeed(); //
-					try {
-						gravity.sleep(1000 / gravitySpeed); //
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (main.getJumping() == false) {
-						if (getColisionBottom() == false) {
-							main.movePlayer(0, 1);
-						}
-						try {
-							gravity.sleep(10);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						if (getColisionBottom() == false) {
-							main.movePlayer(0, 1);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	public void start() {

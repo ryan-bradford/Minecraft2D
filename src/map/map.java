@@ -2,11 +2,14 @@ package map;
 
 import javax.swing.JFrame;
 
+import physicsEngine.gravityTask;
 import physicsEngine.physicsEngine;
 import player.player;
 import block.block;
 import block.air;
 import block.selectorBlock;
+import thread.task;
+import thread.taskManager;
 import userControl.keyControls.jump;
 import userControl.keyControls.keyControls;
 import userControl.keyControls.movePlayer;
@@ -38,7 +41,8 @@ import java.util.ArrayList;
  * 		Two Methods
  * 			Place Block: Called if a block does not exist in the clicked area
  * 			Break Block: Called if a block does exist in the clicked area
- * 3. 
+ * 3. Add a main thread that runs the processes of all the others.
+ * 		Make it modular?
  * */
 
 public class map extends JFrame { // The main panel of display
@@ -70,15 +74,19 @@ public class map extends JFrame { // The main panel of display
 	public double jumpDistance; // The int that stores how height you will jump (In pixels)
 	public int walkSpeed; // The int that stores how fast you will walk (In pixels per second)
 	public double startTime = System.nanoTime(); // Stores the start time, for debugging proposes
+	public taskManager manager;
 
-	public map(Boolean creative, int blockHeight1,
+	public map(Boolean creative,
+			int blockHeight1,
 			int dirtHeightInBlocks,// The long list of constructors, allows for easy customizability
-			int inventoryBlock, int inventoryGap,
+			int inventoryBlock,
+			int inventoryGap,
 			int inventoryExtra, // For all intensive porposes, this is the main class
 			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
 			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight,
 			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
+		initTaskManager();
 		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
@@ -89,8 +97,8 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
-			int walkSpeed1) { // Sets all the variables to their desired values
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1,
+			int gravitySpeed1, int walkSpeed1) { // Sets all the variables to their desired values
 		jumping = false;
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
@@ -207,6 +215,12 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("Inventory Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
+	public void initTaskManager() {
+		manager = new taskManager(null);
+		manager.start();
+		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+	}
+
 	public void startUserControl() { // Starts the user controls
 		startKeyControls();
 		startMouseControl();
@@ -238,12 +252,14 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initPhysics() { // Initializes the physics
-		physics = new physicsEngine(creative);
+		physics = new physicsEngine();
 		System.out.println("Physics Initalized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void startPhysics() { // Starts the physics
 		physics.start();
+		task thisTask = new gravityTask();
+		manager.addTask(thisTask);
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
@@ -259,7 +275,6 @@ public class map extends JFrame { // The main panel of display
 				return chunk.get(i).get(x);
 			}
 		} catch (IndexOutOfBoundsException ex) {
-
 		}
 		return null;
 	}
@@ -269,6 +284,7 @@ public class map extends JFrame { // The main panel of display
 		try {
 			return physics.getColisionLeft();
 		} catch (NullPointerException ex) {
+			ex.printStackTrace();
 			return false;
 		}
 	}
