@@ -12,4 +12,8 @@ public class task {
 	public int getWait() {
 		return 1000;
 	}
+	
+	public int[] getData() {
+		return new int[] {0};
+	}
 }

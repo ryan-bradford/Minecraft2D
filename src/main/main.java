@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
@@ -8,7 +9,6 @@ import player.player;
 import block.block;
 import map.map;
 import userControl.keyControls.jump;
-import userControl.keyControls.movePlayer;
 
 public class main {
 
@@ -43,7 +43,7 @@ public class main {
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2;
 	public static int jumpSpeed = (int) (blockHeight * 2.5);
-	public static int gravitySpeed = blockHeight * 2;
+	public static int gravitySpeed = blockHeight * 3;
 	public static int walkSpeed = blockHeight * 3;
 
 	/*
@@ -159,62 +159,6 @@ public class main {
 		return map.getCollisionRight();
 	}
 
-	public static movePlayer getMoveLeft() {
-		return map.moveLeft;
-	}
-
-	public static void startMoveLeft() {
-		map.moveLeft = new movePlayer(true, null);
-		map.moveLeft.start();
-	}
-
-	public static void stopMoveLeft() {
-		map.moveLeft.stop();
-		map.moveLeft = null;
-	}
-
-	public static movePlayer getMoveRight() {
-		return map.moveRight;
-	}
-
-	public static void startMoveRight() {
-		map.moveRight = new movePlayer(false, null);
-		map.moveRight.start();
-	}
-
-	public static void stopMoveRight() {
-		map.moveRight.stop();
-		map.moveRight = null;
-	}
-
-	public static movePlayer getMoveDown() {
-		return map.moveDown;
-	}
-
-	public static void startMoveDown() {
-		map.moveDown = new movePlayer(null, false);
-		map.moveDown.start();
-	}
-
-	public static void stopMoveDown() {
-		map.moveDown.stop();
-		map.moveDown = null;
-	}
-
-	public static movePlayer getMoveUp() {
-		return map.moveUp;
-	}
-
-	public static void startMoveUp() {
-		map.moveUp = new movePlayer(null, true);
-		map.moveUp.start();
-	}
-
-	public static void stopMoveUp() {
-		map.moveUp.stop();
-		map.moveUp = null;
-	}
-
 	public static void moveSelectorBlock(int xCord, int yCord) {
 		try {
 			if (map.getInventoryState() == false) {
@@ -234,7 +178,7 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		placeBlock(map.selectMapBlockThread.selectorX, map.selectMapBlockThread.selectorRow, fileName);
+		placeBlock(map.manager.tasks.get(map.selectTaskNumber-1).getData()[0], map.manager.tasks.get(map.selectTaskNumber-1).getData()[1], fileName);
 	}
 
 	public static int getGravitySpeed() {
