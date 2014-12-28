@@ -13,7 +13,6 @@ public class taskManager {
 		loadNum = new int[cores.length];
 		for(int i = 0; i < cores.length; i++) {
 			cores[i] = new CPUCore(null);
-			cores[i].start();
 			loadNum[i] = 0;
 		}
 	}
@@ -27,7 +26,9 @@ public class taskManager {
 			}
 		}
 		taskNum = cores[lowestLoadCoreNum].addTask(task1);
-
+		if(cores[lowestLoadCoreNum].getState() == Thread.State.NEW) {
+			cores[lowestLoadCoreNum].start();
+		}
 		return new int[]{lowestLoadCoreNum, taskNum};
 	}
 }

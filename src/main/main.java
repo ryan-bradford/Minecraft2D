@@ -43,7 +43,7 @@ public class main {
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2;
 	public static int jumpSpeed = (int) (blockHeight * 2.5);
-	public static int gravitySpeed = blockHeight * 3;
+	public static int gravitySpeed = blockHeight * 2;
 	public static int walkSpeed = blockHeight * 3;
 
 	/*
