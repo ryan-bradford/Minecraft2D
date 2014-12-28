@@ -3,7 +3,7 @@ package userControl.keyControls;
 import main.main;
 import thread.task;
 
-public class movePlayerTask extends task{
+public class movePlayerTask extends task{ //The task that moves the player
 	Boolean leftOrRight; // True is left Null is neither
 	Boolean upOrDown; // True is up Null is neither
 	int yAmmount = 0; // negative is up
@@ -13,7 +13,7 @@ public class movePlayerTask extends task{
 	}
 	
 	@Override
-	public void runTask() {
+	public void runTask() { //Detirmines what direction to move the player in and moves it that way
 		leftOrRight = main.map.getLeftOrRight();
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null ) {
@@ -39,21 +39,21 @@ public class movePlayerTask extends task{
 	
 	@Override
 	public Boolean returnRunnable() {
-		if(main.map.inventoryOpen == true) {
+		if(main.map.inventoryOpen == true) { //If the inventory is open, dont run
 			return false;
 		}
-		if (upOrDown != null) {
+		if (upOrDown != null) { //If the player is trying to move up, but touching the top, dont move up
 			if (upOrDown == true) {
 				if (main.getCollisionTop() == true) {
 					 return false;
 				}
-			} else {
+			} else { //If the player is trying to move down, but touching the bottom, dont move down
 				if(main.getCollisionBottom() == true) {
 					 return false;
 				}
 			}
 		}
-		if (leftOrRight != null) {
+		if (leftOrRight != null) { //Same rules as about apply
 			if (leftOrRight == true) {
 				if (main.getCollisionLeft() == true) {
 					 return false;

@@ -3,7 +3,7 @@ package physicsEngine;
 import main.main;
 import thread.task;
 
-public class gravityTask extends task{
+public class gravityTask extends task {
 	
 	public gravityTask() {
 		
@@ -16,10 +16,10 @@ public class gravityTask extends task{
 	
 	@Override
 	public Boolean returnRunnable() {
-		if (main.map.physics.runnable == true) {
-			if (main.getJumping() == false) {
-				if (main.getCollisionBottom() == false) {
-					return true;
+		if (main.map.physics.runnable == true) { //If the physics is running
+			if (main.getJumping() == false) {	//If the player is not jumping
+				if (main.getCollisionBottom() == false) { //If the player is not touching the ground
+					return true; //It is runnable
 				}
 			}
 		}
@@ -27,14 +27,14 @@ public class gravityTask extends task{
 	}
 	
 	@Override
-	public int getWait() {
+	public int getWait() { //Returns the wait
 		int gravitySpeed = main.getGravitySpeed(); //
 		int wait = 1000/gravitySpeed;
 		return wait;
 	}
 	
 	@Override
-	public int getCPULoad() {
+	public int getCPULoad() { //Returns the load
 		return 2;
 	}
 	

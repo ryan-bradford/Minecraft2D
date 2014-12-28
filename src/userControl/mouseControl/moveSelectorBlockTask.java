@@ -23,7 +23,7 @@ public class moveSelectorBlockTask extends task{
 	}
 	
 	@Override
-	public void runTask() {
+	public void runTask() { //Same code as before to set the mouse on a grid and find where to place the blue outline box
 		verticalShift = main.getPlayer().getHeight() / main.blockHeight * 2;
 		blockHeight = main.getBlockHeight();
 		playerBlockX = (int) (main.getPlayer().getBounds().x / blockHeight);
@@ -71,12 +71,12 @@ public class moveSelectorBlockTask extends task{
 	}
 	
 	@Override
-	public Boolean returnRunnable() {
+	public Boolean returnRunnable() { //Always runnable(Stops when the inveory is open somehow....(Don't rememmber how I did that))
 		return true;
 	}
 	
 	@Override
-	public int getWait() {
+	public int getWait() { //Checks every 15 seconds
 		return 15;
 	}
 	

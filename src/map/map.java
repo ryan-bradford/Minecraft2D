@@ -70,41 +70,35 @@ public class map extends JFrame { // The main panel of display
 	public int dirtRows; // The int that stores how many dirt rows there are, will be gone soon
 	public double jumpDistance; // The int that stores how height you will jump (In pixels)
 	public int walkSpeed; // The int that stores how fast you will walk (In pixels per second)
-	public int selectTaskTaskNumber;
-	public int selectTaskCoreNumber;
-	public double startTime = System.nanoTime(); // Stores the start time, for
-													// debugging proposes
-	public taskManager manager;
-	public keyControls keyListener;
+	public int selectTaskTaskNumber; // The task number of the block selector task
+	public int selectTaskCoreNumber; // The core number of the block selector task
+	public double startTime = System.nanoTime(); // Stores the start time, for debugging proposes
+	public taskManager manager; // The task manager object
+	public keyControls keyListener; // The keyListener object
 
-	public map(
-			Boolean creative,
+	public map(Boolean creative,
 			int blockHeight1,
-			int dirtHeightInBlocks,// The long list of constructors, allows for
-									// easy customizability
+			int dirtHeightInBlocks, // The long list of constructors, allows for easy customizability
 			int inventoryBlock,
 			int inventoryGap,
-			int inventoryExtra, // For all intensive porposes, this is the main
-								// class
-			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
-			Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor,
-			Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight, int jumpHeight, int jumpSpeed,
-			int gravitySpeed1, int walkSpeed1) {
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1,
-				walkSpeed1);
+			int inventoryExtra, // For all intensive porposes, this is the main class
+			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
+			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight,
+			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1) {
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
 		initTaskManager();
 		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
 		startPhysics();
 		startUserControl();
-		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor,
-				swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight);
+		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
+				backgroundColor, textColor, stackHeight);
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1) { //Sets all the variables to their desired values
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1,
+			int gravitySpeed1, int walkSpeed1) { // Sets all the variables to their desired values
 		jumping = false;
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
@@ -150,8 +144,7 @@ public class map extends JFrame { // The main panel of display
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
 			chunk.get(rowID).add(new block(imageFileNames[2]));
-			chunk.get(rowID).get(current)
-					.setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
+			chunk.get(rowID).get(current).setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(rowID).get(current).setOpaque(false);
 			add(chunk.get(rowID).get(current), 1);
 			current++;
@@ -169,8 +162,7 @@ public class map extends JFrame { // The main panel of display
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
-		player.setBounds(((main.screenWidth) / 2),
-				(((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
+		player.setBounds(((main.screenWidth) / 2), (((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
 				player.getPlayerWidth(), player.getPlayerHeight());
 		player.setOpaque(false);
 		add(player, 0);
@@ -193,9 +185,8 @@ public class map extends JFrame { // The main panel of display
 			}
 		}
 		if (blockExists == true) {
-			selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected]
-					.getBlockID()]; // Gets what block you have selected in your
-									// inventory
+			selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID()]; // Gets what block you have selected in your
+																																// inventory
 			if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks
 																			// if
 																			// the
@@ -221,29 +212,27 @@ public class map extends JFrame { // The main panel of display
 				}
 				add(chunk.get(yRow).get(yRowSize), 2);
 				if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
-					inventoryBar.removeButton(inventoryBar.selected); //Removes the block from your hot bar if you have 0
+					inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hot bar if you have 0
 				}// To Add:Check if block already exists
 			}
 		}
 	}
 
-	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight,
-			Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
-			int stackHeight) { // Initializes and draws the
-								// inventory
-		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight);
+	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor,
+			Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor, int stackHeight) { // Initializes and draws the
+																													// inventory
+		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor, selectedBoxColor,
+				backgroundColor, textColor, stackHeight);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
 		inventoryBar.setBounds((main.screenWidth / 2 - width / 2), main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
-		inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor,
-				swapBoxColor, backgroundColor, textColor, stackHeight);
+		inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, backgroundColor,
+				textColor, stackHeight);
 		width = inventory.width;
 		height = inventory.height;
-		inventory.setBounds((main.screenWidth - inventory.width) / 2, (main.screenHeight - inventory.height) / 2,
-				width, height);
+		inventory.setBounds((main.screenWidth - inventory.width) / 2, (main.screenHeight - inventory.height) / 2, width, height);
 		inventory.setVisible(false);
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);

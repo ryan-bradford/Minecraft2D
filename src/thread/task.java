@@ -1,9 +1,11 @@
 package thread;
 
 public class task {
-	public void runTask() {
+	public void runTask() { //The default task object
 		
 	}
+	
+	//Most methods will be overriden
 	
 	public Boolean returnRunnable() {
 		return false;

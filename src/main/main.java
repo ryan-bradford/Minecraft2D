@@ -41,10 +41,10 @@ public class main {
 			"dirt.jpg", "grass.jpg" };
 	public static Boolean creative = false;
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
-	public static int jumpDistance = 2;
-	public static int jumpSpeed = (int) (blockHeight * 2.5);
-	public static int gravitySpeed = blockHeight * 2;
-	public static int walkSpeed = blockHeight * 3;
+	public static int jumpDistance = 2; //How many blocks the player can jump
+	public static int jumpSpeed = (int) (blockHeight * 2.5); //How fast the player will jump(Pixels per second)
+	public static int gravitySpeed = blockHeight * 2; //How fast the player will fall(Pixels per second)
+	public static int walkSpeed = blockHeight * 3;//How fast the player will walk(Pixels per second)
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -178,8 +178,8 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		int selectorX = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber-1).getData()[0];
-		int selectorRow = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber-1).getData()[1];
+		int selectorX = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber - 1).getData()[0];
+		int selectorRow = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber - 1).getData()[1];
 		placeBlock(selectorX, selectorRow, fileName);
 	}
 
