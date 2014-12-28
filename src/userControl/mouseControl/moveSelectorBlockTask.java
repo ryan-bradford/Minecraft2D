@@ -85,4 +85,9 @@ public class moveSelectorBlockTask extends task{
 		return new int[] {selectorX, selectorRow};
 	}
 	
+	@Override
+	public int getCPULoad() {
+		return 2;
+	}
+	
 }

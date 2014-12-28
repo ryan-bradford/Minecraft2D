@@ -1,68 +1,33 @@
 package thread;
 
-import java.util.ArrayList;
+public class taskManager {
+	public CPUCore[] cores;
+	int[] loadNum;
+	int lowestLoadAmount;
+	int lowestLoadCoreNum;
 
-public class taskManager extends Thread {
-	public ArrayList<task> tasks;
-	ArrayList<Integer> waits;
-	ArrayList<Integer> numShortWaitsPassed;
-	Integer shortestWait;
-
-	public taskManager(ArrayList<task> tasks1) {
-		tasks = new ArrayList<task>();
-		waits = new ArrayList<Integer>();
-		numShortWaitsPassed = new ArrayList<Integer>();
-		try {
-			if (tasks1 != null) {
-				tasks = tasks1;
-			}
-			for (int i = 0; i < tasks.size(); i++) {
-				waits.set(i, tasks.get(i).getWait());
-				numShortWaitsPassed.set(i, 0);
-				if (shortestWait == null || waits.get(i) < shortestWait) {
-					shortestWait = waits.get(i);
-				}
-			}
-		} catch (NullPointerException ex) {
-
+	public taskManager() {
+		lowestLoadCoreNum = 0;
+		lowestLoadAmount = 50000;
+		cores = new CPUCore[Runtime.getRuntime().availableProcessors()];
+		loadNum = new int[cores.length];
+		for(int i = 0; i < cores.length; i++) {
+			cores[i] = new CPUCore(null);
+			cores[i].start();
+			loadNum[i] = 0;
 		}
 	}
 
-	public void run() {
-		while (true) {
-			try {
-				try {
-					taskManager.sleep(shortestWait);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for (int i = 0; i < tasks.size(); i++) {
-					if (numShortWaitsPassed.get(i) + 1 * shortestWait >= waits
-							.get(i)) {
-						numShortWaitsPassed.set(i, 0);
-						if (tasks.get(i).returnRunnable() == true) {
-							tasks.get(i).runTask();
-						}
-					} else {
-						numShortWaitsPassed.set(i,
-								numShortWaitsPassed.get(i) + 1);
-					}
-				}
-			} catch (NullPointerException ex) {
+	public int[] addTask(task task1) {
+		int taskNum;
+		for(int i = 0; i < cores.length; i++) {
+			if(cores[i].getLoad() < lowestLoadAmount) {
+				lowestLoadAmount = cores[i].getLoad();
+				lowestLoadCoreNum = i;
 			}
 		}
-	}
+		taskNum = cores[lowestLoadCoreNum].addTask(task1);
 
-	public int addTask(task task1) {
-		tasks.add(task1);
-		for (int i = 0; i < tasks.size(); i++) {
-			waits.add(tasks.get(i).getWait());
-			numShortWaitsPassed.add(0);
-			if (shortestWait == null || waits.get(i) < shortestWait) {
-				shortestWait = waits.get(i);
-			}
-		}
-		return tasks.size();
+		return new int[]{lowestLoadCoreNum, taskNum};
 	}
 }

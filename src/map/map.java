@@ -70,7 +70,8 @@ public class map extends JFrame { // The main panel of display
 	public int dirtRows; // The int that stores how many dirt rows there are, will be gone soon
 	public double jumpDistance; // The int that stores how height you will jump (In pixels)
 	public int walkSpeed; // The int that stores how fast you will walk (In pixels per second)
-	public int selectTaskNumber;
+	public int selectTaskTaskNumber;
+	public int selectTaskCoreNumber;
 	public double startTime = System.nanoTime(); // Stores the start time, for
 													// debugging proposes
 	public taskManager manager;
@@ -250,8 +251,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initTaskManager() {
-		manager = new taskManager(null);
-		manager.start();
+		manager = new taskManager();
 		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
@@ -277,7 +277,10 @@ public class map extends JFrame { // The main panel of display
 		selectMapBlock.setOpaque(false);
 		add(selectMapBlock, 0);
 		task select = new moveSelectorBlockTask();
-		selectTaskNumber = manager.addTask(select);
+		int[] nums;
+		nums = manager.addTask(select);
+		selectTaskTaskNumber = nums[1];
+		selectTaskCoreNumber = nums[0];
 		placer = new placeBlock();
 		this.addMouseListener(placer);
 	}

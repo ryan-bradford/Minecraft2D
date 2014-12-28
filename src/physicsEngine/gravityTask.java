@@ -33,4 +33,9 @@ public class gravityTask extends task{
 		return wait;
 	}
 	
+	@Override
+	public int getCPULoad() {
+		return 2;
+	}
+	
 }

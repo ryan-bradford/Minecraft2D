@@ -72,4 +72,9 @@ public class movePlayerTask extends task{
 		return 15;
 	}
 	
+	@Override
+	public int getCPULoad() {
+		return 1;
+	}
+	
 }

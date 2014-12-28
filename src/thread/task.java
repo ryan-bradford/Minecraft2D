@@ -16,4 +16,8 @@ public class task {
 	public int[] getData() {
 		return new int[] {0};
 	}
+	
+	public int getCPULoad() {
+		return 0; //0 is no load, 3 is maximum load
+	}
 }

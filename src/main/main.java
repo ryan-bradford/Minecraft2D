@@ -178,7 +178,9 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		placeBlock(map.manager.tasks.get(map.selectTaskNumber-1).getData()[0], map.manager.tasks.get(map.selectTaskNumber-1).getData()[1], fileName);
+		int selectorX = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber-1).getData()[0];
+		int selectorRow = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber-1).getData()[1];
+		placeBlock(selectorX, selectorRow, fileName);
 	}
 
 	public static int getGravitySpeed() {
