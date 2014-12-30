@@ -9,6 +9,7 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 	ArrayList<Integer> numShortWaitsPassed; // Counts the number of short waits that have passed for each task
 	Integer shortestWait; // The shortest wait of all the tasks
 	int load; // What is the total "load" gave by this thread (Is entireley arbritrary)
+	int id = (int)(Math.random()*100);
 
 	public CPUCore(ArrayList<task> tasks1) { // Inits the core to a list of tasks, this task list is most commonly passed as null
 		load = 0;
@@ -43,8 +44,11 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 				for (int i = 0; i < tasks.size(); i++) { // Calculates if the shortest wait adds up to the wait of the selected
 															// It does this by multiplying the short wait count by the short wait
 															// And checks if it is >= to the wait of the task
-					if (numShortWaitsPassed.get(i) + 1 * shortestWait >= waits.get(i)) { // If it does it will execute the task
+					if (numShortWaitsPassed.get(i) * shortestWait >= waits.get(i)) { // If it does it will execute the task
 						numShortWaitsPassed.set(i, 0); // It will reset the short waits passed for said task
+						if(tasks.size() == 2) {
+							System.out.println(shortestWait);
+						}
 						if (tasks.get(i).returnRunnable() == true) {
 							tasks.get(i).runTask();
 						}
@@ -60,13 +64,14 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 	public int addTask(task task1) { // Adds a task to the thread
 		tasks.add(task1);
 		for (int i = 0; i < tasks.size(); i++) { // Adds the wait to the list and finds the shortest wait
-			waits.add(tasks.get(i).getWait());
+			waits.add(1000);
+			waits.set(i, tasks.get(i).getWait());
 			numShortWaitsPassed.add(0);
 			if (shortestWait == null || waits.get(i) < shortestWait) {
 				shortestWait = waits.get(i);
 			}
 		}
-		load = +task1.getCPULoad();
+		load = load + task1.getCPULoad();
 		return tasks.size();
 	}
 

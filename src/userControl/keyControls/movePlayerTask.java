@@ -69,7 +69,7 @@ public class movePlayerTask extends task{ //The task that moves the player
 	
 	@Override
 	public int getWait() {
-		return 15;
+		return 1000/main.walkSpeed;
 	}
 	
 	@Override
