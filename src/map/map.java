@@ -261,7 +261,7 @@ public class map extends JFrame { // The main panel of display
 		keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		movePlayerTask move = new movePlayerTask();
-		manager.addTask(move);
+		manager.addTask(move, 1);
 		this.setLayout(null);
 	}
 
@@ -297,7 +297,7 @@ public class map extends JFrame { // The main panel of display
 	public void startPhysics() { // Starts the physics
 		physics.start();
 		task thisTask = new gravityTask();
-		manager.addTask(thisTask);
+		manager.addTask(thisTask, 1);
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
