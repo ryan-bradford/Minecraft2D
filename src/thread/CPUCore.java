@@ -59,7 +59,7 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 
 	public int addTask(task task1) { // Adds a task to the thread
 		tasks.add(task1);
-		for (int i = 0; i < tasks.size(); i++) { //Adds the wait to the list and finds the shortest wait 
+		for (int i = 0; i < tasks.size(); i++) { // Adds the wait to the list and finds the shortest wait
 			waits.add(tasks.get(i).getWait());
 			numShortWaitsPassed.add(0);
 			if (shortestWait == null || waits.get(i) < shortestWait) {

@@ -45,6 +45,7 @@ public class main {
 	public static int jumpSpeed = (int) (blockHeight * 2.5); //How fast the player will jump(Pixels per second)
 	public static int gravitySpeed = blockHeight * 2; //How fast the player will fall(Pixels per second)
 	public static int walkSpeed = blockHeight * 3;//How fast the player will walk(Pixels per second)
+	public static int mineBlockSpeed = 100; //How many milliseconds per swing
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -55,7 +56,7 @@ public class main {
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra, inventoryHeight,
 				defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
-				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed);
+				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed, mineBlockSpeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -173,7 +174,7 @@ public class main {
 	}
 
 	public static void placeBlock(int xCord, int row, String fileName) {
-		map.drawNewBlock(xCord, row, fileName);
+		map.mouseClicked(xCord, row, fileName);
 		map.repaint();
 	}
 

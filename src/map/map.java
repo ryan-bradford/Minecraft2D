@@ -13,8 +13,9 @@ import thread.taskManager;
 import userControl.keyControls.jump;
 import userControl.keyControls.keyControls;
 import userControl.keyControls.movePlayerTask;
+import userControl.mouseControl.mineBlockTask;
 import userControl.mouseControl.moveSelectorBlockTask;
-import userControl.mouseControl.placeBlock;
+import userControl.mouseControl.clickEvent;
 import inventory.inventoryBar;
 import main.main;
 import inventory.inventory;
@@ -51,7 +52,7 @@ public class map extends JFrame { // The main panel of display
 	public selectorBlock selectMapBlock; // The blue outline that can be seen on placement area
 	public inventoryBar inventoryBar;
 	public inventory inventory;
-	public placeBlock placer; // The thing that listens for mouse clicks
+	public clickEvent placer; // The thing that listens for mouse clicks
 	public jump jump; // The thread that controls jumping, one run will jump once
 	public air air; // The JPanel that is the air
 	public physicsEngine physics; // The thread that controls the physics
@@ -75,23 +76,21 @@ public class map extends JFrame { // The main panel of display
 	public double startTime = System.nanoTime(); // Stores the start time, for debugging proposes
 	public taskManager manager; // The task manager object
 	public keyControls keyListener; // The keyListener object
+	public mineBlockTask mine;
 
-	public map(Boolean creative,
-			int blockHeight1,
-			int dirtHeightInBlocks, // The long list of constructors, allows for easy customizability
-			int inventoryBlock,
-			int inventoryGap,
-			int inventoryExtra, // For all intensive porposes, this is the main class
+	// The long list of constructors, allows for easy customizability
+	// For all intensive porposes, this is the main class
+	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap, int inventoryExtra,
 			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
 			Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight,
-			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1) {
+			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
 		initTaskManager();
 		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
 		startPhysics();
-		startUserControl();
+		startUserControl(mineBlockSpeed);
 		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, stackHeight);
 		System.out.println("The Game Has Begun!");
@@ -169,52 +168,60 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("Player Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawNewBlock(int xCord, int yRow, String fileName) { // Draws a
-																		// new
-																		// block
-																		// when
-																		// requested
-		Boolean blockExists = true;
+	public void mouseClicked(int xCord, int yRow, String fileName) { // Draws a new block when requested
+		Boolean blockExists = false;
+		int blockNum = 0 ;
 		for (int i = 0; i < chunk.get(yRow).size(); i++) {
-			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a
-																	// block
-																	// already
-																	// exists
-				blockExists = false;
+			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a block is already there
+				blockExists = true;
+				blockNum = i;
 				break;
 			}
 		}
-		if (blockExists == true) {
-			selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID()]; // Gets what block you have selected in your
-																																// inventory
-			if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks
-																			// if
-																			// the
-																			// block
-																			// in
-																			// your
-																			// inventory
-																			// isn't
-																			// a
-																			// blank
-																			// file
-																			// block
-					&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to
-																								// place
-					&& main.getInventoryState() == false) { // Checks if your
-															// inventory is
-															// closed
-				chunk.get(yRow).add(new block(selectedBlockKind));
-				int yRowSize = (chunk.get(yRow).size() - 1);
-				chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
-				if (creative == false) {
-					inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
-				}
-				add(chunk.get(yRow).get(yRowSize), 2);
-				if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
-					inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hot bar if you have 0
-				}// To Add:Check if block already exists
+		if (blockExists == false) {
+			placeNewBlock(xCord, yRow, fileName);
+		} else {
+			startToMineBlock(blockNum, yRow, xCord);
+		}
+	}
+
+	public void placeNewBlock(int xCord, int yRow, String fileName) {
+		selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID()]; // Gets what block you have selected in your inventory
+		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if the block is there (And not just a blank block)
+				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
+				&& main.getInventoryState() == false) { // Checks if your
+														// inventory is
+														// closed
+			chunk.get(yRow).add(new block(selectedBlockKind));
+			int yRowSize = (chunk.get(yRow).size() - 1);
+			chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
+			if (creative == false) {
+				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
 			}
+			add(chunk.get(yRow).get(yRowSize), 2);
+			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
+				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hot bar if you have 0
+			}// To Add:Check if block already exists
+		}
+	}
+	
+	public void removeBlock(int blockNum, int yRow) {
+		chunk.get(yRow).get(blockNum).setVisible(false);
+		chunk.get(yRow).remove(blockNum);
+	}
+
+	public void startToMineBlock(int blockNum, int yRow, int xCord) {
+		mine.setRunning(blockNum, yRow, xCord);
+	}
+	
+	public void mineBlockAt(int xCord, int yRow, int blockNum) {
+		removeBlock(blockNum, yRow);
+		mine.stopRunning();
+	}
+	
+	public void stopMining() {
+		if(mine.running == true) {
+			mine.stopRunning();
 		}
 	}
 
@@ -244,9 +251,9 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void startUserControl() { // Starts the user controls
+	public void startUserControl(int mineBlockSpeed) { // Starts the user controls
 		startKeyControls();
-		startMouseControl();
+		startMouseControl(mineBlockSpeed);
 		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
@@ -258,9 +265,8 @@ public class map extends JFrame { // The main panel of display
 		this.setLayout(null);
 	}
 
-	public void startMouseControl() { // Starts the thread that can move the map
-										// block selector
-		// hideCursor();
+	public void startMouseControl(int mineBlockSpeed) { // Starts the thread that can move the map block selector
+		//hideCursor();
 		selectMapBlock = new selectorBlock();
 		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
 		selectMapBlock.setOpaque(false);
@@ -270,12 +276,14 @@ public class map extends JFrame { // The main panel of display
 		nums = manager.addTask(select);
 		selectTaskTaskNumber = nums[1];
 		selectTaskCoreNumber = nums[0];
-		placer = new placeBlock();
+		placer = new clickEvent();
 		this.addMouseListener(placer);
+		mine = new mineBlockTask(mineBlockSpeed);
+		manager.addTask(mine);
+		
 	}
 
-	public void hideCursor() { // Hides the cursor, undecided if this should be
-								// done
+	public void hideCursor() { // Hides the cursor, undecided if this should be done
 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
 		super.getContentPane().setCursor(blankCursor);
