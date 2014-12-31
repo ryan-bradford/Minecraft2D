@@ -37,17 +37,14 @@ import java.util.ArrayList;
  * Row 1:	|_|_|_|
  * Row 0:   |_|_|_|
  * To Do:
- * 1. Add the ability to gather blocks
- * 2. Add a mouse action method
- * 		Two Methods
- * 			Place Block: Called if a block does not exist in the clicked area
- * 			Break Block: Called if a block does exist in the clicked area
- * 3. Add a main thread that runs the processes of all the others.
- * 		Make it modular?
+ *  1. Add the ability to shift screens.
+ *  2. Procedulary Generate Terrain
+ *  3. Add crafting
+ *  4. Add the ability for there to be item drops
  * */
 
 public class map extends JFrame { // The main panel of display
-	public ArrayList<ArrayList<block>> chunk; // Horizontal Row
+	public ArrayList<ArrayList<ArrayList<block>>> chunk; // Horizontal Row
 	public player player;
 	public selectorBlock selectMapBlock; // The blue outline that can be seen on placement area
 	public inventoryBar inventoryBar;
@@ -77,6 +74,7 @@ public class map extends JFrame { // The main panel of display
 	public taskManager manager; // The task manager object
 	public keyControls keyListener; // The keyListener object
 	public mineBlockTask mine;
+	public int currentScreen;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
@@ -86,13 +84,14 @@ public class map extends JFrame { // The main panel of display
 			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
 		initTaskManager();
-		drawMap(airColor);
+		drawMap(airColor, 100);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
 		startPhysics();
 		startUserControl(mineBlockSpeed);
 		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, stackHeight);
+		changeCurrentScreen(100);
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -103,6 +102,7 @@ public class map extends JFrame { // The main panel of display
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
+		mapWidth = mapWidth + 1;
 		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks;
 		jumpSpeed = jumpSpeed1;// Pixels per Second
@@ -113,11 +113,15 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawMap(Color airColor) { // Calls the methods for drawing the
-											// map
-		chunk = new ArrayList<ArrayList<block>>();
+	public void drawMap(Color airColor, int currentScreen1) { // Calls the methods for drawing the
+		// map
+		currentScreen = currentScreen1;
+		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
+		for (int i = 0; i < currentScreen + 1; i++) {
+			chunk.add(new ArrayList<ArrayList<block>>());
+		}
 		for (int i = 0; i < mapHeight; i++) {
-			chunk.add(new ArrayList<block>());
+			chunk.get(currentScreen).add(new ArrayList<block>());
 		}
 		drawAir(airColor);
 		drawDirt();
@@ -128,10 +132,10 @@ public class map extends JFrame { // The main panel of display
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(i).add(new block(imageFileNames[1], 1));
-				chunk.get(i).get(x).setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
-				chunk.get(i).get(x).setOpaque(false);
-				add(chunk.get(i).get(x), 0);
+				chunk.get(currentScreen).get(i).add(new block(imageFileNames[1], 1));
+				chunk.get(currentScreen).get(i).get(x).setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
+				chunk.get(currentScreen).get(i).get(x).setOpaque(false);
+				add(chunk.get(currentScreen).get(i).get(x), 0);
 			}
 
 		}
@@ -142,10 +146,10 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(rowID).add(new block(imageFileNames[2], 2));
-			chunk.get(rowID).get(current).setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
-			chunk.get(rowID).get(current).setOpaque(false);
-			add(chunk.get(rowID).get(current), 1);
+			chunk.get(currentScreen).get(rowID).add(new block(imageFileNames[2], 2));
+			chunk.get(currentScreen).get(rowID).get(current).setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
+			chunk.get(currentScreen).get(rowID).get(current).setOpaque(false);
+			add(chunk.get(currentScreen).get(rowID).get(current), 1);
 			current++;
 		}
 		System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
@@ -161,8 +165,7 @@ public class map extends JFrame { // The main panel of display
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
-		player.setBounds(((main.screenWidth) / 2), (((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
-				player.getPlayerWidth(), player.getPlayerHeight());
+		setPlayerEndPosition();
 		player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
@@ -171,8 +174,8 @@ public class map extends JFrame { // The main panel of display
 	public void mouseClicked(int xCord, int yRow, String fileName) { // Draws a new block when requested
 		Boolean blockExists = false;
 		int blockNum = 0;
-		for (int i = 0; i < chunk.get(yRow).size(); i++) {
-			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a block is already there
+		for (int i = 0; i < chunk.get(currentScreen).get(yRow).size(); i++) {
+			if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { // Checks if a block is already there
 				blockExists = true;
 				blockNum = i;
 				break;
@@ -193,13 +196,13 @@ public class map extends JFrame { // The main panel of display
 				&& main.getInventoryState() == false) { // Checks if your
 														// inventory is
 														// closed
-			chunk.get(yRow).add(new block(selectedBlockKind, id));
-			int yRowSize = (chunk.get(yRow).size() - 1);
-			chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
+			chunk.get(currentScreen).get(yRow).add(new block(selectedBlockKind, id));
+			int yRowSize = (chunk.get(currentScreen).get(yRow).size() - 1);
+			chunk.get(currentScreen).get(yRow).get(yRowSize).setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
 			}
-			add(chunk.get(yRow).get(yRowSize), 2);
+			add(chunk.get(currentScreen).get(yRow).get(yRowSize), 2);
 			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hot bar if you have 0
 			}// To Add:Check if block already exists
@@ -207,9 +210,9 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public int removeBlock(int blockNum, int yRow) {
-		int id = chunk.get(yRow).get(blockNum).id;
-		chunk.get(yRow).get(blockNum).setVisible(false);
-		chunk.get(yRow).remove(blockNum);
+		int id = chunk.get(currentScreen).get(yRow).get(blockNum).id;
+		chunk.get(currentScreen).get(yRow).get(blockNum).setVisible(false);
+		chunk.get(currentScreen).get(yRow).remove(blockNum);
 		return id;
 	}
 
@@ -361,10 +364,10 @@ public class map extends JFrame { // The main panel of display
 
 	public block getBlock(int i, int x) { // Gets the information of a block
 		try {
-			if (chunk.get(i).get(0).equals(null)) {
+			if (chunk.get(main.map.currentScreen).get(i).get(0).equals(null)) {
 				return null;
 			} else {
-				return chunk.get(i).get(x);
+				return chunk.get(currentScreen).get(i).get(x);
 			}
 		} catch (IndexOutOfBoundsException ex) {
 		}
@@ -436,6 +439,40 @@ public class map extends JFrame { // The main panel of display
 			return false;
 		}
 		return null;
+	}
+
+	public void clearMap() {
+		for (int i = 0; i < chunk.size(); i++) {
+			for (int x = 0; x < chunk.get(i).size(); x++) {
+				for (int y = 0; y < chunk.get(i).get(x).size(); y++) {
+					remove(chunk.get(i).get(x).get(y));
+				}
+			}
+		}
+	}
+
+	public void changeCurrentScreen(int newScreenNum) {
+		clearMap();
+		remove(air);
+		drawMap(main.airColor, newScreenNum);
+		remove(player);
+		add(player, 0);
+		remove(inventoryBar);
+		add(inventoryBar, 0);
+		remove(inventory);
+		add(inventory, 0);
+		remove(selectMapBlock);
+		add(selectMapBlock, 1);
+	}
+
+	public void setPlayerStartPosition() {
+		player.setBounds(blockHeight, (((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()), player.getPlayerWidth(),
+				player.getPlayerHeight());
+	}
+
+	public void setPlayerEndPosition() {
+		player.setBounds(main.screenWidth - blockHeight, (((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
+				player.getPlayerWidth(), player.getPlayerHeight());
 	}
 
 }

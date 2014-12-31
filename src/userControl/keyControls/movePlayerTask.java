@@ -35,6 +35,14 @@ public class movePlayerTask extends task{ //The task that moves the player
 			xAmmount = 0;
 		}
 		main.movePlayer(xAmmount, yAmmount);
+		if(main.map.player.getBounds().x > main.screenWidth) {
+			main.map.changeCurrentScreen(main.map.currentScreen+1);
+			main.map.setPlayerStartPosition();
+		}
+		if(main.map.player.getBounds().x < 0 && main.map.currentScreen-1 >= 0) {
+			main.map.changeCurrentScreen(main.map.currentScreen-1);
+			main.map.setPlayerEndPosition();
+		}
 	}
 	
 	@Override
