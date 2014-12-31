@@ -51,7 +51,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				try {
-					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[2])), 32, 2, stackHeight);
+					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,6 +91,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 	}
 
 	public void repaintButton(int idX, int idY) {
+		System.out.println("repainting");
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
 		int amount = inventoryButtons[idX][idY].getAmount();
@@ -104,6 +105,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 			e.printStackTrace();
 		}
 		standardButtonAction(idX, idY);
+		repaint();
 	}
 
 	public void removeButton(int idX, int idY) {

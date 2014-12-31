@@ -128,7 +128,7 @@ public class map extends JFrame { // The main panel of display
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(i).add(new block(imageFileNames[1]));
+				chunk.get(i).add(new block(imageFileNames[1], 1));
 				chunk.get(i).get(x).setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(i).get(x).setOpaque(false);
 				add(chunk.get(i).get(x), 0);
@@ -142,7 +142,7 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(rowID).add(new block(imageFileNames[2]));
+			chunk.get(rowID).add(new block(imageFileNames[2], 2));
 			chunk.get(rowID).get(current).setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(rowID).get(current).setOpaque(false);
 			add(chunk.get(rowID).get(current), 1);
@@ -170,7 +170,7 @@ public class map extends JFrame { // The main panel of display
 
 	public void mouseClicked(int xCord, int yRow, String fileName) { // Draws a new block when requested
 		Boolean blockExists = false;
-		int blockNum = 0 ;
+		int blockNum = 0;
 		for (int i = 0; i < chunk.get(yRow).size(); i++) {
 			if (chunk.get(yRow).get(i).getBounds().x == xCord) { // Checks if a block is already there
 				blockExists = true;
@@ -186,13 +186,14 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void placeNewBlock(int xCord, int yRow, String fileName) {
-		selectedBlockKind = main.getImageFileNames()[inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID()]; // Gets what block you have selected in your inventory
+		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID();
+		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you have selected in your inventory
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if the block is there (And not just a blank block)
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your
 														// inventory is
 														// closed
-			chunk.get(yRow).add(new block(selectedBlockKind));
+			chunk.get(yRow).add(new block(selectedBlockKind, id));
 			int yRowSize = (chunk.get(yRow).size() - 1);
 			chunk.get(yRow).get(yRowSize).setBounds(xCord, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
@@ -204,23 +205,76 @@ public class map extends JFrame { // The main panel of display
 			}// To Add:Check if block already exists
 		}
 	}
-	
-	public void removeBlock(int blockNum, int yRow) {
+
+	public int removeBlock(int blockNum, int yRow) {
+		int id = chunk.get(yRow).get(blockNum).id;
 		chunk.get(yRow).get(blockNum).setVisible(false);
 		chunk.get(yRow).remove(blockNum);
+		return id;
 	}
 
 	public void startToMineBlock(int blockNum, int yRow, int xCord) {
 		mine.setRunning(blockNum, yRow, xCord);
 	}
-	
+
 	public void mineBlockAt(int xCord, int yRow, int blockNum) {
-		removeBlock(blockNum, yRow);
+		int id = removeBlock(blockNum, yRow);
+		Boolean needsToBeRun = true;
+		for (int i = 0; i < inventoryBar.inventoryBarButtons.length; i++) {
+			if (id == inventoryBar.inventoryBarButtons[i].blockID) {
+				if (inventoryBar.inventoryBarButtons[i].amount != 64) {
+					inventoryBar.inventoryBarButtons[i].addBlock(1, id);
+					needsToBeRun = false;
+					break;
+				}
+			}
+		}
+		if (needsToBeRun == true) {
+			for (int x = 0; x < inventory.blockNumber; x++) {
+				for (int y = 0; y < inventory.inventoryHeight; y++) {
+					if (inventory.inventoryButtons[x][y].blockID == id) {
+						if (inventory.inventoryButtons[x][y].amount != 64) {
+							inventory.inventoryButtons[x][y].addBlock(1, id);
+							needsToBeRun = false;
+							break;
+						}
+					}
+				}
+				if (needsToBeRun == false) {
+					break;
+				}
+			}
+		}
+		if (needsToBeRun == true) {
+			for (int i = 0; i < inventoryBar.inventoryBarButtons.length; i++) {
+				if (0 == inventoryBar.inventoryBarButtons[i].blockID) {
+					inventoryBar.inventoryBarButtons[i].addBlock(1, id);
+					inventoryBar.repaintButton(i);
+					needsToBeRun = false;
+					break;
+				}
+			}
+		}
+		if (needsToBeRun == true) {
+			for (int x = 0; x < inventory.blockNumber; x++) {
+				for (int y = 0; y < inventory.inventoryHeight; y++) {
+					if (0 == inventory.inventoryButtons[x][y].blockID) {
+						inventory.inventoryButtons[x][y].addBlock(1, id);
+						inventory.repaintButton(x, y);
+						needsToBeRun = false;
+						break;
+					}
+				}
+				if (needsToBeRun == false) {
+					break;
+				}
+			}
+		}
 		mine.stopRunning();
 	}
-	
+
 	public void stopMining() {
-		if(mine.running == true) {
+		if (mine.running == true) {
 			mine.stopRunning();
 		}
 	}
@@ -266,7 +320,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void startMouseControl(int mineBlockSpeed) { // Starts the thread that can move the map block selector
-		//hideCursor();
+		// hideCursor();
 		selectMapBlock = new selectorBlock();
 		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
 		selectMapBlock.setOpaque(false);
@@ -280,7 +334,7 @@ public class map extends JFrame { // The main panel of display
 		this.addMouseListener(placer);
 		mine = new mineBlockTask(mineBlockSpeed);
 		manager.addTask(mine);
-		
+
 	}
 
 	public void hideCursor() { // Hides the cursor, undecided if this should be done

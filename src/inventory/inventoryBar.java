@@ -49,13 +49,13 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		for (int i = 0; i < blockNumber; i++) {
 			try {
 				inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main
-						.getImageFileNames()[1])), 1, 1, stackHeight);
-				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[1]));
+						.getImageFileNames()[0])), 0, 0, stackHeight);
+				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[0]));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			inventoryBarButtons[i] = new inventoryButton(images[i], 1, 1, stackHeight);
+			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0, stackHeight);
 			standardButtonAction(i);
 		}
 
@@ -101,7 +101,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		}
 	}
 
-	public void rapaintButton(int id) { //Rapaints the button
+	public void repaintButton(int id) { //Rapaints the button
 		remove(inventoryBarButtons[id]);
 		inventoryBarButtons[id].setVisible(false);
 		int amount = inventoryBarButtons[id].getAmount();
@@ -115,6 +115,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 			e.printStackTrace();
 		}
 		standardButtonAction(id);
+		repaint();
 	}
 
 	public void removeButton(int id) { //Sets a button to be blank

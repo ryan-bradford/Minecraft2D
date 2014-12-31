@@ -250,7 +250,7 @@ public class main {
 					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
 					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
 					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
-					map.inventoryBar.rapaintButton(x);
+					map.inventoryBar.repaintButton(x);
 					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 
 				} else {
@@ -258,7 +258,7 @@ public class main {
 					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
 					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
 					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
-					map.inventoryBar.rapaintButton(x);
+					map.inventoryBar.repaintButton(x);
 					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 				}
 				selected = false;
@@ -289,8 +289,8 @@ public class main {
 					int barBlockID = map.inventoryBar.inventoryBarButtons[x].getBlockID();
 					map.inventoryBar.inventoryBarButtons[x].setValue(lastBarAmount, lastBarBlockID);
 					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(barBlockAmount, barBlockID);
-					map.inventoryBar.rapaintButton(lastClickedX);
-					map.inventoryBar.rapaintButton(x);
+					map.inventoryBar.repaintButton(lastClickedX);
+					map.inventoryBar.repaintButton(x);
 				} else {
 					int barBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
 					int barAmount = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
@@ -298,7 +298,7 @@ public class main {
 					int inventoryBlockID = map.inventory.inventoryButtons[x][y].getBlockID();
 					map.inventory.inventoryButtons[x][y].setValue(barAmount, barBlockID);
 					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(inventoryBlockAmount, inventoryBlockID);
-					map.inventoryBar.rapaintButton(lastClickedX);
+					map.inventoryBar.repaintButton(lastClickedX);
 					map.inventory.repaintButton(x, y);
 				}
 			} else {
@@ -319,7 +319,7 @@ public class main {
 					map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(barAmount, barBlockID);
 					map.inventoryBar.inventoryBarButtons[x].setValue(inventoryBlockAmount, inventorylockID);
 					map.inventory.repaintButton(lastClickedX, lastClickedY);
-					map.inventoryBar.rapaintButton(x);
+					map.inventoryBar.repaintButton(x);
 				}
 			}
 		} else { // If some couldn't

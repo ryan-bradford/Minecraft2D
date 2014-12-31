@@ -46,9 +46,6 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 															// And checks if it is >= to the wait of the task
 					if (numShortWaitsPassed.get(i) * shortestWait >= waits.get(i)) { // If it does it will execute the task
 						numShortWaitsPassed.set(i, 0); // It will reset the short waits passed for said task
-						if(tasks.size() == 2) {
-							System.out.println(shortestWait);
-						}
 						if (tasks.get(i).returnRunnable() == true) {
 							tasks.get(i).runTask();
 						}

@@ -10,8 +10,8 @@ import main.main;
 import javax.swing.JButton;
 
 public class inventoryButton extends JButton { // The object that is the buttons in the inventory
-	private int amount = 0;
-	private int blockID;
+	public int amount = 0;
+	public int blockID;
 	public double serialID;
 	private Image image;
 	public int stackHeight;

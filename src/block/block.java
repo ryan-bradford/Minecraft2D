@@ -21,14 +21,16 @@ public class block extends JPanel {
     private BufferedImage image;
     public int health = 100;
     public java.io.File f = null;  
+    public int id;
     
-    public block(String file) {
+    public block(String file, int id1) {
         f = new java.io.File(file); //Reads in the file
         try {
             image = ImageIO.read(f );
         } catch (IOException ex) {
             // handle exception...
         }
+        id = id1;
     }
 
     @Override
