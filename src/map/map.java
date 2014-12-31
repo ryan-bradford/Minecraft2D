@@ -37,7 +37,6 @@ import java.util.ArrayList;
  * Row 1:	|_|_|_|
  * Row 0:   |_|_|_|
  * To Do:
- *  1. Add the ability to shift screens.
  *  2. Procedulary Generate Terrain
  *  3. Add crafting
  *  4. Add the ability for there to be item drops
@@ -84,14 +83,13 @@ public class map extends JFrame { // The main panel of display
 			int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
 		initTaskManager();
-		drawMap(airColor, 100);
+		drawMap(airColor, 0);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
 		initPhysics();
 		startPhysics();
 		startUserControl(mineBlockSpeed);
 		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor,
 				backgroundColor, textColor, stackHeight);
-		changeCurrentScreen(100);
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -110,23 +108,21 @@ public class map extends JFrame { // The main panel of display
 		jumpDistance = jumpDistance1; // In Block Width
 		walkSpeed = walkSpeed1;
 		creative = creativ;
+		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawMap(Color airColor, int currentScreen1) { // Calls the methods for drawing the
 		// map
 		currentScreen = currentScreen1;
-		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
-		for (int i = 0; i < currentScreen + 1; i++) {
-			chunk.add(new ArrayList<ArrayList<block>>());
-		}
+		chunk.add(new ArrayList<ArrayList<block>>());
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.get(currentScreen).add(new ArrayList<block>());
 		}
 		drawAir(airColor);
 		drawDirt();
 		drawGrass();
-		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		// System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawDirt() { // Draws the dirt
@@ -139,7 +135,7 @@ public class map extends JFrame { // The main panel of display
 			}
 
 		}
-		System.out.println("Dirt Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		// System.out.println("Dirt Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawGrass() { // Draws the grass
@@ -152,7 +148,7 @@ public class map extends JFrame { // The main panel of display
 			add(chunk.get(currentScreen).get(rowID).get(current), 1);
 			current++;
 		}
-		System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		// System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawAir(Color airColor) { // Draws the air
@@ -160,7 +156,7 @@ public class map extends JFrame { // The main panel of display
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		air.setOpaque(false);
 		add(air, 0);
-		System.out.println("Air Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		// System.out.println("Air Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor) { // Draws the player
@@ -212,6 +208,8 @@ public class map extends JFrame { // The main panel of display
 	public int removeBlock(int blockNum, int yRow) {
 		int id = chunk.get(currentScreen).get(yRow).get(blockNum).id;
 		chunk.get(currentScreen).get(yRow).get(blockNum).setVisible(false);
+		chunk.get(currentScreen).get(yRow).set(blockNum, null);
+		System.out.println(currentScreen);
 		chunk.get(currentScreen).get(yRow).remove(blockNum);
 		return id;
 	}
@@ -364,7 +362,7 @@ public class map extends JFrame { // The main panel of display
 
 	public block getBlock(int i, int x) { // Gets the information of a block
 		try {
-			if (chunk.get(main.map.currentScreen).get(i).get(0).equals(null)) {
+			if (chunk.get(currentScreen).get(i).get(0).equals(null)) {
 				return null;
 			} else {
 				return chunk.get(currentScreen).get(i).get(x);
@@ -442,27 +440,50 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void clearMap() {
-		for (int i = 0; i < chunk.size(); i++) {
-			for (int x = 0; x < chunk.get(i).size(); x++) {
-				for (int y = 0; y < chunk.get(i).get(x).size(); y++) {
-					remove(chunk.get(i).get(x).get(y));
-				}
+		for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
+			for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
+				chunk.get(currentScreen).get(x).get(y).setVisible(false);
+				remove(chunk.get(currentScreen).get(x).get(y));
 			}
 		}
 	}
 
-	public void changeCurrentScreen(int newScreenNum) {
+	public int changeCurrentScreen(int newScreenNum) {
 		clearMap();
-		remove(air);
-		drawMap(main.airColor, newScreenNum);
-		remove(player);
-		add(player, 0);
-		remove(inventoryBar);
-		add(inventoryBar, 0);
-		remove(inventory);
-		add(inventory, 0);
-		remove(selectMapBlock);
-		add(selectMapBlock, 1);
+		currentScreen = newScreenNum;
+		try {
+			chunk.get(currentScreen);
+		} catch (IndexOutOfBoundsException ex) {
+			remove(air);
+			drawMap(main.airColor, currentScreen);
+			remove(player);
+			add(player, 0);
+			remove(inventoryBar);
+			add(inventoryBar, 0);
+			remove(inventory);
+			add(inventory, 0);
+			remove(selectMapBlock);
+			add(selectMapBlock, 1);
+			repaint();
+			return 0;
+		}
+		for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
+			for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
+				add(chunk.get(currentScreen).get(x).get(y), 1);
+				chunk.get(currentScreen).get(x).get(y).setVisible(true);
+				remove(player);
+				add(player, 0);
+				remove(inventoryBar);
+				add(inventoryBar, 0);
+				remove(inventory);
+				add(inventory, 0);
+				remove(selectMapBlock);
+				add(selectMapBlock, 1);
+				repaint();
+			}
+		}
+		repaint();
+		return 0;
 	}
 
 	public void setPlayerStartPosition() {
