@@ -79,6 +79,22 @@ public class main {
 			return new ArrayList<block>();
 		}
 	}
+	
+	public static ArrayList<block> getBlocks(int height, int screenNum) {
+		try {
+			try {
+				blocks = new ArrayList<block>();
+				for (int i = 0; i < (map.mapWidth); i++) {
+					blocks.add(map.getBlock(screenNum, height, i));
+				}
+				return blocks;
+			} catch (NullPointerException ex) {
+				return new ArrayList<block>();
+			}
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			return new ArrayList<block>();
+		}
+	}
 
 	public static Boolean getCreative() {
 		return map.creative;
