@@ -91,7 +91,6 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 	}
 
 	public void repaintButton(int idX, int idY) {
-		System.out.println("repainting");
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
 		int amount = inventoryButtons[idX][idY].getAmount();
