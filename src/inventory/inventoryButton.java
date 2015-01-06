@@ -15,19 +15,21 @@ public class inventoryButton extends JButton { // The object that is the buttons
 	public double serialID;
 	private Image image;
 	public int stackHeight;
+	public Color textColor;
 
-	public inventoryButton(Image image1, int amount1, Integer blockID1, int stackHeight1) {
+	public inventoryButton(Image image1, int amount1, Integer blockID1, int stackHeight1, Color textColor1) {
 		image = image1;
 		serialID = Math.random();
 		amount = amount1;
 		blockID = blockID1;
 		stackHeight = stackHeight1;
+		textColor = textColor1;
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) { // Draws its image and the block amount it stores
 		g.drawImage(image, 0, 0, main.blockHeight, main.blockHeight, null);
-		g.setColor(Color.black);
+		g.setColor(textColor);
 		g.drawString(Integer.toString(amount), 5, main.blockHeight - 5);
 	}
 

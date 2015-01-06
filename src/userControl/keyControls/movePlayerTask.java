@@ -39,64 +39,51 @@ public class movePlayerTask extends task { // The task that moves the player
 		} else {
 			xAmmount = 0;
 		}
-		main.movePlayer(xAmmount, yAmmount);
-		if (main.map.player.getBounds().x > main.screenWidth) {
-			Boolean canBeShifted = false;
-			try {
-				main.map.chunk.get(main.map.currentScreen + 1);
-
-			} catch (IndexOutOfBoundsException ex) {
-				canBeShifted = true;
-			}
-			if (canBeShifted == false) {
-				int playerLowY = (int) (main.getPlayer().getBounds().y)
-						+ (main.getPlayer().getHeight());
-				ArrayList<block> testBlocks = main.getBlocks(playerLowY,
-						main.map.currentScreen + 1);
-				Boolean found = false;
-				for (int i = 0; i < testBlocks.size(); i++) {
-					if (testBlocks.get(i).getBounds().x == main.blockHeight) {
-						found = true;
-						break;
-					}
-				}
-				if (found == false) {
-					canBeShifted = true;
-				}
-			}
-			if (canBeShifted == true) {
-				main.map.changeCurrentScreen(main.map.currentScreen + 1);
-				main.map.setPlayerPosition(false);
-			}
+		Boolean canBeMoved = true;
+		int whichDirectionToMove = 0;
+		Boolean endOrBegining = null; // True is end
+		int currentScreen = main.map.currentScreen;
+		if (main.getPlayer().getBounds().x + xAmmount <= 0
+				&& currentScreen - 1 >= 0) {
+			whichDirectionToMove = -1;
+			endOrBegining = true;
+		} else if (main.getPlayer().getBounds().x + xAmmount >= main.screenWidth) {
+			whichDirectionToMove = 1;
+			endOrBegining = false;
 		}
-		if (main.map.player.getBounds().x < 0
-				&& main.map.currentScreen - 1 >= 0) {
-			Boolean canBeShifted = false;
-			try {
-				main.map.chunk.get(main.map.currentScreen - 1);
+		if (currentScreen - 1 < 0
+				&& main.getPlayer().getBounds().x + xAmmount <= 0) {
+			canBeMoved = false;
+		}
 
-			} catch (IndexOutOfBoundsException ex) {
-				canBeShifted = true;
-			}
-			if (canBeShifted == false) {
-				int playerLowY = (int) (main.getPlayer().getBounds().y)
-						+ (main.getPlayer().getHeight());
-				ArrayList<block> testBlocks = main.getBlocks(playerLowY,
-						main.map.currentScreen - 1);
-				Boolean found = false;
-				for (int i = 0; i < testBlocks.size(); i++) {
-					if (testBlocks.get(i).getBounds().x == main.blockHeight) {
-						found = true;
-						break;
-					}
-				}
-				if (found == false) {
-					canBeShifted = true;
-				}
-			}
-			if (canBeShifted == true) {
-				main.map.changeCurrentScreen(main.map.currentScreen - 1);
-				main.map.setPlayerPosition(true);
+//		if (canBeMoved == true && endOrBegining != null) {
+//			ArrayList<block> toCheck;
+//			toCheck = main.getBlocks(main.getPlayer().getBounds().y, currentScreen
+//					+ whichDirectionToMove);
+//			for (int i = 0; i < toCheck.size(); i++) {
+//				if (endOrBegining == false) {
+//					if (toCheck.get(i).getBounds().x == main.screenWidth
+//							- main.blockHeight) {
+//						canBeMoved = false;
+//					}
+//				} else {
+//					if (toCheck.get(i).getBounds().x == main.blockHeight) {
+//						System.out.println("Found falsedddddd");
+//						canBeMoved = false;
+//						
+//					}					
+//				}
+//			}
+//		}
+//		System.out.println(canBeMoved);
+//		System.out.println(whichDirectionToMove);
+//		System.out.println(endOrBegining);
+		if (canBeMoved == true) {
+			main.movePlayer(xAmmount, yAmmount);
+			if (endOrBegining != null) {
+				main.map.changeCurrentScreen(main.map.currentScreen
+						+ whichDirectionToMove);
+				main.map.setPlayerPosition(endOrBegining);
 			}
 		}
 	}

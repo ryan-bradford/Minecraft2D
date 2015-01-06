@@ -51,7 +51,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				try {
-					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight);
+					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -98,7 +98,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		Image icon;
 		try {
 			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
-			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID, stackHeight);
+			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID, stackHeight, textColor);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,7 +111,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
 		try {
-			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight);
+			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
 		} catch (IOException e) {
 
 			e.printStackTrace();
