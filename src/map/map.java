@@ -476,16 +476,16 @@ public class map extends JFrame { // The main panel of display
 		return null;
 	}
 	
-	public block getBlock(int screenNum, int i, int x) { // Gets the information of a block
+	public block getBlock(int screenNum1, int i, int x) { // Gets the information of a block
 		try {
-			if (chunk.get(screenNum).get(i).get(0).equals(null)) {
+			if (chunk.get(screenNum1).get(i).get(0).equals(null)) {
 				return null;
 			} else {
-				return chunk.get(screenNum).get(i).get(x);
+				return chunk.get(screenNum1).get(i).get(x);
 			}
 		} catch (IndexOutOfBoundsException ex) {
+			return null;
 		}
-		return null;
 	}
 
 	// The below methods should be self explanatory, ask for explanation if

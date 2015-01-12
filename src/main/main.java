@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.Color;
-
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
@@ -80,7 +79,7 @@ public class main {
 		}
 	}
 	
-	public static ArrayList<block> getBlocks(int height, int screenNum) {
+	public static ArrayList<block> getBlocks(int screenNum, int height) {
 		try {
 			try {
 				blocks = new ArrayList<block>();
@@ -89,9 +88,11 @@ public class main {
 				}
 				return blocks;
 			} catch (NullPointerException ex) {
+				System.out.println("Caught 2 Null");
 				return new ArrayList<block>();
 			}
 		} catch (ArrayIndexOutOfBoundsException ex) {
+			System.out.println("Caught 2");
 			return new ArrayList<block>();
 		}
 	}

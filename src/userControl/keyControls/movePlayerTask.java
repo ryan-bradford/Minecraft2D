@@ -55,29 +55,40 @@ public class movePlayerTask extends task { // The task that moves the player
 				&& main.getPlayer().getBounds().x + xAmmount <= 0) {
 			canBeMoved = false;
 		}
-
 //		if (canBeMoved == true && endOrBegining != null) {
-//			ArrayList<block> toCheck;
-//			toCheck = main.getBlocks(main.getPlayer().getBounds().y, currentScreen
-//					+ whichDirectionToMove);
-//			for (int i = 0; i < toCheck.size(); i++) {
-//				if (endOrBegining == false) {
-//					if (toCheck.get(i).getBounds().x == main.screenWidth
-//							- main.blockHeight) {
-//						canBeMoved = false;
+//			canBeMoved = true;
+//			try {
+//				ArrayList<block> blocks = main.getBlocks(currentScreen
+//						+ whichDirectionToMove, main.getPlayer().getBounds().y);
+//				System.out.println(blocks.get(0).getBounds().y
+//						+ " " + main.getPlayer().getBounds().y);
+//				if (!blocks.equals(null)) {
+//					for (int i = 0; i < blocks.size(); i++) {
+//						System.out.println(blocks.get(i).getBounds().y + " "
+//								+ main.getPlayer().getBounds().y);
+//						if (!blocks.get(i).equals(null)) {
+//							System.out.println(blocks.get(i).getBounds().y
+//									+ " " + main.getPlayer().getBounds().y);
+//							if (endOrBegining == true) {
+//								if (blocks.get(i).getBounds().x == main.blockHeight) {
+//									canBeMoved = false;
+//									System.out.println("Can't Move Left");
+//								}
+//							} else {
+//								if (blocks.get(i).getBounds().x == main.screenWidth
+//										- main.blockHeight) {
+//									canBeMoved = false;
+//									System.out.println("Can't Move Right");
+//								}
+//							}
+//						}
 //					}
-//				} else {
-//					if (toCheck.get(i).getBounds().x == main.blockHeight) {
-//						System.out.println("Found falsedddddd");
-//						canBeMoved = false;
-//						
-//					}					
 //				}
+//			} catch (IndexOutOfBoundsException ex) {
+//				System.out.println("Caught 3");
 //			}
 //		}
-//		System.out.println(canBeMoved);
-//		System.out.println(whichDirectionToMove);
-//		System.out.println(endOrBegining);
+
 		if (canBeMoved == true) {
 			main.movePlayer(xAmmount, yAmmount);
 			if (endOrBegining != null) {
