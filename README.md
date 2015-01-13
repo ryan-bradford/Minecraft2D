@@ -15,6 +15,8 @@ are not, no images will be drawn.
 
 The .jar file will be updated ever y.x.0.0 versions.
 
+.jar is located here: https://drive.google.com/folderview?id=0B-15OJL-6QwzZ21IaDJzTjhQYkk&usp=sharing
+
 Pre-Release Version
 ===========================================================
 Warning: The latest version breaks the feature to move back a screen and does not fufill its intended pourpose.
