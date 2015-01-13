@@ -1,5 +1,26 @@
 Change Log:
 
+Beta 0.6.0:
+  1. Made it so if you are in creative, placing a block will not take one
+     from your inventory.
+  2. Made the stack size a changable value.
+  3. Made more variables easily changable.
+  4. Added a task manager that will run "tasks", replaces the need for many many threads
+  5. Turned more threads into tasks.
+  6. Fixed the bug where the player will sinck into the ground
+  7. Added the ability for the taskManager to have multiple threads.
+  8. Made it so a core will not be started until it has something to do.
+  9. Added comments to the new code.
+  10. Fixed a bug where all tasks would be added to the same core.
+  11. Added the ability to break a block
+  12. Fixed the bug where the player will sink into the ground.(again)
+  13. Fixed all the bugs with the taskManger and CPUCore classes.
+  14. Added the ability for blocks to be gathered, not just broken.
+  15. Gave the player the ability to move across terrain screens.
+  16. Fixed the bug where the map will not save the data from past screens.
+  17. Fixed some crashing bugs.
+  18. Made it so the player cannot move to <0 chunks
+
 Beta 0.5.0:
   1. Fixed many bugs.
   2. Made the code more efficient in places.
