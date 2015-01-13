@@ -29,7 +29,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 
 	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra,
 			Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
-			Color backgroundColor1, Color textColor1, int stackHeight1) {
+			Color backgroundColor1, Color textColor1, int stackHeight1, inventoryButton[] buttons) {
 		setLayout(null); //Allows for boxes to be moved
 		switchedNum = null;
 		stackHeight = stackHeight1;
@@ -48,14 +48,20 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		images = new Image[blockNumber];
 		for (int i = 0; i < blockNumber; i++) {
 			try {
-				inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main
-						.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
-				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[0]));
+				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[buttons[i].blockID]));
+			inventoryBarButtons[i] = new inventoryButton(images[i], buttons[i].amount, buttons[i].blockID, stackHeight, textColor);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch(NullPointerException ex) {
+				try {
+					inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main
+							.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			}
-			inventoryBarButtons[i] = new inventoryButton(images[i], 0, 0, stackHeight, textColor);
 			standardButtonAction(i);
 		}
 

@@ -17,6 +17,7 @@ import userControl.mouseControl.mineBlockTask;
 import userControl.mouseControl.moveSelectorBlockTask;
 import userControl.mouseControl.clickEvent;
 import inventory.inventoryBar;
+import inventory.inventoryButton;
 import main.main;
 import inventory.inventory;
 
@@ -98,31 +99,37 @@ public class map extends JFrame { // The main panel of display
 			Color airColor, Color skinColor, Color pantsColor,
 			Color shirtColor, Color shoeColor, String[] imageFileNames,
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1,
-			int walkSpeed1, int mineBlockSpeed) {
+			int walkSpeed1, int mineBlockSpeed,
+			ArrayList<ArrayList<ArrayList<block>>> chunk1,
+			inventoryButton[][] inventButtons,
+			inventoryButton[] inventBarButtons, Integer[] playerPosition) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames,
-				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
+				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1);
 		initTaskManager();
 		drawMap(airColor, 0);
-		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
+		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
 		initPhysics();
 		startPhysics();
 		startUserControl(mineBlockSpeed);
 		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight);
+				selectedBoxColor, backgroundColor, textColor, stackHeight,
+				inventButtons, inventBarButtons);
 		System.out.println("The Game Has Begun!");
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1,
 			int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1) { // Sets
-																					// all
-																					// the
-																					// variables
-																					// to
-																					// their
-																					// desired
-																					// values
+			int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
+			int walkSpeed1, ArrayList<ArrayList<ArrayList<block>>> chunk1) { // Sets
+		// all
+		// the
+		// variables
+		// to
+		// their
+		// desired
+		// values
+		chunk = chunk1;
 		jumping = false;
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
@@ -145,16 +152,35 @@ public class map extends JFrame { // The main panel of display
 																// methods for
 																// drawing the
 		// map
-		currentScreen = currentScreen1;
-		chunk.add(new ArrayList<ArrayList<block>>());
-		for (int i = 0; i < mapHeight; i++) {
-			chunk.get(currentScreen).add(new ArrayList<block>());
+		try {
+			chunk.get(currentScreen1);
+			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
+				for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
+					add(chunk.get(currentScreen).get(x).get(y), 1);
+					chunk.get(currentScreen).get(x).get(y).setVisible(true);
+					remove(player);
+					add(player, 0);
+					remove(inventoryBar);
+					add(inventoryBar, 0);
+					remove(inventory);
+					add(inventory, 0);
+					remove(selectMapBlock);
+					add(selectMapBlock, 1);
+					repaint();
+				}
+			}
+		} catch (IndexOutOfBoundsException ex) {
+			currentScreen = currentScreen1;
+			chunk.add(new ArrayList<ArrayList<block>>());
+			for (int i = 0; i < mapHeight; i++) {
+				chunk.get(currentScreen).add(new ArrayList<block>());
+			}
+			drawAir(airColor);
+			drawDirt();
+			drawGrass();
+			// System.out.println("Map Drawn" + " In " + (System.nanoTime() -
+			// startTime) + " Nanoseconds");
 		}
-		drawAir(airColor);
-		drawDirt();
-		drawGrass();
-		// System.out.println("Map Drawn" + " In " + (System.nanoTime() -
-		// startTime) + " Nanoseconds");
 	}
 
 	public void drawDirt() { // Draws the dirt
@@ -205,9 +231,13 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor,
-			Color shoeColor) { // Draws the player
+			Color shoeColor, Integer[] playerPosition) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
-		setPlayerStartPosition();
+		try { 
+			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
+		} catch(NullPointerException ex) {
+			setPlayerStartPosition();			
+		}
 		player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In "
@@ -222,26 +252,26 @@ public class map extends JFrame { // The main panel of display
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
-		for (int i = 0; i < chunk.get(currentScreen).get(yRow).size(); i++) {
-			if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { // Checks
-																					// if
-																					// a
-																					// block
-																					// is
-																					// already
-																					// there
-				blockExists = true;
-				blockNum = i;
-				break;
+			for (int i = 0; i < chunk.get(currentScreen).get(yRow).size(); i++) {
+				if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { // Checks
+																						// if
+																						// a
+																						// block
+																						// is
+																						// already
+																						// there
+					blockExists = true;
+					blockNum = i;
+					break;
+				}
 			}
-		}
-		if (blockExists == false) {
-			placeNewBlock(xCord, yRow, fileName);
-		} else {
-			startToMineBlock(blockNum, yRow, xCord);
-		}
-		} catch(IndexOutOfBoundsException ex) {
-			
+			if (blockExists == false) {
+				placeNewBlock(xCord, yRow, fileName);
+			} else {
+				startToMineBlock(blockNum, yRow, xCord);
+			}
+		} catch (IndexOutOfBoundsException ex) {
+
 		}
 	}
 
@@ -370,20 +400,30 @@ public class map extends JFrame { // The main panel of display
 	public void initAndDrawInventory(int inventoryBlock, int inventoryGap,
 			int inventoryExtra, int inventoryHeight, Color defaultBoxColor,
 			Color swapBoxColor, Color selectedBoxColor, Color backgroundColor,
-			Color textColor, int stackHeight) { // Initializes and draws the
-												// inventory
+			Color textColor, int stackHeight,
+			inventoryButton[][] inventButtons,
+			inventoryButton[] inventBarButtons) { // Initializes and draws the
+		// inventory
 		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap,
 				inventoryExtra, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight);
+				selectedBoxColor, backgroundColor, textColor, stackHeight,
+				inventBarButtons);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
 		inventoryBar.setBounds((main.screenWidth / 2 - width / 2),
 				main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
-		inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra,
-				inventoryHeight, defaultBoxColor, swapBoxColor,
-				backgroundColor, textColor, stackHeight);
+		try {
+			inventory = new inventory(inventoryBlock, inventoryGap,
+					inventoryExtra, inventoryHeight, defaultBoxColor,
+					swapBoxColor, backgroundColor, textColor, stackHeight,
+					inventButtons);
+		} catch (NullPointerException ex) {
+			inventory = new inventory(inventoryBlock, inventoryGap,
+					inventoryExtra, inventoryHeight, defaultBoxColor,
+					swapBoxColor, backgroundColor, textColor, stackHeight, null);
+		}
 		width = inventory.width;
 		height = inventory.height;
 		inventory.setBounds((main.screenWidth - inventory.width) / 2,
@@ -475,8 +515,10 @@ public class map extends JFrame { // The main panel of display
 		}
 		return null;
 	}
-	
-	public block getBlock(int screenNum1, int i, int x) { // Gets the information of a block
+
+	public block getBlock(int screenNum1, int i, int x) { // Gets the
+															// information of a
+															// block
 		try {
 			if (chunk.get(screenNum1).get(i).get(0).equals(null)) {
 				return null;
@@ -616,8 +658,8 @@ public class map extends JFrame { // The main panel of display
 			player.setBounds(blockHeight, playerLastY, player.getPlayerWidth(),
 					player.getPlayerHeight());
 		} else {
-			player.setBounds(main.screenWidth - blockHeight, playerLastY, player.getPlayerWidth(),
-					player.getPlayerHeight());
+			player.setBounds(main.screenWidth - blockHeight, playerLastY,
+					player.getPlayerWidth(), player.getPlayerHeight());
 		}
 
 	}
