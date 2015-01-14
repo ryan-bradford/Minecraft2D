@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import player.player;
 import block.block;
 import map.map;
+import save.getSavedStuff;
 import userControl.keyControls.jump;
 
 public class main {
@@ -77,9 +78,10 @@ public class main {
 	public static int walkSpeed = blockHeight * 4;// How fast the player will
 													// walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
-	public static ArrayList<ArrayList<ArrayList<block>>> chunk;
+	public static ArrayList<ArrayList<ArrayList<block>>> savedChunk;
 	public static inventoryButton[][] buttons;
 	public static inventoryButton[] barButtons;
+	public static String fileName = "save.xml";
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -94,8 +96,8 @@ public class main {
 				selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames,
 				stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed,
-				mineBlockSpeed, new ArrayList<ArrayList<ArrayList<block>>>(),
-				buttons, barButtons, null);
+				mineBlockSpeed, savedChunk,
+				buttons, barButtons, getSavedStuff.getPlayerBounds());
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);

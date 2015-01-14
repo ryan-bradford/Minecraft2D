@@ -8,6 +8,7 @@ import player.player;
 import block.block;
 import block.air;
 import block.selectorBlock;
+import save.saveTask;
 import thread.task;
 import thread.taskManager;
 import userControl.keyControls.jump;
@@ -115,6 +116,7 @@ public class map extends JFrame { // The main panel of display
 				inventoryHeight, defaultBoxColor, swapBoxColor,
 				selectedBoxColor, backgroundColor, textColor, stackHeight,
 				inventButtons, inventBarButtons);
+		startSave();
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -178,8 +180,8 @@ public class map extends JFrame { // The main panel of display
 			drawAir(airColor);
 			drawDirt();
 			drawGrass();
-			// System.out.println("Map Drawn" + " In " + (System.nanoTime() -
-			// startTime) + " Nanoseconds");
+			System.out.println("Map Drawn" + " In " + (System.nanoTime() -
+			startTime) + " Nanoseconds");
 		}
 	}
 
@@ -497,6 +499,13 @@ public class map extends JFrame { // The main panel of display
 		task thisTask = new gravityTask();
 		manager.addTask(thisTask, 1);
 		System.out.println("Physics Started" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
+	}
+	
+	public void startSave() {
+		saveTask task = new saveTask();
+		manager.addTask(task);
+		System.out.println("Save Started" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
