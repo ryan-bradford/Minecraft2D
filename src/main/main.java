@@ -82,6 +82,7 @@ public class main {
 	public static inventoryButton[][] buttons;
 	public static inventoryButton[] barButtons;
 	public static String fileName = "save.xml";
+	public static int mapHeight = screenHeight/blockHeight;
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -96,7 +97,7 @@ public class main {
 				selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames,
 				stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed,
-				mineBlockSpeed, savedChunk,
+				mineBlockSpeed, getSavedStuff.getAllScreens(),
 				buttons, barButtons, getSavedStuff.getPlayerBounds());
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);

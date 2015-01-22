@@ -123,14 +123,7 @@ public class map extends JFrame { // The main panel of display
 	public void initVar(Boolean creativ, int blockHeight1,
 			int dirtHeightInBlocks, String[] imageFileNames1,
 			int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
-			int walkSpeed1, ArrayList<ArrayList<ArrayList<block>>> chunk1) { // Sets
-		// all
-		// the
-		// variables
-		// to
-		// their
-		// desired
-		// values
+			int walkSpeed1, ArrayList<ArrayList<ArrayList<block>>> chunk1) {
 		chunk = chunk1;
 		jumping = false;
 		imageFileNames = imageFileNames1;
@@ -145,7 +138,11 @@ public class map extends JFrame { // The main panel of display
 		jumpDistance = jumpDistance1; // In Block Width
 		walkSpeed = walkSpeed1;
 		creative = creativ;
-		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
+		try {
+			chunk.get(0);
+		} catch(IndexOutOfBoundsException ex) {
+			chunk = new ArrayList<ArrayList<ArrayList<block>>>();			
+		}
 		System.out.println("Variables Initialized" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -155,19 +152,12 @@ public class map extends JFrame { // The main panel of display
 																// drawing the
 		// map
 		try {
+			currentScreen = currentScreen1;
 			chunk.get(currentScreen1);
-			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
-				for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
-					add(chunk.get(currentScreen).get(x).get(y), 1);
-					chunk.get(currentScreen).get(x).get(y).setVisible(true);
-					remove(player);
-					add(player, 0);
-					remove(inventoryBar);
-					add(inventoryBar, 0);
-					remove(inventory);
-					add(inventory, 0);
-					remove(selectMapBlock);
-					add(selectMapBlock, 1);
+			for (int x = 0; x < chunk.get(currentScreen1).size(); x++) {
+				for (int y = 0; y < chunk.get(currentScreen1).get(x).size(); y++) {
+					add(chunk.get(currentScreen1).get(x).get(y));
+					chunk.get(currentScreen1).get(x).get(y).setVisible(true);
 					repaint();
 				}
 			}
@@ -246,22 +236,12 @@ public class map extends JFrame { // The main panel of display
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void mouseClicked(int xCord, int yRow, String fileName) { // Draws a
-																		// new
-																		// block
-																		// when
-																		// requested
+	public void mouseClicked(int xCord, int yRow, String fileName) { 
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
 			for (int i = 0; i < chunk.get(currentScreen).get(yRow).size(); i++) {
-				if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { // Checks
-																						// if
-																						// a
-																						// block
-																						// is
-																						// already
-																						// there
+				if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { 
 					blockExists = true;
 					blockNum = i;
 					break;
@@ -621,6 +601,7 @@ public class map extends JFrame { // The main panel of display
 		try {
 			chunk.get(currentScreen);
 		} catch (IndexOutOfBoundsException ex) {
+			System.out.println("Caught");
 			remove(air);
 			drawMap(main.airColor, currentScreen);
 			remove(player);
@@ -631,6 +612,7 @@ public class map extends JFrame { // The main panel of display
 			add(inventory, 0);
 			remove(selectMapBlock);
 			add(selectMapBlock, 1);
+			add(air);
 			repaint();
 			return 0;
 		}

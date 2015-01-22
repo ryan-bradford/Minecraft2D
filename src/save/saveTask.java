@@ -22,6 +22,8 @@ public class saveTask extends task {
 			out = new PrintWriter(br);
 			out.write("Head");
 			out.println(" ");
+			out.write(main.map.currentScreen);
+			out.println(" ");
 			savePlayer(main.getPlayer());
 			for (int i = 0; i < main.map.chunk.size(); i++) {
 				saveChunk(main.map.chunk.get(i), i);
@@ -65,8 +67,8 @@ public class saveTask extends task {
 	public void saveChunk(ArrayList<ArrayList<block>> chunk, int chunkNum) {
 		out.write("Chunk");
 		out.println(" ");
-		out.write(Integer.toString(chunkNum));
-		out.println(" ");
+//		out.write(Integer.toString(chunkNum));
+//		out.println(" ");
 		for (int i = 0; i < chunk.size(); i++) {
 			for (int x = 0; x < chunk.get(i).size(); x++) {
 				out.write(Integer.toString(chunk.get(i).get(x).getBounds().x));
@@ -79,5 +81,7 @@ public class saveTask extends task {
 				out.println(" ");
 			}
 		}
+		out.write("End");
+		out.println(" ");		
 	}
 }
