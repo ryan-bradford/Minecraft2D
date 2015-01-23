@@ -22,7 +22,7 @@ public class saveTask extends task {
 			out = new PrintWriter(br);
 			out.write("Head");
 			out.println(" ");
-			out.write(main.map.currentScreen);
+			out.write(" " + main.map.currentScreen);
 			out.println(" ");
 			savePlayer(main.getPlayer());
 			for (int i = 0; i < main.map.chunk.size(); i++) {

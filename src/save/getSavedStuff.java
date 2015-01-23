@@ -13,7 +13,11 @@ public class getSavedStuff {
 	static String[] text = getText();
 
 	public static int getScreenNum() {
-		return Integer.parseInt(text[1]);
+		if(new File(main.fileName).exists()) {
+			return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
+		} else {
+			return 0;
+		}
 	}
 	
 	public static int getScreenNumAmmount() {
@@ -81,7 +85,9 @@ public class getSavedStuff {
 
 	public static String[] getText() {
 		try {
+			if(new File(main.fileName).exists()) {
 			return FileArrayProvider.readLines(main.fileName);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
