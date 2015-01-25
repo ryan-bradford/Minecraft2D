@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 /* Notes: 
  * Math.abs(dirtRows-mapHeight)-1; is where the grass is drawn.
@@ -68,6 +69,8 @@ public class map extends JFrame { // The main panel of display
 							// (Ex. A 64 pixel map will have a width of 1)
 	public int mapHeight; // The int that stores the map height in block widths
 							// (Ex. A 64 pixel map will have a width of 1)
+	public String WorldGen; // The string that describes the map generation
+							// "Flatworld" = flat, "Normal" = variation/biomes
 	public int jumpSpeed; // The int that stores how fast you will jump (In
 							// pixels per second)
 	public int gravitySpeed; // The int that stores how fast you will fall (In
@@ -88,6 +91,10 @@ public class map extends JFrame { // The main panel of display
 	public keyControls keyListener; // The keyListener object
 	public mineBlockTask mine;
 	public int currentScreen;
+	public Random rnd;
+	public int seed; //Randomly generates land
+	public int playerStartSpot;
+	public int prevSurface;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
@@ -98,9 +105,11 @@ public class map extends JFrame { // The main panel of display
 			Color airColor, Color skinColor, Color pantsColor,
 			Color shirtColor, Color shoeColor, String[] imageFileNames,
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1,
-			int walkSpeed1, int mineBlockSpeed) {
+			int walkSpeed1, int mineBlockSpeed, String WorldType,
+			int worldSeed) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames,
-				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1);
+				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, WorldType,
+				worldSeed);
 		initTaskManager();
 		drawMap(airColor, 0);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor);
@@ -115,7 +124,8 @@ public class map extends JFrame { // The main panel of display
 
 	public void initVar(Boolean creativ, int blockHeight1,
 			int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1) { // Sets
+			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1,
+			String WorldType, int worldSeed) { 													// Sets
 																					// all
 																					// the
 																					// variables
@@ -130,13 +140,20 @@ public class map extends JFrame { // The main panel of display
 		mapWidth = (main.screenWidth) / blockHeight;
 		mapWidth = mapWidth + 1;
 		mapHeight = (main.screenHeight) / blockHeight;
-		dirtRows = dirtHeightInBlocks;
+		dirtRows = dirtHeightInBlocks - 1;
 		jumpSpeed = jumpSpeed1;// Pixels per Second
 		gravitySpeed = gravitySpeed1;// Pixels per Second
 		jumpDistance = jumpDistance1; // In Block Width
 		walkSpeed = walkSpeed1;
 		creative = creativ;
 		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
+		WorldGen = WorldType;
+		if(worldSeed == 0){
+			rnd = new Random(); 
+			seed =  rnd.nextInt(999999);// can be substituted for a specific number
+		}else{
+			seed = worldSeed;
+		}
 		System.out.println("Variables Initialized" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
@@ -150,13 +167,78 @@ public class map extends JFrame { // The main panel of display
 		for (int i = 0; i < mapHeight; i++) {
 			chunk.get(currentScreen).add(new ArrayList<block>());
 		}
-		drawAir(airColor);
-		drawDirt();
-		drawGrass();
+		
+		if (WorldGen.toUpperCase().equals("FLATWORLD")){  //Flat world generation I didn't touch
+			drawAir(airColor);
+			drawDirt();
+			drawGrass();
+		} else if(WorldGen.toUpperCase().equals("NORMAL")){ //Environment varies
+			System.out.println("World generating with seed "+seed);
+			dirtRows = dirtRows+5;
+			drawAir(airColor);
+			drawLand();
+		}
 		// System.out.println("Map Drawn" + " In " + (System.nanoTime() -
 		// startTime) + " Nanoseconds");
 	}
 
+	public void drawLand() {
+		// Draws the ground
+		ArrayList<ArrayList<block>> currentChunk = chunk.get(currentScreen);
+		if(currentScreen == 0){
+			prevSurface= Math.max(dirtRows-5,3);
+		}
+		//PER COLUMN
+		for (int x = 0; x < mapWidth; x++){
+			//generate surface block number
+			int surface =(int) ((int) seed*(currentScreen+1)*Math.sqrt((seed*(x+1))%240)) % 100;
+			//System.out.println("column "+x+" percentage of "+surface+" mapwidth "+mapWidth);
+			if (surface < 2){ //unlikely scenario where floor is raised two blocks
+				surface = -2;
+			} else if(surface < 20){ //floor is up 1 block
+				surface = -1;
+			} else if(surface < 80){ //floor is dirtRows
+				surface = 0;
+			} else if(surface < 98){ //floor is down 1
+				surface = 1;
+			} else{ // (surface <= 100) floor is down 2
+				surface = 2;
+			}
+			surface = prevSurface + surface;
+			surface = Math.min(surface,(mapHeight-3));
+			surface = Math.max(surface, 3);
+			prevSurface = surface;
+			if(x==1){
+				playerStartSpot = surface;
+			}
+			//PER ROW
+			for (int y = 0; y < mapHeight; y++){
+				ArrayList<block> chunkRow = currentChunk.get(y);
+				int blockID=0;
+				if(y<surface){
+					chunkRow
+					.add(null);
+					//System.out.println("null at x= "+x+" y="+y+"  surface = "+surface+chunk.get(currentScreen).get(y).get(x));
+					continue;
+				}else if(y==surface){
+					blockID=2;
+				}else if(y>surface){
+					blockID=1;
+				}
+				chunkRow
+					.add(new block(imageFileNames[blockID], blockID));
+				//System.out.println("Block "+blockID+" at x="+x+" y="+y+chunk.get(currentScreen).get(y).get(x));
+				chunkRow
+					.get(x)
+					.setBounds((x * blockHeight), ((y) * blockHeight),
+				blockHeight, blockHeight);
+				chunkRow.get(x).setOpaque(false);
+				add(currentChunk.get(y).get(x), 0);
+			}
+		}
+		
+	}
+	
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
@@ -242,6 +324,10 @@ public class map extends JFrame { // The main panel of display
 		}
 		} catch(IndexOutOfBoundsException ex) {
 			
+		} catch(NullPointerException ex) {
+			chunk.get(currentScreen).get(yRow).remove(xCord/blockHeight);
+			placeNewBlock(xCord, yRow, fileName);
+			System.out.println("NullPointerException at x= "+xCord/blockHeight+" y= "+yRow+" blockdata: "+chunk.get(currentScreen).get(yRow).get(xCord/blockHeight));
 		}
 	}
 
@@ -297,7 +383,6 @@ public class map extends JFrame { // The main panel of display
 		int id = chunk.get(currentScreen).get(yRow).get(blockNum).id;
 		chunk.get(currentScreen).get(yRow).get(blockNum).setVisible(false);
 		chunk.get(currentScreen).get(yRow).set(blockNum, null);
-		chunk.get(currentScreen).get(yRow).remove(blockNum);
 		return id;
 	}
 
@@ -558,6 +643,9 @@ public class map extends JFrame { // The main panel of display
 	public void clearMap() {
 		for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
 			for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
+				if(chunk.get(currentScreen).get(x).get(y)==null){
+					continue;
+				}
 				chunk.get(currentScreen).get(x).get(y).setVisible(false);
 				remove(chunk.get(currentScreen).get(x).get(y));
 			}
@@ -565,6 +653,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public int changeCurrentScreen(int newScreenNum) {
+		System.out.println("changeCurrentScreen: newScreenNum= "+newScreenNum+" currentScreen= "+currentScreen);
 		clearMap();
 		currentScreen = newScreenNum;
 		try {
@@ -603,10 +692,17 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void setPlayerStartPosition() {
+		if (WorldGen.toLowerCase()=="flatworld"){
 		player.setBounds(blockHeight,
 				(((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player
 						.getPlayerHeight()), player.getPlayerWidth(), player
 						.getPlayerHeight());
+		}else if(WorldGen.toLowerCase()=="normal"){
+			player.setBounds(blockHeight,
+					((Math.abs(playerStartSpot) * blockHeight) - player
+							.getPlayerHeight()), player.getPlayerWidth(), player
+							.getPlayerHeight());
+		}
 	}
 
 	public void setPlayerPosition(Boolean endOrStart) { // True is end, false is

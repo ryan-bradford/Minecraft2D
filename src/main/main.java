@@ -17,6 +17,8 @@ public class main {
 			.getScreenSize().height;
 	private static ArrayList<block> blocks; // The blocks that will be passed through, gerarally used to select one row of blocks
 	public static int blockHeight = 64; // Height of a block
+	public static String WorldGen = "normal"; //Can be either "Normal" or "Flatworld"- not case sensitive.
+	public static int worldSeed = 0; //Number used for world generation, '0' is random
 	public static int inventoryGap = 4; // The gap between boxes in the inventory
 	public static int inventoryBlockNumber = 8; // Amount of slots in the ivnentory
 	public static int inventoryExtra = 4; // How much larger the background box is on each side of the inventory boxes
@@ -55,7 +57,7 @@ public class main {
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra, inventoryHeight,
 				defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
-				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed, mineBlockSpeed);
+				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed, mineBlockSpeed, WorldGen, worldSeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
