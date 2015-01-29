@@ -89,7 +89,7 @@ public class map extends JFrame { // The main panel of display
 	public taskManager manager; // The task manager object
 	public keyControls keyListener; // The keyListener object
 	public mineBlockTask mine;
-	public int currentScreen;
+	public int currentScreen = 0;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
@@ -103,11 +103,11 @@ public class map extends JFrame { // The main panel of display
 			int walkSpeed1, int mineBlockSpeed,
 			ArrayList<ArrayList<ArrayList<block>>> chunk1,
 			inventoryButton[][] inventButtons,
-			inventoryButton[] inventBarButtons, Integer[] playerPosition) {
+			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames,
-				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1);
+				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1);
 		initTaskManager();
-		drawMap(airColor, 0);
+		drawMap(airColor);
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
 		initPhysics();
 		startPhysics();
@@ -117,14 +117,25 @@ public class map extends JFrame { // The main panel of display
 				selectedBoxColor, backgroundColor, textColor, stackHeight,
 				inventButtons, inventBarButtons);
 		startSave();
+		drawAir(airColor);
+		if(currentScreen!=0) {
+			changeCurrentScreen(true);
+			changeCurrentScreen(false);
+		}
+		repaintObjects();
 		System.out.println("The Game Has Begun!");
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1,
 			int dirtHeightInBlocks, String[] imageFileNames1,
 			int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
-			int walkSpeed1, ArrayList<ArrayList<ArrayList<block>>> chunk1) {
-		chunk = chunk1;
+			int walkSpeed1, ArrayList<ArrayList<ArrayList<block>>> chunk1, int currentScreen1) {
+		currentScreen = currentScreen1;
+		chunk = new ArrayList<ArrayList<ArrayList<block>>>();
+		for(int i = 0; i < chunk1.size(); i++) {
+			chunk.add(chunk1.get(i));
+			System.out.println("Added");
+		}
 		jumping = false;
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
@@ -140,29 +151,25 @@ public class map extends JFrame { // The main panel of display
 		creative = creativ;
 		try {
 			chunk.get(0);
-		} catch(IndexOutOfBoundsException ex) {
-			chunk = new ArrayList<ArrayList<ArrayList<block>>>();			
+		} catch (IndexOutOfBoundsException ex) {
+			chunk = new ArrayList<ArrayList<ArrayList<block>>>();
 		}
 		System.out.println("Variables Initialized" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawMap(Color airColor, int currentScreen1) { // Calls the
-																// methods for
-																// drawing the
-		// map
+	public boolean getDrawNewOrOld() { // True is new, false is old
 		try {
-			currentScreen = currentScreen1;
-			chunk.get(currentScreen1);
-			for (int x = 0; x < chunk.get(currentScreen1).size(); x++) {
-				for (int y = 0; y < chunk.get(currentScreen1).get(x).size(); y++) {
-					add(chunk.get(currentScreen1).get(x).get(y));
-					chunk.get(currentScreen1).get(x).get(y).setVisible(true);
-					repaint();
-				}
-			}
+			chunk.get(currentScreen);
+			System.out.println("draw new");
+			return false;
 		} catch (IndexOutOfBoundsException ex) {
-			currentScreen = currentScreen1;
+			return true;
+		}
+	}
+
+	public void drawMap(Color airColor) {
+		if (getDrawNewOrOld()) {
 			chunk.add(new ArrayList<ArrayList<block>>());
 			for (int i = 0; i < mapHeight; i++) {
 				chunk.get(currentScreen).add(new ArrayList<block>());
@@ -170,9 +177,17 @@ public class map extends JFrame { // The main panel of display
 			drawAir(airColor);
 			drawDirt();
 			drawGrass();
-			System.out.println("Map Drawn" + " In " + (System.nanoTime() -
-			startTime) + " Nanoseconds");
+		} else {
+			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
+				for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
+					add(chunk.get(currentScreen).get(x).get(y));
+					chunk.get(currentScreen).get(x).get(y).setVisible(true);
+					repaint();
+				}
+			}
 		}
+		System.out.println("Map Drawn" + " In "
+				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawDirt() { // Draws the dirt
@@ -218,17 +233,18 @@ public class map extends JFrame { // The main panel of display
 		air.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		air.setOpaque(false);
 		add(air, 0);
-		// System.out.println("Air Drawn" + " In " + (System.nanoTime() -
-		// startTime) + " Nanoseconds");
+		System.out.println("Air Drawn" + " In " + (System.nanoTime() -
+		startTime) + " Nanoseconds");
 	}
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor,
 			Color shoeColor, Integer[] playerPosition) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
-		try { 
-			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
-		} catch(NullPointerException ex) {
-			setPlayerStartPosition();			
+		try {
+			player.setBounds(playerPosition[0], playerPosition[1],
+					player.getPlayerWidth(), player.getPlayerHeight());
+		} catch (NullPointerException ex) {
+			setPlayerStartPosition();
 		}
 		player.setOpaque(false);
 		add(player, 0);
@@ -236,12 +252,12 @@ public class map extends JFrame { // The main panel of display
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void mouseClicked(int xCord, int yRow, String fileName) { 
+	public void mouseClicked(int xCord, int yRow, String fileName) {
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
 			for (int i = 0; i < chunk.get(currentScreen).get(yRow).size(); i++) {
-				if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) { 
+				if (chunk.get(currentScreen).get(yRow).get(i).getBounds().x == xCord) {
 					blockExists = true;
 					blockNum = i;
 					break;
@@ -481,7 +497,7 @@ public class map extends JFrame { // The main panel of display
 		System.out.println("Physics Started" + " In "
 				+ (System.nanoTime() - startTime) + " Nanoseconds");
 	}
-	
+
 	public void startSave() {
 		saveTask task = new saveTask();
 		manager.addTask(task);
@@ -595,40 +611,25 @@ public class map extends JFrame { // The main panel of display
 		}
 	}
 
-	public int changeCurrentScreen(int newScreenNum) {
+	public int changeCurrentScreen(Boolean backwardsOrForwards) {
 		clearMap();
-		currentScreen = newScreenNum;
+		if (backwardsOrForwards) {
+			currentScreen--;
+		} else {
+			currentScreen++;
+		}
 		try {
 			chunk.get(currentScreen);
 		} catch (IndexOutOfBoundsException ex) {
-			System.out.println("Caught");
-			remove(air);
-			drawMap(main.airColor, currentScreen);
-			remove(player);
-			add(player, 0);
-			remove(inventoryBar);
-			add(inventoryBar, 0);
-			remove(inventory);
-			add(inventory, 0);
-			remove(selectMapBlock);
-			add(selectMapBlock, 1);
-			add(air);
-			repaint();
+			drawMap(main.airColor);
+			repaintObjects();
 			return 0;
 		}
 		for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
 			for (int y = 0; y < chunk.get(currentScreen).get(x).size(); y++) {
 				add(chunk.get(currentScreen).get(x).get(y), 1);
 				chunk.get(currentScreen).get(x).get(y).setVisible(true);
-				remove(player);
-				add(player, 0);
-				remove(inventoryBar);
-				add(inventoryBar, 0);
-				remove(inventory);
-				add(inventory, 0);
-				remove(selectMapBlock);
-				add(selectMapBlock, 1);
-				repaint();
+				repaintObjects();
 			}
 		}
 		repaint();
@@ -653,6 +654,20 @@ public class map extends JFrame { // The main panel of display
 					player.getPlayerWidth(), player.getPlayerHeight());
 		}
 
+	}
+
+	public void repaintObjects() {
+		remove(air);
+		add(air);
+		remove(player);
+		add(player, 0);
+		remove(inventoryBar);
+		add(inventoryBar, 0);
+		remove(inventory);
+		add(inventory, 0);
+		remove(selectMapBlock);
+		add(selectMapBlock, 1);
+		repaint();
 	}
 
 }

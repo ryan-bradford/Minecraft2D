@@ -78,11 +78,12 @@ public class main {
 	public static int walkSpeed = blockHeight * 4;// How fast the player will
 													// walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
-	public static ArrayList<ArrayList<ArrayList<block>>> savedChunk;
+	public static ArrayList<ArrayList<ArrayList<block>>> savedChunk;// = getSavedStuff.getAllScreens();
 	public static inventoryButton[][] buttons;
 	public static inventoryButton[] barButtons;
 	public static String fileName = "save.xml";
 	public static int mapHeight = screenHeight/blockHeight;
+	public static int currentScreen = getSavedStuff.getScreenNum();
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -98,7 +99,7 @@ public class main {
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames,
 				stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed,
 				mineBlockSpeed, getSavedStuff.getAllScreens(),
-				buttons, barButtons, getSavedStuff.getPlayerBounds());
+				buttons, barButtons, getSavedStuff.getPlayerBounds(), currentScreen);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
@@ -280,37 +281,12 @@ public class main {
 
 	// To here is used for basic passing of variables and preforming basic
 	// methods
-	public static void setSwapInvent(int x, int y, Boolean inventOrBar) { // The
-																			// thing
-																			// that
-																			// controls
-																			// how
-																			// the
-																			// blocks
-																			// are
-																			// moved
-																			// throughout
-																			// the
-																			// inventory
+	public static void setSwapInvent(int x, int y, Boolean inventOrBar) {
 		if (inventOrBar == true) { // True is inventory false is bar
 			if (selected == true) { // If one was already selected
-				map.inventory.setSwitch(x, y, selected, inventOrBar); // Clears
-																		// both
-																		// selectors
-																		// and
-																		// gathers
-																		// some
-																		// data
-				map.inventoryBar.setSwitch(x, selected, inventOrBar); // Clears
-																		// both
-																		// selectors
-																		// and
-																		// gathers
-																		// some
-																		// data
-				if (lastClickedInventOrBar == true) { // Checks whether the last
-														// one was inventory or
-														// bar
+				map.inventory.setSwitch(x, y, selected, inventOrBar);
+				map.inventoryBar.setSwitch(x, selected, inventOrBar);
+				if (lastClickedInventOrBar == true) { 
 					int leftOver;
 					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
 							.getAmount();
