@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import player.player;
 import block.block;
 import map.map;
@@ -19,9 +21,9 @@ public class main {
 																						// pixels
 	public static int screenHeight = Toolkit.getDefaultToolkit() // In pixels
 			.getScreenSize().height;
-	private static ArrayList<block> blocks; // The blocks that will be passed
-											// through, gerarally used to select
-											// one row of blocks
+	private static block[] blocks; // The blocks that will be passed
+									// through, gerarally used to select
+									// one row of blocks
 	public static int blockHeight = 64; // Height of a block
 	public static int inventoryGap = 4; // The gap between boxes in the
 										// inventory
@@ -82,8 +84,10 @@ public class main {
 	public static inventoryButton[][] buttons;
 	public static inventoryButton[] barButtons;
 	public static String fileName = "save.xml";
-	public static int mapHeight = screenHeight/blockHeight;
+	public static int mapHeight = screenHeight / blockHeight;
 	public static int currentScreen = getSavedStuff.getScreenNum();
+	public static String WorldGen = "flatworld"; // Can be either "Normal" or "Flatworld"- not case sensitive.
+	public static int worldSeed = 0; // Number used for world generation, '0' is random
 
 	/*
 	 * 0 is blank 1 is dirt 2 is grass
@@ -92,53 +96,25 @@ public class main {
 	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(creative, blockHeight, dirtHeightInBlocks,
-				inventoryBlockNumber, inventoryGap, inventoryExtra,
-				inventoryHeight, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, airColor,
-				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames,
-				stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed,
-				mineBlockSpeed, getSavedStuff.getAllScreens(),
-				buttons, barButtons, getSavedStuff.getPlayerBounds(), currentScreen);
+		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
+				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
+				gravitySpeed, walkSpeed, mineBlockSpeed, getSavedStuff.getAllScreens(), buttons, barButtons,
+				getSavedStuff.getPlayerBounds(), currentScreen, WorldGen, worldSeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
-		map.setDefaultCloseOperation(map.EXIT_ON_CLOSE);
+		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		map.getContentPane().setBackground(airColor);
 	}
 
 	// From here:
-	public static ArrayList<block> getBlocks(int height) {
-		try {
-			try {
-				blocks = new ArrayList<block>();
-				for (int i = 0; i < (map.mapWidth); i++) {
-					blocks.add(map.getBlock(height, i));
-				}
-				return blocks;
-			} catch (NullPointerException ex) {
-				return new ArrayList<block>();
-			}
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			return new ArrayList<block>();
-		}
+	public static block getBlock(int height, int x) {
+		return map.getBlock(height, x);
 	}
 
-	public static ArrayList<block> getBlocks(int screenNum, int height) {
-		try {
-			try {
-				blocks = new ArrayList<block>();
-				for (int i = 0; i < (map.mapWidth); i++) {
-					blocks.add(map.getBlock(screenNum, height, i));
-				}
-				return blocks;
-			} catch (NullPointerException ex) {
-				System.out.println("Caught 2 Null");
-				return new ArrayList<block>();
-			}
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			System.out.println("Caught 2");
-			return new ArrayList<block>();
-		}
+	public static block getBlocks(int screenNum, int height, int x) {
+		return map.getBlock(screenNum, height, x);
 	}
 
 	public static Boolean getCreative() {
@@ -146,11 +122,7 @@ public class main {
 	}
 
 	public static player getPlayer() {
-		try {
-			return map.player;
-		} catch (NullPointerException ex) {
-			return new player(null, null, null, null);
-		}
+		return map.player;
 	}
 
 	public static int getWalkSpeed() {
@@ -163,11 +135,8 @@ public class main {
 
 	public static void movePlayer(int x, int y) {
 		try {
-			map.player
-					.setBounds(map.player.getBounds().x + x,
-							(map.player.getBounds().y) + y,
-							map.player.getBounds().width,
-							map.player.getBounds().height);
+			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y,
+					map.player.getBounds().width, map.player.getBounds().height);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
@@ -228,8 +197,7 @@ public class main {
 		try {
 			if (map.getInventoryState() == false) {
 				try {
-					map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight,
-							map.blockHeight);
+					map.selectMapBlock.setBounds(xCord, yCord, map.blockHeight, map.blockHeight);
 				} catch (NullPointerException ex) {
 
 				}
@@ -244,10 +212,8 @@ public class main {
 	}
 
 	public static void placeBlockAtMouse(String fileName) {
-		int selectorX = map.manager.cores[map.selectTaskCoreNumber].tasks.get(
-				map.selectTaskTaskNumber - 1).getData()[0];
-		int selectorRow = map.manager.cores[map.selectTaskCoreNumber].tasks
-				.get(map.selectTaskTaskNumber - 1).getData()[1];
+		int selectorX = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber - 1).getData()[0];
+		int selectorRow = map.manager.cores[map.selectTaskCoreNumber].tasks.get(map.selectTaskTaskNumber - 1).getData()[1];
 		placeBlock(selectorX, selectorRow, fileName);
 	}
 
@@ -286,29 +252,21 @@ public class main {
 			if (selected == true) { // If one was already selected
 				map.inventory.setSwitch(x, y, selected, inventOrBar);
 				map.inventoryBar.setSwitch(x, selected, inventOrBar);
-				if (lastClickedInventOrBar == true) { 
+				if (lastClickedInventOrBar == true) {
 					int leftOver;
-					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getAmount();
-					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getBlockID();
-					leftOver = map.inventory.inventoryButtons[x][y].addBlock(
-							toAdd, blockID);
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);
 					map.inventory.repaintButton(x, y); // Adds the amounts to
 														// the button objects
-					handleLeftOver(leftOver, toAdd, lastClickedX,
-							lastClickedInventOrBar, x, y, blockID, inventOrBar);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 				} else { // Same thing, but runs if the last clicked was the bar
 					int leftOver;
-					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getAmount();
-					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getBlockID();
-					leftOver = map.inventory.inventoryButtons[x][y].addBlock(
-							toAdd, blockID);
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					leftOver = map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);
 					map.inventory.repaintButton(x, y);
-					handleLeftOver(leftOver, toAdd, lastClickedX,
-							lastClickedInventOrBar, x, y, blockID, inventOrBar);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 				}
 				selected = false;
 			} else { // Sets the swap box to the proper place
@@ -324,27 +282,19 @@ public class main {
 				map.inventoryBar.setSwitch(x, selected, inventOrBar);
 				if (lastClickedInventOrBar == true) {
 					int leftOver;
-					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getAmount();
-					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getBlockID();
-					leftOver = map.inventoryBar.inventoryBarButtons[x]
-							.addBlock(toAdd, blockID);
+					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
+					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
 					map.inventoryBar.repaintButton(x);
-					handleLeftOver(leftOver, toAdd, lastClickedX,
-							lastClickedInventOrBar, x, y, blockID, inventOrBar);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 
 				} else {
 					int leftOver;
-					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getAmount();
-					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getBlockID();
-					leftOver = map.inventoryBar.inventoryBarButtons[x]
-							.addBlock(toAdd, blockID);
+					int toAdd = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int blockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					leftOver = map.inventoryBar.inventoryBarButtons[x].addBlock(toAdd, blockID);
 					map.inventoryBar.repaintButton(x);
-					handleLeftOver(leftOver, toAdd, lastClickedX,
-							lastClickedInventOrBar, x, y, blockID, inventOrBar);
+					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 				}
 				selected = false;
 			} else {
@@ -357,9 +307,8 @@ public class main {
 		}
 	}
 
-	public static void handleLeftOver(int leftOver, int toAdd,
-			int lastClickedX, Boolean lastClickedInventOrBar, int x, int y,
-			int blockID, Boolean selected) {
+	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX, Boolean lastClickedInventOrBar, int x,
+			int y, int blockID, Boolean selected) {
 		if (leftOver == 0) { // If all of the amount could be passed, clear the
 								// button
 			if (lastClickedInventOrBar == false) {
@@ -371,65 +320,41 @@ public class main {
 			if (lastClickedInventOrBar == false) { // Change the vaule to the
 													// leftover
 				if (selected == false) {
-					int lastBarBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getBlockID();
-					int lastBarAmount = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getAmount();
-					int barBlockAmount = map.inventoryBar.inventoryBarButtons[x]
-							.getAmount();
-					int barBlockID = map.inventoryBar.inventoryBarButtons[x]
-							.getBlockID();
-					map.inventoryBar.inventoryBarButtons[x].setValue(
-							lastBarAmount, lastBarBlockID);
-					map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.setValue(barBlockAmount, barBlockID);
+					int lastBarBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					int lastBarAmount = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int barBlockAmount = map.inventoryBar.inventoryBarButtons[x].getAmount();
+					int barBlockID = map.inventoryBar.inventoryBarButtons[x].getBlockID();
+					map.inventoryBar.inventoryBarButtons[x].setValue(lastBarAmount, lastBarBlockID);
+					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(barBlockAmount, barBlockID);
 					map.inventoryBar.repaintButton(lastClickedX);
 					map.inventoryBar.repaintButton(x);
 				} else {
-					int barBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getBlockID();
-					int barAmount = map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.getAmount();
-					int inventoryBlockAmount = map.inventory.inventoryButtons[x][y]
-							.getAmount();
-					int inventoryBlockID = map.inventory.inventoryButtons[x][y]
-							.getBlockID();
-					map.inventory.inventoryButtons[x][y].setValue(barAmount,
-							barBlockID);
-					map.inventoryBar.inventoryBarButtons[lastClickedX]
-							.setValue(inventoryBlockAmount, inventoryBlockID);
+					int barBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
+					int barAmount = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[x][y].getAmount();
+					int inventoryBlockID = map.inventory.inventoryButtons[x][y].getBlockID();
+					map.inventory.inventoryButtons[x][y].setValue(barAmount, barBlockID);
+					map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(inventoryBlockAmount, inventoryBlockID);
 					map.inventoryBar.repaintButton(lastClickedX);
 					map.inventory.repaintButton(x, y);
 				}
 			} else {
 				if (selected == true) {
-					int barBlockID = map.inventory.inventoryButtons[x][y]
-							.getBlockID();
-					int barAmount = map.inventory.inventoryButtons[x][y]
-							.getAmount();
-					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getAmount();
-					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getBlockID();
-					map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.setValue(barAmount, barBlockID);
-					map.inventory.inventoryButtons[x][y].setValue(
-							inventoryBlockAmount, inventorylockID);
+					int barBlockID = map.inventory.inventoryButtons[x][y].getBlockID();
+					int barAmount = map.inventory.inventoryButtons[x][y].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
+					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
+					map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(barAmount, barBlockID);
+					map.inventory.inventoryButtons[x][y].setValue(inventoryBlockAmount, inventorylockID);
 					map.inventory.repaintButton(lastClickedX, lastClickedY);
 					map.inventory.repaintButton(x, y);
 				} else {
-					int barBlockID = map.inventoryBar.inventoryBarButtons[x]
-							.getBlockID();
-					int barAmount = map.inventoryBar.inventoryBarButtons[y]
-							.getAmount();
-					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getAmount();
-					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.getBlockID();
-					map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-							.setValue(barAmount, barBlockID);
-					map.inventoryBar.inventoryBarButtons[x].setValue(
-							inventoryBlockAmount, inventorylockID);
+					int barBlockID = map.inventoryBar.inventoryBarButtons[x].getBlockID();
+					int barAmount = map.inventoryBar.inventoryBarButtons[y].getAmount();
+					int inventoryBlockAmount = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
+					int inventorylockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
+					map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(barAmount, barBlockID);
+					map.inventoryBar.inventoryBarButtons[x].setValue(inventoryBlockAmount, inventorylockID);
 					map.inventory.repaintButton(lastClickedX, lastClickedY);
 					map.inventoryBar.repaintButton(x);
 				}
@@ -438,11 +363,9 @@ public class main {
 
 			if (lastClickedInventOrBar == false) { // Change the vaule to the
 													// leftover
-				map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(
-						leftOver, blockID);
+				map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
 			} else {
-				map.inventory.inventoryButtons[lastClickedX][lastClickedY]
-						.setValue(leftOver, blockID);
+				map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);
 			}
 		}
 	}

@@ -30,7 +30,7 @@ public class saveTask extends task {
 			}
 			out.close();
 		} catch (IOException ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 	}
 
@@ -64,24 +64,26 @@ public class saveTask extends task {
 
 	}
 
-	public void saveChunk(ArrayList<ArrayList<block>> chunk, int chunkNum) {
+	public void saveChunk(ArrayList<block[]> chunk, int chunkNum) {
 		out.write("Chunk");
 		out.println(" ");
-//		out.write(Integer.toString(chunkNum));
-//		out.println(" ");
 		for (int i = 0; i < chunk.size(); i++) {
-			for (int x = 0; x < chunk.get(i).size(); x++) {
-				out.write(Integer.toString(chunk.get(i).get(x).getBounds().x));
+			for (int x = 0; x < chunk.get(i).length; x++) {
+				try {
+				out.write(Integer.toString(chunk.get(i)[x].getBounds().x));
 				out.println(" ");
-				out.write(Integer.toString(chunk.get(i).get(x).getBounds().y));
+				out.write(Integer.toString(chunk.get(i)[x].getBounds().y));
 				out.println(" ");
-				out.write(Integer.toString(chunk.get(i).get(x).id));
+				out.write(Integer.toString(chunk.get(i)[x].id));
 				out.println(" ");
-				out.write(Integer.toString(chunk.get(i).get(x).health));
+				out.write(Integer.toString(chunk.get(i)[x].health));
 				out.println(" ");
+				} catch(NullPointerException ex) {
+					
+				}
 			}
 		}
 		out.write("End");
-		out.println(" ");		
+		out.println(" ");	
 	}
 }
