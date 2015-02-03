@@ -30,7 +30,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 	public int stackHeight;
 
 	public inventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight1, Color defaultColor1, Color swapBoxColor1,
-			Color backgroundColor1, Color textColor1, int stackHeight1) {
+			Color backgroundColor1, Color textColor1, int stackHeight1, inventoryButton[][] buttons1) {
 		setLayout(null);
 		f = null;
 		stackHeight = stackHeight1;
@@ -51,10 +51,17 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				try {
-					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[buttons1[x][y].blockID])), buttons1[x][y].amount, buttons1[x][y].blockID, stackHeight, textColor);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch(NullPointerException ex) {
+					try {
+						inventoryButtons[x][y] = new inventoryButton((ImageIO.read(new java.io.File(main.getImageFileNames()[0]))), 0, 0, stackHeight, textColor);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
 				}
 				standardButtonAction(x, y);
 			}

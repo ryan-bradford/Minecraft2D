@@ -1,102 +1,88 @@
 package main;
 
+import inventory.inventoryButton;
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import player.player;
 import block.block;
 import map.map;
+import save.getSavedStuff;
 import userControl.keyControls.jump;
 
 public class main {
 
 	public static map map;
+	public static String fileName = "save.xml";
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
-	public static int screenHeight = Toolkit.getDefaultToolkit() // In pixels
-			.getScreenSize().height;
-	private static ArrayList<block> blocks; // The blocks that will be passed through, gerarally used to select one row of blocks
+	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height; // In pixels
 	public static int blockHeight = 64; // Height of a block
-	public static String WorldGen = "normal"; //Can be either "Normal" or "Flatworld"- not case sensitive.
-	public static int worldSeed = 0; //Number used for world generation, '0' is random
 	public static int inventoryGap = 4; // The gap between boxes in the inventory
 	public static int inventoryBlockNumber = 8; // Amount of slots in the ivnentory
 	public static int inventoryExtra = 4; // How much larger the background box is on each side of the inventory boxes
 	public static int inventoryHeight = 4; // How many boxes there are in the veritcal of the inventory
 	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1; // How much dirt
 	public static Color defaultBoxColor = Color.gray; // COLORS!
-	public static Color swapBoxColor = Color.yellow;
-	public static Color selectedBoxColor = Color.blue;
-	public static Color backgroundColor = Color.darkGray;
-	public static Color textColor = Color.black;
-	public static Color airColor = new Color(135, 206, 250);
-	public static Color skinColor = new Color(139, 69, 19);
-	public static Color pantsColor = new Color(25, 25, 112);
-	public static Color shirtColor = new Color(0, 155, 155);
-	public static Color shoeColor = Color.darkGray;
+	public static Color swapBoxColor = Color.yellow; //The color of the block selector in the inventory
+	public static Color selectedBoxColor = Color.blue; //The color of the block selector in the world
+	public static Color backgroundColor = Color.darkGray; //The background color in the inventory screen
+	public static Color textColor = Color.black; //The Color of Text in the Inventory
+	public static Color airColor = new Color(135, 206, 250); //The Color of the air
+	public static Color skinColor = new Color(139, 69, 19); //The Color of the players skin
+	public static Color pantsColor = new Color(25, 25, 112); //The color of the players pants
+	public static Color shirtColor = new Color(0, 155, 155); //The color of the players shirt
+	public static Color shoeColor = Color.darkGray; //The color of the players shoes
 	public static Boolean selected = false; // Whether a inventory box has alread been slected, True is yes
 	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
 	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
 	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
-	public static String[] imageFileNames = new String[] { "blank.jpg", // The block image file names
-			"dirt.jpg", "grass.jpg" };
-	public static Boolean creative = false;
+	public static String[] imageFileNames = new String[] { "blank.jpg", "dirt.jpg", "grass.jpg" }; // The block image file names
+	public static Boolean creative = false; //If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
-	public static int jumpDistance = 2; //How many blocks the player can jump
-	public static int jumpSpeed = (int) (blockHeight * 2.5); //How fast the player will jump(Pixels per second)
-	public static int gravitySpeed = blockHeight*4; //How fast the player will fall(Pixels per second)
-	public static int walkSpeed = blockHeight*4;//How fast the player will walk(Pixels per second)
-	public static int mineBlockSpeed = 100; //How many milliseconds per swing
+	public static int jumpDistance = 2; // How many blocks the player can jump
+	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the player will jump(Pixels per second)
+	public static int gravitySpeed = blockHeight * 4; // How fast the player will fall(Pixels per second)
+	public static int walkSpeed = blockHeight * 4;// How fast the player will walk(Pixels per second)
+	public static int mineBlockSpeed = 100; // How many milliseconds per swing
+	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
+	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
+	public static int worldSeed = 0; // Number used for world generation, '0' is random
+	public static int currentScreen = getSavedStuff.getScreenNum(); //The current viewed screen
+	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); //The saved blocks
+	public static Integer[] playerBounds = getSavedStuff.getPlayerBounds(); //The saved player location
+	public static inventoryButton[][] savedInventoryButtons = getSavedStuff.getInventoryButtons(); //The saved inventory stuff
+	public static inventoryButton[] savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons(); //The saved inventory bar stuff
 
 	/*
-	 * 0 is blank 1 is dirt 2 is grass
+	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
 
 	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra, inventoryHeight,
-				defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor,
-				imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed, mineBlockSpeed, WorldGen, worldSeed);
+		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
+				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
+				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
+				playerBounds, currentScreen, WorldGen, worldSeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
-		map.setDefaultCloseOperation(map.EXIT_ON_CLOSE);
+		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		map.getContentPane().setBackground(airColor);
 	}
 
 	// From here:
-	public static ArrayList<block> getBlocks(int height) {
-		try {
-			try {
-				blocks = new ArrayList<block>();
-				for (int i = 0; i < (map.mapWidth); i++) {
-					blocks.add(map.getBlock(height, i));
-				}
-				return blocks;
-			} catch (NullPointerException ex) {
-				return new ArrayList<block>();
-			}
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			return new ArrayList<block>();
-		}
+	public static block getBlock(int height, int x) {
+		return map.getBlock(height, x);
 	}
-	
-	public static ArrayList<block> getBlocks(int screenNum, int height) {
-		try {
-			try {
-				blocks = new ArrayList<block>();
-				for (int i = 0; i < (map.mapWidth); i++) {
-					blocks.add(map.getBlock(screenNum, height, i));
-				}
-				return blocks;
-			} catch (NullPointerException ex) {
-				System.out.println("Caught 2 Null");
-				return new ArrayList<block>();
-			}
-		} catch (ArrayIndexOutOfBoundsException ex) {
-			System.out.println("Caught 2");
-			return new ArrayList<block>();
-		}
+
+	public static block getBlocks(int screenNum, int height, int x) {
+		return map.getBlock(screenNum, height, x);
 	}
 
 	public static Boolean getCreative() {
@@ -104,11 +90,7 @@ public class main {
 	}
 
 	public static player getPlayer() {
-		try {
-			return map.player;
-		} catch (NullPointerException ex) {
-			return new player(null, null, null, null);
-		}
+		return map.player;
 	}
 
 	public static int getWalkSpeed() {
@@ -121,8 +103,8 @@ public class main {
 
 	public static void movePlayer(int x, int y) {
 		try {
-			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y, map.player.getBounds().width,
-					map.player.getBounds().height);
+			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y,
+					map.player.getBounds().width, map.player.getBounds().height);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
@@ -231,18 +213,20 @@ public class main {
 		return imageFileNames;
 	}
 
-	// To here is used for basic passing of variables and preforming basic methods
-	public static void setSwapInvent(int x, int y, Boolean inventOrBar) { // The thing that controls how the blocks are moved throughout the inventory
+	// To here is used for basic passing of variables and preforming basic
+	// methods
+	public static void setSwapInvent(int x, int y, Boolean inventOrBar) {
 		if (inventOrBar == true) { // True is inventory false is bar
 			if (selected == true) { // If one was already selected
-				map.inventory.setSwitch(x, y, selected, inventOrBar); // Clears both selectors and gathers some data
-				map.inventoryBar.setSwitch(x, selected, inventOrBar); // Clears both selectors and gathers some data
-				if (lastClickedInventOrBar == true) { // Checks whether the last one was inventory or bar
+				map.inventory.setSwitch(x, y, selected, inventOrBar);
+				map.inventoryBar.setSwitch(x, selected, inventOrBar);
+				if (lastClickedInventOrBar == true) {
 					int leftOver;
 					int toAdd = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getAmount();
 					int blockID = map.inventory.inventoryButtons[lastClickedX][lastClickedY].getBlockID();
 					leftOver = map.inventory.inventoryButtons[x][y].addBlock(toAdd, blockID);
-					map.inventory.repaintButton(x, y); // Adds the amounts to the button objects
+					map.inventory.repaintButton(x, y); // Adds the amounts to
+														// the button objects
 					handleLeftOver(leftOver, toAdd, lastClickedX, lastClickedInventOrBar, x, y, blockID, inventOrBar);
 				} else { // Same thing, but runs if the last clicked was the bar
 					int leftOver;
@@ -291,16 +275,18 @@ public class main {
 		}
 	}
 
-	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX, Boolean lastClickedInventOrBar, int x, int y, int blockID,
-			Boolean selected) {
-		if (leftOver == 0) { // If all of the amount could be passed, clear the button
+	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX, Boolean lastClickedInventOrBar, int x,
+			int y, int blockID, Boolean selected) {
+		if (leftOver == 0) { // If all of the amount could be passed, clear the
+								// button
 			if (lastClickedInventOrBar == false) {
 				map.inventoryBar.removeButton(lastClickedX);
 			} else {
 				map.inventory.removeButton(lastClickedX, lastClickedY);
 			}
 		} else if (leftOver == toAdd) {
-			if (lastClickedInventOrBar == false) { // Change the vaule to the leftover
+			if (lastClickedInventOrBar == false) { // Change the vaule to the
+													// leftover
 				if (selected == false) {
 					int lastBarBlockID = map.inventoryBar.inventoryBarButtons[lastClickedX].getBlockID();
 					int lastBarAmount = map.inventoryBar.inventoryBarButtons[lastClickedX].getAmount();
@@ -343,7 +329,8 @@ public class main {
 			}
 		} else { // If some couldn't
 
-			if (lastClickedInventOrBar == false) { // Change the vaule to the leftover
+			if (lastClickedInventOrBar == false) { // Change the vaule to the
+													// leftover
 				map.inventoryBar.inventoryBarButtons[lastClickedX].setValue(leftOver, blockID);
 			} else {
 				map.inventory.inventoryButtons[lastClickedX][lastClickedY].setValue(leftOver, blockID);

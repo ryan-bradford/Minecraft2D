@@ -15,8 +15,8 @@ public class mineBlockTask extends task{
 	
 	@Override
 	public void runTask() {
-		main.map.chunk.get(main.map.currentScreen).get(yRow).get(blockNum).deductHealth(100);
-		if(main.map.chunk.get(main.map.currentScreen).get(yRow).get(blockNum).health <= 0) {
+		main.map.chunk.get(main.map.currentScreen).get(yRow)[blockNum].deductHealth(100);
+		if(main.map.chunk.get(main.map.currentScreen).get(yRow)[blockNum].health <= 0) {
 			main.map.mineBlockAt(xCord, yRow, blockNum);
 		}
 	}
