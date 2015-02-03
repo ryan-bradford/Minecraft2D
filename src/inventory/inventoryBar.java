@@ -21,16 +21,16 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 	public int selected; // The int that shows which box is the one being selected for placement
 	public Color defaultColor; // The color of the boxes
 	public Color swapBoxColor; // The color of the box that is used to show which box has been clicked on for movment in the inventory
-	public Color selectedBoxColor; //The color of the box that is used to show which box has been selected for placment
-	public Color backgroundColor; //The color of the background
-	public Color textColor; //The color of the text(As of now is not used)
-	public Integer switchedNum; //The int that shows which box has been clicked on
+	public Color selectedBoxColor; // The color of the box that is used to show which box has been selected for placment
+	public Color backgroundColor; // The color of the background
+	public Color textColor; // The color of the text(As of now is not used)
+	public Integer switchedNum; // The int that shows which box has been clicked on
 	public int stackHeight;
 
-	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra,
-			Color defaultColor1, Color swapBoxColor1, Color selectedBoxColor1,
-			Color backgroundColor1, Color textColor1, int stackHeight1, inventoryButton[] buttons) {
-		setLayout(null); //Allows for boxes to be moved
+	public inventoryBar(int inventoryBlock, int inventoryGap, int inventoryExtra, Color defaultColor1,
+			Color swapBoxColor1, Color selectedBoxColor1, Color backgroundColor1, Color textColor1, int stackHeight1,
+			inventoryButton[] buttons) {
+		setLayout(null); // Allows for boxes to be moved
 		switchedNum = null;
 		stackHeight = stackHeight1;
 		gaps = inventoryGap;
@@ -49,18 +49,19 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		for (int i = 0; i < blockNumber; i++) {
 			try {
 				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[buttons[i].blockID]));
-			inventoryBarButtons[i] = new inventoryButton(images[i], buttons[i].amount, buttons[i].blockID, stackHeight, textColor);
+				inventoryBarButtons[i] = new inventoryButton(images[i], buttons[i].amount, buttons[i].blockID,
+						stackHeight, textColor);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch(NullPointerException ex) {
+			} catch (NullPointerException ex) {
 				try {
-					inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main
-							.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+					inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(
+							main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	
+				}
 			}
 			standardButtonAction(i);
 		}
@@ -68,7 +69,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) { //Draws the layout of the bar
+	protected void paintComponent(Graphics g) { // Draws the layout of the bar
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, width, height);
 		for (int i = 0; i < blockNumber; i++) {
@@ -79,14 +80,14 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 			} else {
 				g.setColor(defaultColor);
 			}
-			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2 - (rectangleWidth) / 2,
-					rectangleWidth, rectangleWidth);
+			g.drawRect((rectangleWidth + gaps) * i + gaps, height / 2 - (rectangleWidth) / 2, rectangleWidth,
+					rectangleWidth);
 
 		}
 
 	}
 
-	public String setSelected(int i) { //Sets which box to be selected for placement
+	public String setSelected(int i) { // Sets which box to be selected for placement
 		try {
 			selected = i;
 			repaint();
@@ -97,7 +98,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		return "blank.jpg";
 	}
 
-	public void setSwitch(int id, Boolean selected, Boolean inveotOrBar) { //Sets which block is clicked on for movement in the inventory
+	public void setSwitch(int id, Boolean selected, Boolean inveotOrBar) { // Sets which block is clicked on for movement in the inventory
 		if (main.selected == false) {
 			switchedNum = id;
 			repaint();
@@ -107,7 +108,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		}
 	}
 
-	public void repaintButton(int id) { //Rapaints the button
+	public void repaintButton(int id) { // Rapaints the button
 		remove(inventoryBarButtons[id]);
 		inventoryBarButtons[id].setVisible(false);
 		int amount = inventoryBarButtons[id].getAmount();
@@ -124,12 +125,12 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		repaint();
 	}
 
-	public void removeButton(int id) { //Sets a button to be blank
+	public void removeButton(int id) { // Sets a button to be blank
 		remove(inventoryBarButtons[id]);
 		inventoryBarButtons[id].setVisible(false);
 		try {
-			inventoryBarButtons[id] = new inventoryButton(ImageIO.read(new java.io.File(main
-					.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+			inventoryBarButtons[id] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])),
+					0, 0, stackHeight, textColor);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -138,13 +139,10 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 
 	}
 
-	public void standardButtonAction(int id) { //Is the action used on all buttons to draw them
-		int imageCornerX = (rectangleWidth + gaps) * id + gaps
-				+ (rectangleWidth - main.blockHeight) / 2;
-		int imageCornerY = height / 2 - (rectangleWidth) / 2 + (rectangleWidth - main.blockHeight)
-				/ 2;
-		inventoryBarButtons[id].setBounds(imageCornerX, imageCornerY, main.blockHeight,
-				main.blockHeight);
+	public void standardButtonAction(int id) { // Is the action used on all buttons to draw them
+		int imageCornerX = (rectangleWidth + gaps) * id + gaps + (rectangleWidth - main.blockHeight) / 2;
+		int imageCornerY = height / 2 - (rectangleWidth) / 2 + (rectangleWidth - main.blockHeight) / 2;
+		inventoryBarButtons[id].setBounds(imageCornerX, imageCornerY, main.blockHeight, main.blockHeight);
 		inventoryBarButtons[id].setOpaque(false);
 		inventoryBarButtons[id].setContentAreaFilled(false);
 		inventoryBarButtons[id].setBorderPainted(false);

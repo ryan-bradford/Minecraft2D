@@ -17,80 +17,48 @@ import userControl.keyControls.jump;
 public class main {
 
 	public static map map;
-	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In
-																						// pixels
-	public static int screenHeight = Toolkit.getDefaultToolkit() // In pixels
-			.getScreenSize().height;
-	private static block[] blocks; // The blocks that will be passed
-									// through, gerarally used to select
-									// one row of blocks
-	public static int blockHeight = 64; // Height of a block
-	public static int inventoryGap = 4; // The gap between boxes in the
-										// inventory
-	public static int inventoryBlockNumber = 8; // Amount of slots in the
-												// ivnentory
-	public static int inventoryExtra = 4; // How much larger the background box
-											// is on each side of the inventory
-											// boxes
-	public static int inventoryHeight = 4; // How many boxes there are in the
-											// veritcal of the inventory
-	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1; // How
-																						// much
-																						// dirt
-	public static Color defaultBoxColor = Color.gray; // COLORS!
-	public static Color swapBoxColor = Color.yellow;
-	public static Color selectedBoxColor = Color.blue;
-	public static Color backgroundColor = Color.darkGray;
-	public static Color textColor = Color.black;
-	public static Color airColor = new Color(135, 206, 250);
-	public static Color skinColor = new Color(139, 69, 19);
-	public static Color pantsColor = new Color(25, 25, 112);
-	public static Color shirtColor = new Color(0, 155, 155);
-	public static Color shoeColor = Color.darkGray;
-	public static Boolean selected = false; // Whether a inventory box has
-											// alread been slected, True is yes
-	public static Integer lastClickedX = null; // The previously selected box,
-												// by the mouse, for movement in
-												// the inventory
-	public static Integer lastClickedY = null; // The previously selected box,
-												// by the mouse, for movement in
-												// the inventory(Not used for
-												// the inventory bar)
-	public static Boolean lastClickedInventOrBar = null; // Whether the last
-															// selected box was
-															// in the inventory
-															// or inventory bar
-	public static String[] imageFileNames = new String[] { "blank.jpg", // The
-																		// block
-																		// image
-																		// file
-																		// names
-			"dirt.jpg", "grass.jpg" };
-	public static Boolean creative = false;
-	public static int stackHeight = 64; // How many blocks can go in one "stack"
-										// in the inventory
-	public static int jumpDistance = 2; // How many blocks the player can jump
-	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the
-																// player will
-																// jump(Pixels
-																// per second)
-	public static int gravitySpeed = blockHeight * 4; // How fast the player
-														// will fall(Pixels per
-														// second)
-	public static int walkSpeed = blockHeight * 4;// How fast the player will
-													// walk(Pixels per second)
-	public static int mineBlockSpeed = 100; // How many milliseconds per swing
-	public static ArrayList<ArrayList<ArrayList<block>>> savedChunk;// = getSavedStuff.getAllScreens();
-	public static inventoryButton[][] buttons;
-	public static inventoryButton[] barButtons;
 	public static String fileName = "save.xml";
-	public static int mapHeight = screenHeight / blockHeight;
-	public static int currentScreen = getSavedStuff.getScreenNum();
+	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
+	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height; // In pixels
+	public static int blockHeight = 64; // Height of a block
+	public static int inventoryGap = 4; // The gap between boxes in the inventory
+	public static int inventoryBlockNumber = 8; // Amount of slots in the ivnentory
+	public static int inventoryExtra = 4; // How much larger the background box is on each side of the inventory boxes
+	public static int inventoryHeight = 4; // How many boxes there are in the veritcal of the inventory
+	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1; // How much dirt
+	public static Color defaultBoxColor = Color.gray; // COLORS!
+	public static Color swapBoxColor = Color.yellow; //The color of the block selector in the inventory
+	public static Color selectedBoxColor = Color.blue; //The color of the block selector in the world
+	public static Color backgroundColor = Color.darkGray; //The background color in the inventory screen
+	public static Color textColor = Color.black; //The Color of Text in the Inventory
+	public static Color airColor = new Color(135, 206, 250); //The Color of the air
+	public static Color skinColor = new Color(139, 69, 19); //The Color of the players skin
+	public static Color pantsColor = new Color(25, 25, 112); //The color of the players pants
+	public static Color shirtColor = new Color(0, 155, 155); //The color of the players shirt
+	public static Color shoeColor = Color.darkGray; //The color of the players shoes
+	public static Boolean selected = false; // Whether a inventory box has alread been slected, True is yes
+	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
+	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
+	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
+	public static String[] imageFileNames = new String[] { "blank.jpg", "dirt.jpg", "grass.jpg" }; // The block image file names
+	public static Boolean creative = false; //If the game is in creative or not
+	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
+	public static int jumpDistance = 2; // How many blocks the player can jump
+	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the player will jump(Pixels per second)
+	public static int gravitySpeed = blockHeight * 4; // How fast the player will fall(Pixels per second)
+	public static int walkSpeed = blockHeight * 4;// How fast the player will walk(Pixels per second)
+	public static int mineBlockSpeed = 100; // How many milliseconds per swing
+	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
 	public static String WorldGen = "flatworld"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
+	public static int currentScreen = getSavedStuff.getScreenNum(); //The current viewed screen
+	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); //The saved blocks
+	public static Integer[] playerBounds = getSavedStuff.getPlayerBounds(); //The saved player location
+	public static inventoryButton[][] savedInventoryButtons = getSavedStuff.getInventoryButtons(); //The saved inventory stuff
+	public static inventoryButton[] savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons(); //The saved inventory bar stuff
 
 	/*
-	 * 0 is blank 1 is dirt 2 is grass
+	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
 
 	public static void main(String[] args) { // Creates the map
@@ -99,8 +67,8 @@ public class main {
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
-				gravitySpeed, walkSpeed, mineBlockSpeed, getSavedStuff.getAllScreens(), buttons, barButtons,
-				getSavedStuff.getPlayerBounds(), currentScreen, WorldGen, worldSeed);
+				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
+				playerBounds, currentScreen, WorldGen, worldSeed);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);

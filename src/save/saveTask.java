@@ -28,6 +28,8 @@ public class saveTask extends task {
 			for (int i = 0; i < main.map.chunk.size(); i++) {
 				saveChunk(main.map.chunk.get(i), i);
 			}
+			saveInventory();
+			saveInventoryBar();
 			out.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -85,5 +87,33 @@ public class saveTask extends task {
 		}
 		out.write("End");
 		out.println(" ");	
+	}
+	
+	public void saveInventory() {
+		out.write("Inventory");
+		out.println(" ");
+		for(int i = 0; i < main.map.inventory.inventoryButtons.length; i++) {
+			for(int x = 0; x < main.map.inventory.inventoryButtons[i].length; x++) {
+				out.write(Integer.toString(main.map.inventory.inventoryButtons[i][x].amount));
+				out.println(" ");
+				out.write(Integer.toString(main.map.inventory.inventoryButtons[i][x].blockID));
+				out.println(" ");
+			}
+		}
+		out.write("End");
+		out.println(" ");
+	}
+	
+	public void saveInventoryBar() {
+		out.write("Inventory Bar");
+		out.println(" ");
+		for(int i = 0; i < main.map.inventoryBar.inventoryBarButtons.length; i++) {
+				out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].amount));
+				out.println(" ");
+				out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].blockID));
+				out.println(" ");
+		}
+		out.write("End");
+		out.println(" ");
 	}
 }

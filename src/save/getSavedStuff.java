@@ -1,8 +1,13 @@
 package save;
 
+import inventory.inventoryButton;
+
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import main.main;
 import block.block;
@@ -19,6 +24,7 @@ public class getSavedStuff {
 				if (new File(main.fileName).exists()) {
 					return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
 				} else {
+					runnable = false;
 					return 0;
 				}
 			} catch (ArrayIndexOutOfBoundsException ex) {
@@ -114,6 +120,66 @@ public class getSavedStuff {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static inventoryButton[][] getInventoryButtons() {
+		if (runnable) {
+			inventoryButton[][] buttons = new inventoryButton[main.inventoryBlockNumber][main.inventoryHeight];
+			while (!(text[currentRow].equals("Inventory "))) {
+				currentRow++;
+			}
+			currentRow++;
+			int start = currentRow;
+			for (int i = 0; i < main.inventoryBlockNumber; i++) {
+				for (int x = 0; x < main.inventoryHeight; x++) {
+					Image currentBlock = null;
+					try {
+						currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer
+								.parseInt(text[start + 1].trim())]));
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					buttons[i][x] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()),
+							Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
+					start = start + 2;
+				}
+			}
+			return buttons;
+		}
+		return null;
+	}
+
+	public static inventoryButton[] getInventoryBarButtons() {
+		if (runnable) {
+			inventoryButton[] buttons = new inventoryButton[main.inventoryBlockNumber];
+			while (!(text[currentRow].equals("Inventory Bar "))) {
+				currentRow++;
+			}
+			currentRow++;
+			int start = currentRow;
+			for (int i = 0; i < main.inventoryBlockNumber; i++) {
+				Image currentBlock = null;
+				try {
+					currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer
+							.parseInt(text[start + 1].trim())]));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				buttons[i] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()),
+						Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
+				start = start + 2;			
+				}
+			return buttons;
 		}
 		return null;
 	}

@@ -47,50 +47,33 @@ import java.util.Random;
 public class map extends JFrame { // The main panel of display
 	public ArrayList<ArrayList<block[]>> chunk; // Horizontal Row
 	public player player;
-	public selectorBlock selectMapBlock; // The blue outline that can be seen on
-											// placement area
+	public selectorBlock selectMapBlock; // The blue outline that can be seen on placement area
 	public inventoryBar inventoryBar;
 	public inventory inventory;
 	public clickEvent placer; // The thing that listens for mouse clicks
-	public jump jump; // The thread that controls jumping, one run will jump
-						// once
+	public jump jump; // The thread that controls jumping, one run will jump once
 	public physicsEngine physics; // The thread that controls the physics
-	public String selectedBlockKind; // The kind of block that is selected in
-										// the inventory bar
-	public Boolean jumping; // The boolean that updates when the player is
-							// jumping
+	public String selectedBlockKind; // The kind of block that is selected in the inventory bar
+	public Boolean jumping; // The boolean that updates when the player is jumping
 	public Boolean creative; // The boolean that holds creative game mode or not
-	public Boolean inventoryOpen; // The boolean that holds whether the
-									// inventory is open or not
-	public String[] imageFileNames; // The string that holds the block image
-									// file names (Often not used)
+	public Boolean inventoryOpen; // The boolean that holds whether the inventory is open or not
+	public String[] imageFileNames; // The string that holds the block image file names (Often not used)
 	public int blockHeight; // The int that stores the block height
-	public int mapWidth; // The int that stores the map width in block widths
-							// (Ex. A 64 pixel map will have a width of 1)
-	public int mapHeight; // The int that stores the map height in block widths
-							// (Ex. A 64 pixel map will have a width of 1)
-	public int jumpSpeed; // The int that stores how fast you will jump (In
-							// pixels per second)
-	public int gravitySpeed; // The int that stores how fast you will fall (In
-								// pixels per second)
-	public int dirtRows; // The int that stores how many dirt rows there are,
-							// will be gone soon
-	public double jumpDistance; // The int that stores how height you will jump
-								// (In pixels)
-	public int walkSpeed; // The int that stores how fast you will walk (In
-							// pixels per second)
-	public int selectTaskTaskNumber; // The task number of the block selector
-										// task
-	public int selectTaskCoreNumber; // The core number of the block selector
-										// task
-	public double startTime = System.nanoTime(); // Stores the start time, for
-													// debugging proposes
+	public int mapWidth; // The int that stores the map width in block widths (Ex. A 64 pixel map will have a width of 1)
+	public int mapHeight; // The int that stores the map height in block widths (Ex. A 64 pixel map will have a width of 1)
+	public int jumpSpeed; // The int that stores how fast you will jump (In pixels per second)
+	public int gravitySpeed; // The int that stores how fast you will fall (In pixels per second)
+	public int dirtRows; // The int that stores how many dirt rows there are, will be gone soon
+	public double jumpDistance; // The int that stores how height you will jump (In pixels)
+	public int walkSpeed; // The int that stores how fast you will walk (In pixels per second)
+	public int selectTaskTaskNumber; // The task number of the block selector task
+	public int selectTaskCoreNumber; // The core number of the block selector task
+	public double startTime = System.nanoTime(); // Stores the start time, for debugging proposes
 	public taskManager manager; // The task manager object
 	public keyControls keyListener; // The keyListener object
 	public mineBlockTask mine;
 	public int currentScreen = 0;
-	public String WorldGen; // The string that describes the map generation
-							// "Flatworld" = flat, "Normal" = variation/biomes
+	public String WorldGen; // The string that describes the map generation "Flatworld" = flat, "Normal" = variation/biomes
 	public Random rnd;
 	public int seed; // Randomly generates land
 	public int playerStartSpot;
@@ -117,11 +100,6 @@ public class map extends JFrame { // The main panel of display
 				swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventButtons,
 				inventBarButtons);
 		startSave();
-		if (currentScreen != 0) {
-			changeCurrentScreen(true);
-			changeCurrentScreen(false);
-		}
-		repaintObjects();
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -133,7 +111,6 @@ public class map extends JFrame { // The main panel of display
 		if (chunk1 != null) {
 			for (int i = 0; i < chunk1.size(); i++) {
 				chunk.add(chunk1.get(i));
-				System.out.println("Added");
 			}
 		}
 		jumping = false;
@@ -162,12 +139,12 @@ public class map extends JFrame { // The main panel of display
 			chunk = new ArrayList<ArrayList<block[]>>();
 		}
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public boolean getDrawNewOrOld() { // True is new, false is old
 		try {
 			chunk.get(currentScreen);
-			System.out.println("draw new");
 			return false;
 		} catch (IndexOutOfBoundsException ex) {
 			return true;
@@ -202,6 +179,7 @@ public class map extends JFrame { // The main panel of display
 			}
 		}
 		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void drawLand() {
@@ -295,6 +273,7 @@ public class map extends JFrame { // The main panel of display
 		player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void mouseClicked(int xCord, int yRow, String fileName) {
@@ -324,25 +303,10 @@ public class map extends JFrame { // The main panel of display
 
 	public void placeNewBlock(int xCord, int yRow, String fileName) {
 		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID();
-		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you
-															// have selected in
-															// your inventory
-		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks
-																		// if
-																		// the
-																		// block
-																		// is
-																		// there
-																		// (And
-																		// not
-																		// just
-																		// a
-																		// blank
-																		// block)
+		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you have in your inventory
+		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there and not just a blank block
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
-				&& main.getInventoryState() == false) { // Checks if your
-														// inventory is
-														// closed
+				&& main.getInventoryState() == false) { // Checks if your inventory is closed
 			chunk.get(currentScreen).get(yRow)[xCord / 64] = (new block(selectedBlockKind, id));
 			chunk.get(currentScreen).get(yRow)[xCord / 64].setBounds(xCord, yRow * blockHeight, blockHeight,
 					blockHeight);
@@ -351,13 +315,8 @@ public class map extends JFrame { // The main panel of display
 			}
 			add(chunk.get(currentScreen).get(yRow)[xCord / 64], 2);
 			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
-				inventoryBar.removeButton(inventoryBar.selected); // Removes the
-																	// block
-																	// from your
-																	// hot bar
-																	// if you
-																	// have 0
-			}// To Add:Check if block already exists
+				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar
+			}
 		}
 	}
 
@@ -460,18 +419,20 @@ public class map extends JFrame { // The main panel of display
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);
 		System.out.println("Inventory Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void initTaskManager() {
 		manager = new taskManager();
 		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
-	public void startUserControl(int mineBlockSpeed) { // Starts the user
-														// controls
+	public void startUserControl(int mineBlockSpeed) { // Starts the user controls
 		startKeyControls();
 		startMouseControl(mineBlockSpeed);
 		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void startKeyControls() { // Adds the key listner
@@ -482,9 +443,7 @@ public class map extends JFrame { // The main panel of display
 		this.setLayout(null);
 	}
 
-	public void startMouseControl(int mineBlockSpeed) { // Starts the thread
-														// that can move the map
-														// block selector
+	public void startMouseControl(int mineBlockSpeed) { // Starts the thread that moves the block selector
 		// hideCursor();
 		selectMapBlock = new selectorBlock();
 		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
@@ -502,8 +461,7 @@ public class map extends JFrame { // The main panel of display
 
 	}
 
-	public void hideCursor() { // Hides the cursor, undecided if this should be
-								// done
+	public void hideCursor() { // Hides the cursor, undecided if this should be done
 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
 		super.getContentPane().setCursor(blankCursor);
@@ -512,6 +470,7 @@ public class map extends JFrame { // The main panel of display
 	public void initPhysics() { // Initializes the physics
 		physics = new physicsEngine();
 		System.out.println("Physics Initalized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void startPhysics() { // Starts the physics
@@ -519,12 +478,14 @@ public class map extends JFrame { // The main panel of display
 		task thisTask = new gravityTask();
 		manager.addTask(thisTask, 1);
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void startSave() {
 		saveTask task = new saveTask();
 		manager.addTask(task);
 		System.out.println("Save Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		startTime = System.nanoTime();
 	}
 
 	public void doneJumping() { // Called when the jump thread is done excuting
@@ -630,15 +591,8 @@ public class map extends JFrame { // The main panel of display
 		} else {
 			currentScreen++;
 		}
-		try {
-			chunk.get(currentScreen);
-		} catch (IndexOutOfBoundsException ex) {
-			drawMap();
-			repaintObjects();
-			return 0;
-		}
+		drawMap();
 		repaintObjects();
-		repaint();
 		return 0;
 	}
 
@@ -648,8 +602,7 @@ public class map extends JFrame { // The main panel of display
 				player.getPlayerWidth(), player.getPlayerHeight());
 	}
 
-	public void setPlayerPosition(Boolean endOrStart) { // True is end, false is
-														// start
+	public void setPlayerPosition(Boolean endOrStart) { // True is end, false is start
 		int playerLastY = player.getBounds().y;
 		if (endOrStart == false) {
 			player.setBounds(blockHeight, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
