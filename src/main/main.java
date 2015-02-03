@@ -49,7 +49,7 @@ public class main {
 	public static int walkSpeed = blockHeight * 4;// How fast the player will walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
 	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
-	public static String WorldGen = "flatworld"; // Can be either "Normal" or "Flatworld"- not case sensitive.
+	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
 	public static int currentScreen = getSavedStuff.getScreenNum(); //The current viewed screen
 	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); //The saved blocks

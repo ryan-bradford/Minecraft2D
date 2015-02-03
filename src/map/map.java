@@ -30,18 +30,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /* Notes: 
- * Math.abs(dirtRows-mapHeight)-1; is where the grass is drawn.
- * Math.abs(dirtRows-mapHeight) is the top of the dirt.
- * Chunk 0 is the bottom row. 
- * Map:
- * Row 3:	|_|_|_|
- * Row 2:	|_|_|_|
- * Row 1:	|_|_|_|
- * Row 0:   |_|_|_|
  * To Do:
- *  2. Procedulary Generate Terrain
- *  3. Add crafting
- *  4. Add the ability for there to be item drops
+ *  1. Add crafting
+ *  2. Add the ability for there to be item drops
  * */
 
 public class map extends JFrame { // The main panel of display
@@ -268,7 +259,7 @@ public class map extends JFrame { // The main panel of display
 		try {
 			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
 		} catch (NullPointerException ex) {
-			setPlayerStartPosition();
+			setPlayerPosition(false);
 		}
 		player.setOpaque(false);
 		add(player, 0);
@@ -594,12 +585,6 @@ public class map extends JFrame { // The main panel of display
 		drawMap();
 		repaintObjects();
 		return 0;
-	}
-
-	public void setPlayerStartPosition() {
-		player.setBounds(blockHeight,
-				(((Math.abs(dirtRows - mapHeight) - 1) * blockHeight) - player.getPlayerHeight()),
-				player.getPlayerWidth(), player.getPlayerHeight());
 	}
 
 	public void setPlayerPosition(Boolean endOrStart) { // True is end, false is start
