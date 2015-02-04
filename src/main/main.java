@@ -20,7 +20,7 @@ public class main {
 	public static String fileName = "save.xml";
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height; // In pixels
-	public static int blockHeight = 64; // Height of a block
+	public static int blockHeight = 16; // Height of a block
 	public static int inventoryGap = 4; // The gap between boxes in the inventory
 	public static int inventoryBlockNumber = 8; // Amount of slots in the ivnentory
 	public static int inventoryExtra = 4; // How much larger the background box is on each side of the inventory boxes
@@ -40,8 +40,8 @@ public class main {
 	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
 	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
 	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
-	public static String[] imageFileNames = new String[] { "blank.jpg", "dirt.jpg", "grass.jpg" }; // The block image file names
-	public static Boolean creative = false; //If the game is in creative or not
+	public static String[] imageFileNames = new String[] { "textures/blank.jpg", "textures/dirt.jpg", "textures/grass.jpg" }; // The block image file names
+	public static Boolean creative = true; //If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump
 	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the player will jump(Pixels per second)
