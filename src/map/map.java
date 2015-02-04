@@ -141,6 +141,15 @@ public class map extends JFrame { // The main panel of display
 			return true;
 		}
 	}
+	
+	public boolean getDrawNewOrOld(int currentScreen1) { // True is new, false is old
+		try {
+			chunk.get(currentScreen1);
+			return false;
+		} catch (IndexOutOfBoundsException ex) {
+			return true;
+		}
+	}
 
 	public void drawMap() {
 		if (getDrawNewOrOld()) {
@@ -493,7 +502,6 @@ public class map extends JFrame { // The main panel of display
 
 	public block getBlock(int screenNum1, int i, int x) { // Gets the info of a block
 		return chunk.get(screenNum1).get(i)[x];
-
 	}
 
 	// The below methods should be self explanatory, ask for explanation if
