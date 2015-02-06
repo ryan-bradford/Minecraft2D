@@ -135,7 +135,6 @@ public class map extends JFrame { // The main panel of display
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
-		mapWidth = mapWidth + 1;
 		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks - 1;
 		jumpSpeed = jumpSpeed1;// Pixels per Second
@@ -320,32 +319,25 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 	}
 
-	public void mouseClicked(int xCord, int yRow, String fileName) {
+	public void mouseClicked(int xRow, int yRow, String fileName) {
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
-			for (int i = 0; i < chunk.get(currentScreen).get(yRow).length; i++) {
-				try {
-					if (chunk.get(currentScreen).get(yRow)[i].getBounds().x == xCord) {
-						blockExists = true;
-						blockNum = i;
-						break;
-					}
-				} catch (NullPointerException ex) {
-
-				}
+			if (chunk.get(currentScreen).get(yRow)[xRow] != null) {
+				blockExists = true;
+				blockNum = xRow;
 			}
 			if (blockExists == false) {
-				placeNewBlock(xCord, yRow, fileName);
+				placeNewBlock(xRow, yRow, fileName);
 			} else {
-				startToMineBlock(blockNum, yRow, xCord);
+				startToMineBlock(xRow, yRow);
 			}
 		} catch (IndexOutOfBoundsException ex) {
 
 		}
 	}
 
-	public void placeNewBlock(int xCord, int yRow, String fileName) {
+	public void placeNewBlock(int xRow, int yRow, String fileName) {
 		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected]
 				.getBlockID();
 		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you
@@ -356,48 +348,43 @@ public class map extends JFrame { // The main panel of display
 																		// block
 																		// is
 																		// there
-																		// and
-																		// not
-																		// just
-																		// a
-																		// blank
-																		// block
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected]
 						.getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your
 														// inventory is closed
-			chunk.get(currentScreen).get(yRow)[xCord / blockHeight] = (new block(
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(
 					selectedBlockKind, id));
-			chunk.get(currentScreen).get(yRow)[xCord / blockHeight].setBounds(
-					xCord, yRow * blockHeight, blockHeight, blockHeight);
+			chunk.get(currentScreen).get(yRow)[xRow]
+					.setBounds(xRow * blockHeight, yRow * blockHeight,
+							blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected]
 						.subtractOne();
 			}
-			add(chunk.get(currentScreen).get(yRow)[xCord / blockHeight], 2);
+			add(chunk.get(currentScreen).get(yRow)[xRow], 2);
 			if (inventoryBar.inventoryBarButtons[inventoryBar.selected]
 					.getAmount() <= 0) {
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the
 																	// block
 																	// from your
-																	// hotbar
+																	// hot bar
 			}
 		}
 	}
 
-	public int removeBlock(int blockNum, int yRow) {
-		int id = chunk.get(currentScreen).get(yRow)[blockNum].id;
-		chunk.get(currentScreen).get(yRow)[blockNum].setVisible(false);
-		chunk.get(currentScreen).get(yRow)[blockNum] = null;
+	public int removeBlock(int xRow, int yRow) {
+		int id = chunk.get(currentScreen).get(yRow)[xRow].id;
+		chunk.get(currentScreen).get(yRow)[xRow].setVisible(false);
+		chunk.get(currentScreen).get(yRow)[xRow] = null;
 		return id;
 	}
 
-	public void startToMineBlock(int blockNum, int yRow, int xCord) {
-		mine.setRunning(blockNum, yRow, xCord);
+	public void startToMineBlock(int xRow, int yRow) {
+		mine.setRunning(xRow, yRow);
 	}
 
-	public void mineBlockAt(int xCord, int yRow, int blockNum) {
-		int id = removeBlock(blockNum, yRow);
+	public void mineBlockAt(int xRow, int yRow) {
+		int id = removeBlock(xRow, yRow);
 		Boolean needsToBeRun = true;
 		for (int i = 0; i < inventoryBar.inventoryBarButtons.length; i++) {
 			if (id == inventoryBar.inventoryBarButtons[i].blockID) {

@@ -7,8 +7,8 @@ import main.main;
 import thread.task;
 
 public class moveSelectorBlockTask extends task{
-	public int selectorX;						//Moves it on a grid that has squares the size of blocks
-	public int selectorRow;
+	public int selectorRowX;						//Moves it on a grid that has squares the size of blocks
+	public int selectorRowY;
 	public int blockHeight;
 	public int playerBlockX;
 	public int playerX;
@@ -17,6 +17,8 @@ public class moveSelectorBlockTask extends task{
 	public int playerMidY;
 	public int playerLowBlockY;
 	public int verticalShift;
+	public int playerXRow;
+	public int mouseXRow;
 	
 	public moveSelectorBlockTask() {
 		
@@ -28,45 +30,43 @@ public class moveSelectorBlockTask extends task{
 		blockHeight = main.getBlockHeight();
 		playerBlockX = (int) (main.getPlayer().getBounds().x / blockHeight);
 		playerX = main.getPlayer().getBounds().x;
+		playerXRow = playerX / blockHeight;
 		playerHighY = main.getPlayer().getBounds().y;
 		playerLowY = playerHighY - main.getPlayer().getHeight();
 		playerMidY = playerLowY + main.getBlockHeight();
 		playerLowBlockY = (int) (playerLowY / blockHeight) + 1;
 		Point mouseInfo = MouseInfo.getPointerInfo().getLocation();
+		mouseXRow = mouseInfo.x / blockHeight;
 		if (mouseInfo.y < playerLowY + main.getPlayer().getHeight()*2
 				&& mouseInfo.y > (playerLowY - blockHeight + main.getPlayer().getHeight()*2)) { // Middle
-			if (mouseInfo.x > playerX) {
-				selectorRow = (int) ((playerLowY - blockHeight) / blockHeight)
+			if (mouseXRow > playerXRow) {
+				selectorRowY = (int) ((playerLowY - blockHeight) / blockHeight)
 						+ verticalShift;
-				selectorX = playerX - (playerX - blockHeight) % blockHeight
-						+ blockHeight * 1; // Right
-				main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
+				selectorRowX = (playerXRow + 1); // Right
+				main.moveSelectorBlock(selectorRowX * blockHeight, selectorRowY * blockHeight);
 			} else {
-				selectorRow = (int) ((playerLowY - blockHeight) / blockHeight)
+				selectorRowY = (int) ((playerLowY - blockHeight) / blockHeight)
 						+ verticalShift;
-				selectorX = playerX - blockHeight - (playerX - blockHeight)
-						% blockHeight; // Left
-				main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
+				selectorRowX = (playerXRow - 1); // Left
+				main.moveSelectorBlock(selectorRowX * blockHeight, selectorRowY * blockHeight);
 			}
 		} else if (mouseInfo.y <= playerLowY - blockHeight + main.getPlayer().getHeight()*2) { // Highest
-			if (mouseInfo.x > playerX) {
-				selectorRow = (int) ((playerLowY - blockHeight * 2) / blockHeight)
+			if (mouseXRow > playerXRow) {
+				selectorRowY = (int) ((playerLowY - blockHeight * 2) / blockHeight)
 						+ verticalShift;
-				selectorX = playerX - (playerX - blockHeight) % blockHeight
-						+ blockHeight * 1; // Right
-				main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
+				selectorRowX = (playerXRow + 1); // Right
+				main.moveSelectorBlock(selectorRowX * blockHeight, selectorRowY * blockHeight);
 			} else {
-				selectorRow = (int) ((playerLowY - blockHeight * 2) / blockHeight)
+				selectorRowY = (int) ((playerLowY - blockHeight * 2) / blockHeight)
 						+ verticalShift;
-				selectorX = playerX - blockHeight - (playerX - blockHeight)
-						% blockHeight; // Left
-				main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
+				selectorRowX = (playerXRow - 1); // Left
+				main.moveSelectorBlock(selectorRowX * blockHeight, selectorRowY * blockHeight);
 			}
 		} else { // Lowest
-			selectorRow = (int) ((playerLowY+40) / blockHeight)
+			selectorRowY = (int) ((playerLowY+40) / blockHeight)
 					+ verticalShift;
-			selectorX = playerX - (playerX - blockHeight) % blockHeight;
-			main.moveSelectorBlock(selectorX, selectorRow * blockHeight);
+			selectorRowX = (playerXRow); // Left
+			main.moveSelectorBlock(selectorRowX * blockHeight, selectorRowY * blockHeight);
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class moveSelectorBlockTask extends task{
 	
 	@Override
 	public int[] getData() {
-		return new int[] {selectorX, selectorRow};
+		return new int[] {selectorRowX, selectorRowY};
 	}
 	
 	@Override

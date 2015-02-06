@@ -5,7 +5,6 @@ import thread.task;
 
 public class mineBlockTask extends task{
 	int wait;
-	int blockNum;
 	int yRow;
 	int xCord;
 	public Boolean running = false;
@@ -15,9 +14,9 @@ public class mineBlockTask extends task{
 	
 	@Override
 	public void runTask() {
-		main.map.chunk.get(main.map.currentScreen).get(yRow)[blockNum].deductHealth(100);
-		if(main.map.chunk.get(main.map.currentScreen).get(yRow)[blockNum].health <= 0) {
-			main.map.mineBlockAt(xCord, yRow, blockNum);
+		main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].deductHealth(100);
+		if(main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].health <= 0) {
+			main.map.mineBlockAt(xCord, yRow);
 		}
 	}
 	
@@ -36,9 +35,8 @@ public class mineBlockTask extends task{
 		return 1; //0 is no load, 3 is maximum load
 	}
 	
-	public void setRunning(int blockNum1, int yRow1, int xCord1) {
+	public void setRunning(int xCord1, int yRow1) {
 		running = true;
-		blockNum = blockNum1;
 		yRow = yRow1;
 		xCord = xCord1;
 	}
