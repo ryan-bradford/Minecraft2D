@@ -69,6 +69,7 @@ public class map extends JFrame { // The main panel of display
 	public int seed; // Randomly generates land
 	public int playerStartSpot;
 	public int prevSurface;
+	public int prevBiome;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
@@ -155,6 +156,7 @@ public class map extends JFrame { // The main panel of display
 				System.out.println("World generating with seed " + seed);
 				dirtRows = dirtRows + 5;
 				drawLand();
+				drawStructures();
 			}
 		} else {
 			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
@@ -177,6 +179,7 @@ public class map extends JFrame { // The main panel of display
 		// Draws the ground
 		if (currentScreen == 0) {
 			prevSurface = Math.max(dirtRows - 5, 3);
+			prevBiome = 0;
 		}
 		// PER COLUMN
 		for (int x = 0; x < mapWidth; x++) {
@@ -209,8 +212,10 @@ public class map extends JFrame { // The main panel of display
 					continue;
 				} else if (y == surface) {
 					blockID = 2;
-				} else if (y > surface) {
+				} else if (y <= surface+3) {
 					blockID = 1;
+				} else if(y > surface+3){
+					blockID = 3;
 				}
 				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID));
 				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
@@ -222,7 +227,11 @@ public class map extends JFrame { // The main panel of display
 		}
 
 	}
-
+	
+	public void drawStructures(){
+		
+	}
+	
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {

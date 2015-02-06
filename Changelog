@@ -1,5 +1,10 @@
 Change Log:
 
+Beta 0.6.1:
+	1. Added Stone
+	2. Added Stone Terrain Generation
+	3. Began to implement biomes
+
 Beta 0.6.0:
   1. Made it so if you are in creative, placing a block will not take one
      from your inventory.

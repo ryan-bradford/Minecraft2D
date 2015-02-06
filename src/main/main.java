@@ -40,7 +40,7 @@ public class main {
 	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
 	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
 	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
-	public static String[] imageFileNames = new String[] { "blank.jpg", "dirt.jpg", "grass.jpg" }; // The block image file names
+	public static String[] imageFileNames = new String[] { "blank.jpg", "dirt.jpg", "grass.jpg", "stone.jpg" }; // The block image file names
 	public static Boolean creative = false; //If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump
