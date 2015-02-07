@@ -28,7 +28,7 @@ public class taskManager { // The thing that distributes the tasks to the differ
 		lowestLoadAmount = cores[lowestLoadCoreNum].getLoad();
 		return new int[] { lowestLoadCoreNum, taskNum }; // Returns the core number the task was added to
 	}
-	
+
 	public int[] addTask(task task1, int coreNum) { // Adds a task
 		int taskNum;
 		taskNum = cores[coreNum].addTask(task1); // Adds the task to this core

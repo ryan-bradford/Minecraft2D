@@ -9,7 +9,7 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 	ArrayList<Integer> numShortWaitsPassed; // Counts the number of short waits that have passed for each task
 	Integer shortestWait; // The shortest wait of all the tasks
 	int load; // What is the total "load" gave by this thread (Is entireley arbritrary)
-	int id = (int)(Math.random()*100);
+	int id = (int) (Math.random() * 100);
 
 	public CPUCore(ArrayList<task> tasks1) { // Inits the core to a list of tasks, this task list is most commonly passed as null
 		load = 0;

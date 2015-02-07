@@ -26,10 +26,7 @@ public class keyControls implements KeyListener { // The thing that controls the
 			}
 		}
 		if (key == KeyEvent.VK_W && main.getCollisionTop() == false && main.getInventoryState() == false) {
-			if (main.getCreative() == false) { // Checks colision and moves
-												// also, if the player is in
-												// creative, he will not jump,
-												// but fly
+			if (main.getCreative() == false) { // Checks colision and moves also, if the player is in creative, he will not jump, but fly
 				if (main.getJumpingObject() == null && main.getJumping() == false && main.getCollisionBottom() == true) {
 					main.startjumping();
 				}
@@ -38,12 +35,7 @@ public class keyControls implements KeyListener { // The thing that controls the
 			}
 		}
 
-		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) { // Moves
-																			// the
-																			// block
-																			// selector
-																			// for
-																			// placement
+		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) { // Moves the block selector placment
 			main.setSelected(0);
 		}
 

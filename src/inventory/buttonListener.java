@@ -11,8 +11,8 @@ public class buttonListener implements ActionListener {
 	int idY;
 	Boolean inventOrBar; //True is inventory
 	
-	public buttonListener(int idX1, int idY1, Boolean inventOrBar1) { //The thing that controls what happens when a inventory 
-		idX = idX1; 											      //Button is clicked
+	public buttonListener(int idX1, int idY1, Boolean inventOrBar1) { //The thing that controls what happens when a inventory Button is clicked
+		idX = idX1;
 		idY = idY1;
 		inventOrBar = inventOrBar1;
 	}

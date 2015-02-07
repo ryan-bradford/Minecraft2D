@@ -69,34 +69,29 @@ public class map extends JFrame { // The main panel of display
 	public int seed; // Randomly generates land
 	public int playerStartSpot;
 	public int prevSurface;
+	public int prevBiome;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
-	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap,
-			int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
-			Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor,
-			Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight, int jumpHeight, int jumpSpeed,
-			int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1,
-			inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons, Integer[] playerPosition,
-			int currentScreen1, String WorldType, int worldSeed) {
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1,
-				walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
+	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
+			Color selectedBoxColor, Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames,
+			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1, inventoryButton[][] inventButtons,
+			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed) {
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
 		initTaskManager();
 		drawMap();
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
 		initPhysics();
 		startPhysics();
 		startUserControl(mineBlockSpeed);
-		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor,
-				swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventButtons,
+		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventButtons,
 				inventBarButtons);
 		startSave();
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, ArrayList<ArrayList<block[]>> chunk1,
-			int currentScreen1, String WorldType, int worldSeed) {
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1,
+			ArrayList<ArrayList<block[]>> chunk1, int currentScreen1, String WorldType, int worldSeed) {
 		currentScreen = currentScreen1;
 		chunk = new ArrayList<ArrayList<block[]>>();
 		if (chunk1 != null) {
@@ -109,7 +104,6 @@ public class map extends JFrame { // The main panel of display
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
 		mapWidth = (main.screenWidth) / blockHeight;
-		mapWidth = mapWidth + 1;
 		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks - 1;
 		jumpSpeed = jumpSpeed1;// Pixels per Second
@@ -120,7 +114,8 @@ public class map extends JFrame { // The main panel of display
 		WorldGen = WorldType;
 		if (worldSeed == 0) {
 			rnd = new Random();
-			seed = rnd.nextInt(999999);// can be substituted for a specific number
+			seed = rnd.nextInt(999999);// can be substituted for a specific
+										// number
 		} else {
 			seed = worldSeed;
 		}
@@ -142,19 +137,33 @@ public class map extends JFrame { // The main panel of display
 		}
 	}
 
+	public boolean getDrawNewOrOld(int currentScreen1) { // True is new, false
+															// is old
+		try {
+			chunk.get(currentScreen1);
+			return false;
+		} catch (IndexOutOfBoundsException ex) {
+			return true;
+		}
+	}
+
 	public void drawMap() {
 		if (getDrawNewOrOld()) {
 			chunk.add(new ArrayList<block[]>());
 			for (int i = 0; i < mapHeight; i++) {
 				chunk.get(currentScreen).add(new block[mapWidth]);
 			}
-			if (WorldGen.toUpperCase().equals("FLATWORLD")) { // Flat world generation I didn't touch
+			if (WorldGen.toUpperCase().equals("FLATWORLD")) { // Flat world
+																// generation I
+																// didn't touch
 				drawDirt();
 				drawGrass();
-			} else if (WorldGen.toUpperCase().equals("NORMAL")) { // Environment varies
+			} else if (WorldGen.toUpperCase().equals("NORMAL")) { // Environment
+																	// varies
 				System.out.println("World generating with seed " + seed);
 				dirtRows = dirtRows + 5;
 				drawLand();
+				drawStructures();
 			}
 		} else {
 			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
@@ -177,13 +186,16 @@ public class map extends JFrame { // The main panel of display
 		// Draws the ground
 		if (currentScreen == 0) {
 			prevSurface = Math.max(dirtRows - 5, 3);
+			prevBiome = 0;
 		}
 		// PER COLUMN
 		for (int x = 0; x < mapWidth; x++) {
 			// generate surface block number
 			int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100;
-			// System.out.println("column " x " percentage of " surface " mapwidth " mapWidth);
-			if (surface < 2) { // unlikely scenario where floor is raised two blocks
+			// System.out.println("column " x " percentage of " surface
+			// " mapwidth " mapWidth);
+			if (surface < 2) { // unlikely scenario where floor is raised two
+								// blocks
 				surface = -2;
 			} else if (surface < 20) { // floor is up 1 block
 				surface = -1;
@@ -205,30 +217,36 @@ public class map extends JFrame { // The main panel of display
 			for (int y = 0; y < mapHeight; y++) {
 				int blockID = 0;
 				if (y < surface) {
-					// System.out.println("null at x= " x " y=" y "  surface = " surface chunk.get(currentScreen).get(y).get(x));
+					// System.out.println("null at x= " x " y=" y "  surface = "
+					// surface chunk.get(currentScreen).get(y).get(x));
 					continue;
 				} else if (y == surface) {
 					blockID = 2;
-				} else if (y > surface) {
+				} else if (y <= surface+3) {
 					blockID = 1;
+				} else if(y > surface+3){
+					blockID = 3;
 				}
 				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID));
-				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
-				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight,
-						blockHeight);
+				// System.out.println("Block " blockID " at x=" x " y=" y
+				// chunk.get(currentScreen).get(y).get(x));
+				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(y)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(y)[x], 0);
 			}
 		}
 
 	}
+	
+	public void drawStructures(){
+		
+	}
 
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
 				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1));
-				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight,
-						blockHeight);
+				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
 			}
@@ -243,18 +261,15 @@ public class map extends JFrame { // The main panel of display
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
 			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2));
-			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight),
-					blockHeight, blockHeight);
+			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
 			current++;
 		}
-		// System.out.println("Grass Drawn" + " In " + (System.nanoTime() -
-		// startTime) + " Nanoseconds");
+		// System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
-	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor,
-			Integer[] playerPosition) { // Draws the player
+	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, Integer[] playerPosition) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
 		try {
 			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
@@ -267,67 +282,59 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 	}
 
-	public void mouseClicked(int xCord, int yRow, String fileName) {
+	public void mouseClicked(int xRow, int yRow, String fileName) {
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
-			for (int i = 0; i < chunk.get(currentScreen).get(yRow).length; i++) {
-				try {
-					if (chunk.get(currentScreen).get(yRow)[i].getBounds().x == xCord) {
-						blockExists = true;
-						blockNum = i;
-						break;
-					}
-				} catch (NullPointerException ex) {
-
-				}
+			if (chunk.get(currentScreen).get(yRow)[xRow] != null) {
+				blockExists = true;
+				blockNum = xRow;
 			}
 			if (blockExists == false) {
-				placeNewBlock(xCord, yRow, fileName);
+				placeNewBlock(xRow, yRow, fileName);
 			} else {
-				startToMineBlock(blockNum, yRow, xCord);
+				startToMineBlock(xRow, yRow);
 			}
 		} catch (IndexOutOfBoundsException ex) {
 
 		}
 	}
 
-	public void placeNewBlock(int xCord, int yRow, String fileName) {
+	public void placeNewBlock(int xRow, int yRow, String fileName) {
 		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID();
 		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you have in your inventory
-		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there and not just a blank block
+		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(currentScreen).get(yRow)[xCord / 64] = (new block(selectedBlockKind, id));
-			chunk.get(currentScreen).get(yRow)[xCord / 64].setBounds(xCord, yRow * blockHeight, blockHeight,
-					blockHeight);
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id));
+			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
 			}
-			add(chunk.get(currentScreen).get(yRow)[xCord / 64], 2);
+			add(chunk.get(currentScreen).get(yRow)[xRow], 2);
 			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar
 			}
 		}
 	}
 
-	public int removeBlock(int blockNum, int yRow) {
-		int id = chunk.get(currentScreen).get(yRow)[blockNum].id;
-		chunk.get(currentScreen).get(yRow)[blockNum].setVisible(false);
-		chunk.get(currentScreen).get(yRow)[blockNum] = null;
+	public int removeBlock(int xRow, int yRow) {
+		int id = chunk.get(currentScreen).get(yRow)[xRow].id;
+		chunk.get(currentScreen).get(yRow)[xRow].setVisible(false);
+		chunk.get(currentScreen).get(yRow)[xRow] = null;
 		return id;
 	}
 
-	public void startToMineBlock(int blockNum, int yRow, int xCord) {
-		mine.setRunning(blockNum, yRow, xCord);
+	public void startToMineBlock(int xRow, int yRow) {
+		mine.setRunning(xRow, yRow);
 	}
 
-	public void mineBlockAt(int xCord, int yRow, int blockNum) {
-		int id = removeBlock(blockNum, yRow);
+	public void mineBlockAt(int xRow, int yRow) {
+		int id = removeBlock(xRow, yRow);
 		Boolean needsToBeRun = true;
 		for (int i = 0; i < inventoryBar.inventoryBarButtons.length; i++) {
 			if (id == inventoryBar.inventoryBarButtons[i].blockID) {
-				if (inventoryBar.inventoryBarButtons[i].amount != 64) {
+				if (inventoryBar.inventoryBarButtons[i].amount != main.stackHeight) {
 					inventoryBar.inventoryBarButtons[i].addBlock(1, id);
 					needsToBeRun = false;
 					break;
@@ -338,7 +345,7 @@ public class map extends JFrame { // The main panel of display
 			for (int x = 0; x < inventory.blockNumber; x++) {
 				for (int y = 0; y < inventory.inventoryHeight; y++) {
 					if (inventory.inventoryButtons[x][y].blockID == id) {
-						if (inventory.inventoryButtons[x][y].amount != 64) {
+						if (inventory.inventoryButtons[x][y].amount != main.stackHeight) {
 							inventory.inventoryButtons[x][y].addBlock(1, id);
 							needsToBeRun = false;
 							break;
@@ -384,28 +391,23 @@ public class map extends JFrame { // The main panel of display
 		}
 	}
 
-	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight,
-			Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor, Color backgroundColor, Color textColor,
-			int stackHeight, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons) { // Initializes and draws the
+	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
+			Color backgroundColor, Color textColor, int stackHeight, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons) { // Initializes and draws the
 		// inventory
-		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight, inventBarButtons);
+		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventBarButtons);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
 		inventoryBar.setBounds((main.screenWidth / 2 - width / 2), main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
 		try {
-			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor,
-					swapBoxColor, backgroundColor, textColor, stackHeight, inventButtons);
+			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, backgroundColor, textColor, stackHeight, inventButtons);
 		} catch (NullPointerException ex) {
-			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor,
-					swapBoxColor, backgroundColor, textColor, stackHeight, null);
+			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, backgroundColor, textColor, stackHeight, null);
 		}
 		width = inventory.width;
 		height = inventory.height;
-		inventory.setBounds((main.screenWidth - inventory.width) / 2, (main.screenHeight - inventory.height) / 2,
-				width, height);
+		inventory.setBounds((main.screenWidth - inventory.width) / 2, (main.screenHeight - inventory.height) / 2, width, height);
 		inventory.setVisible(false);
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);
@@ -419,7 +421,8 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 	}
 
-	public void startUserControl(int mineBlockSpeed) { // Starts the user controls
+	public void startUserControl(int mineBlockSpeed) { // Starts the user
+														// controls
 		startKeyControls();
 		startMouseControl(mineBlockSpeed);
 		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
@@ -466,8 +469,10 @@ public class map extends JFrame { // The main panel of display
 
 	public void startPhysics() { // Starts the physics
 		physics.start();
-		task thisTask = new gravityTask();
-		manager.addTask(thisTask, 1);
+		if (creative == false) {
+			task thisTask = new gravityTask();
+			manager.addTask(thisTask, 1);
+		}
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
@@ -493,11 +498,9 @@ public class map extends JFrame { // The main panel of display
 
 	public block getBlock(int screenNum1, int i, int x) { // Gets the info of a block
 		return chunk.get(screenNum1).get(i)[x];
-
 	}
 
-	// The below methods should be self explanatory, ask for explanation if
-	// needed
+	// The below methods should be self explanatory, ask for explanation if needed
 	public Boolean getCollisionLeft() {
 		try {
 			return physics.getColisionLeft();
@@ -592,8 +595,7 @@ public class map extends JFrame { // The main panel of display
 		if (endOrStart == false) {
 			player.setBounds(blockHeight, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		} else {
-			player.setBounds(main.screenWidth - blockHeight, playerLastY, player.getPlayerWidth(),
-					player.getPlayerHeight());
+			player.setBounds(main.screenWidth - blockHeight, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		}
 
 	}

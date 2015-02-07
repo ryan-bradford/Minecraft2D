@@ -17,8 +17,7 @@ public class movePlayerTask extends task { // The task that moves the player
 	}
 
 	@Override
-	public void runTask() { // Detirmines what direction to move the player in
-							// and moves it that way
+	public void runTask() { // Detirmines what direction to move the player in and moves it that way
 		leftOrRight = main.map.getLeftOrRight();
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null) {
@@ -55,39 +54,55 @@ public class movePlayerTask extends task { // The task that moves the player
 				&& main.getPlayer().getBounds().x + xAmmount <= 0) {
 			canBeMoved = false;
 		}
-//		if (canBeMoved == true && endOrBegining != null) {
-//			canBeMoved = true;
-//			try {
-//				ArrayList<block> blocks = main.getBlocks(currentScreen
-//						+ whichDirectionToMove, main.getPlayer().getBounds().y);
-//				System.out.println(blocks.get(0).getBounds().y
-//						+ " " + main.getPlayer().getBounds().y);
-//				if (!blocks.equals(null)) {
-//					for (int i = 0; i < blocks.size(); i++) {
-//						System.out.println(blocks.get(i).getBounds().y + " "
-//								+ main.getPlayer().getBounds().y);
-//						if (!blocks.get(i).equals(null)) {
-//							System.out.println(blocks.get(i).getBounds().y
-//									+ " " + main.getPlayer().getBounds().y);
-//							if (endOrBegining == true) {
-//								if (blocks.get(i).getBounds().x == main.blockHeight) {
-//									canBeMoved = false;
-//									System.out.println("Can't Move Left");
-//								}
-//							} else {
-//								if (blocks.get(i).getBounds().x == main.screenWidth
-//										- main.blockHeight) {
-//									canBeMoved = false;
-//									System.out.println("Can't Move Right");
-//								}
-//							}
-//						}
-//					}
-//				}
-//			} catch (IndexOutOfBoundsException ex) {
-//				System.out.println("Caught 3");
-//			}
-//		}
+		if (endOrBegining != null) {
+			if (endOrBegining == true) {
+				int playerRightHighX = (int) (main.getPlayer().getPlayerWidth()
+						* ((1 + 1 / 3) * .1) + main.screenWidth - main.blockHeight)
+						+ (int) (main.getPlayer().getPlayerWidth() / 1.2);
+				int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.screenWidth - main.blockHeight)
+						+ main.getPlayer().getPlayerWidth() / 2;
+				int playerHighY = (int) (main.getPlayer().getBounds().y);
+				int playerLowY = main.getPlayer().getBounds().y
+						+ (main.getPlayer().getHeight()) - 4;
+				int[] playerYs = new int[] { playerHighY,
+						(playerLowY + playerHighY) / 2 };
+				int[] playerXs = new int[] { playerRightHighX, playerRightLowX };
+				int thisCurrentScreen = currentScreen--;
+				for (int i = 0; i < playerYs.length; i++) {
+					if (main.map.getDrawNewOrOld(thisCurrentScreen) == false) {
+						if (main.map.getBlock(thisCurrentScreen, playerYs[i]
+								/ main.blockHeight, playerXs[i]
+								/ main.blockHeight) != null) {
+							xAmmount = 0;
+							endOrBegining = null;
+						}
+					}
+				}
+
+			} else if (endOrBegining == false) {
+				int playerLeftHighX = (int) (main.getPlayer().getPlayerWidth()
+						* ((1 + 1 / 3) * .1) + main.blockHeight);
+				int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth()
+						/ 4 + main.blockHeight);
+				int playerHighY = (int) (main.getPlayer().getBounds().y);
+				int playerLowY = main.getPlayer().getBounds().y
+						+ (main.getPlayer().getHeight()) - 4;
+				int[] playerYs = new int[] { playerHighY,
+						(playerLowY + playerHighY) / 2 };
+				int[] playerXs = new int[] { playerLeftHighX, playerLeftLowX };
+				int thisCurrentScreen = currentScreen++;
+				for (int i = 0; i < playerYs.length; i++) {
+					if (main.map.getDrawNewOrOld(thisCurrentScreen) == false) {
+						if (main.map.getBlock(thisCurrentScreen, playerYs[i]
+								/ main.blockHeight, playerXs[i]
+								/ main.blockHeight) != null) {
+							xAmmount = 0;
+							endOrBegining = null;
+						}
+					}
+				}
+			}
+		}
 
 		if (canBeMoved == true) {
 			main.movePlayer(xAmmount, yAmmount);
@@ -100,18 +115,15 @@ public class movePlayerTask extends task { // The task that moves the player
 
 	@Override
 	public Boolean returnRunnable() {
-		if (main.map.inventoryOpen == true) { // If the inventory is open, dont
-												// run
+		if (main.map.inventoryOpen == true) { // If the inventory is open, dont run
 			return false;
 		}
-		if (upOrDown != null) { // If the player is trying to move up, but
-								// touching the top, dont move up
+		if (upOrDown != null) { // If the player is trying to move up, but touching the top, dont move up
 			if (upOrDown == true) {
 				if (main.getCollisionTop() == true) {
 					return false;
 				}
-			} else { // If the player is trying to move down, but touching the
-						// bottom, dont move down
+			} else { // If the player is trying to move down, but touching the bottom, dont move down
 				if (main.getCollisionBottom() == true) {
 					return false;
 				}
