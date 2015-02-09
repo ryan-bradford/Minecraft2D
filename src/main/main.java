@@ -82,7 +82,7 @@ public class main {
 		start.setVisible(false);
 		start.setFocusable(false);
 		start = null;
-		fileName = worldName + ".xml";
+		fileName = worldName;
 		getSavedStuff.readFile();
 		currentScreen = getSavedStuff.getScreenNum();
 		playerBounds = getSavedStuff.getPlayerBounds();

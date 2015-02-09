@@ -18,13 +18,18 @@ public class startScreen extends JFrame {
 
 	JButton newGame;
 	JButton loadGame;
+	JButton[][] selectGame;
 	JTextPane message;
 	JTextPane enterWorldName;
+	JTextPane noSavedGames;
 	JButton done;
 	Boolean newOrOld;
 	String[] savedGames;
+	SimpleAttributeSet center;
 
 	public startScreen() {
+		center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		setLayout(null);
 		savedGames = getSavedStuff.getWorldNames();
 		newGame = new JButton("New/Overwrite Game");
@@ -34,6 +39,7 @@ public class startScreen extends JFrame {
 		loadGame = new JButton("Load Game");
 		loadGame.setBounds(main.screenWidth / 2 + 100, 300, 200, 50);
 		add(loadGame);
+		loadGame.addActionListener(new listenToLoadGame());
 	}
 
 	public class listenToNewGame implements ActionListener {
@@ -48,13 +54,77 @@ public class startScreen extends JFrame {
 			message = new JTextPane();
 			message.setText("Type the Name of Your World");
 			message.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 200, 200, 25);
+			message.setParagraphAttributes(center, true);
 			add(message);
 			enterWorldName = new JTextPane();
 			enterWorldName.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 100, 200, 25);
-			SimpleAttributeSet center = new SimpleAttributeSet();
-			StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-			enterWorldName.setParagraphAttributes(center, false);
+			enterWorldName.setParagraphAttributes(center, true);
 			add(enterWorldName);
+		}
+	}
+
+	public class listenToLoadGame implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			newGame.setVisible(false);
+			loadGame.setVisible(false);
+			remove(newGame);
+			remove(loadGame);
+			savedGames = getSavedStuff.getWorldNames();
+			if (savedGames == null) {
+				noSavedGames = new JTextPane();
+				noSavedGames.setText("You have no saved games");
+				noSavedGames.setBounds(main.screenWidth / 2 - 100, 50, 200, 25);
+				noSavedGames.setParagraphAttributes(center, true);
+				add(noSavedGames);
+				newOrOld = true;
+				initDone();
+				message = new JTextPane();
+				message.setText("Type the Name of Your World");
+				message.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 200, 200, 25);
+				message.setParagraphAttributes(center, true);
+				add(message);
+				enterWorldName = new JTextPane();
+				enterWorldName.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 100, 200, 25);
+				enterWorldName.setParagraphAttributes(center, true);
+				add(enterWorldName);
+				repaint();
+			} else {
+				int widthInButtons = main.screenWidth / 100;
+				int heightInButtons = main.screenHeight / 50;
+				int rowsNeeded = (savedGames.length / widthInButtons) + 1;
+				int counter = 0;
+				selectGame = new JButton[widthInButtons][heightInButtons];
+				System.out.println(widthInButtons);
+				System.out.println(rowsNeeded);
+				System.out.println(savedGames[counter].substring(0, savedGames[counter].length() - 4));
+				for (int i = 0; i < widthInButtons; i++) {
+					for (int x = 0; x < rowsNeeded; x++) {
+						if (!(counter + 1 > savedGames.length)) {
+							System.out.println(150 * i + 50);
+							System.out.println(100 * x + 50);							
+							selectGame[i][x] = new JButton(savedGames[counter].substring(0, savedGames[counter].length() - 4));
+							selectGame[i][x].setBounds(150 * i + 50, 100 * x + 50, 100, 50);
+							selectGame[i][x].addActionListener(new listenToGameButtons(counter));
+							add(selectGame[i][x]);
+							repaint();
+							counter++;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public class listenToGameButtons implements ActionListener {
+		int id;
+		public listenToGameButtons(int id1) {
+			id = id1;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			main.startGame(savedGames[id]);
 		}
 	}
 
@@ -64,7 +134,7 @@ public class startScreen extends JFrame {
 			if (newOrOld) {
 				File thisFile = new File(enterWorldName.getText() + ".xml");
 				thisFile.delete();
-				main.startGame(enterWorldName.getText());
+				main.startGame(enterWorldName.getText() + ".xml");
 			} else {
 
 			}
