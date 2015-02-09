@@ -23,18 +23,18 @@ public class movePlayerTask extends task { // The task that moves the player
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null) {
 			if (upOrDown == true) {
-				yAmmount = +-1;
+				yAmmount = -1;
 			} else {
-				yAmmount = +1;
+				yAmmount = 1;
 			}
 		} else {
 			yAmmount = 0;
 		}
 		if (leftOrRight != null) {
 			if (leftOrRight == true) {
-				xAmmount = +-1;
+				xAmmount = -1;
 			} else {
-				xAmmount = +1;
+				xAmmount = 1;
 			}
 		} else {
 			xAmmount = 0;
@@ -116,6 +116,9 @@ public class movePlayerTask extends task { // The task that moves the player
 
 	@Override
 	public Boolean returnRunnable() {
+		if(main.map.keyListener.nothingPressed) {
+			return false;
+		}
 		if (main.map.inventoryOpen == true) { // If the inventory is open, dont
 												// run
 			return false;
@@ -134,11 +137,11 @@ public class movePlayerTask extends task { // The task that moves the player
 			}
 		}
 		if (leftOrRight != null) { // Same rules as about apply
-			if (leftOrRight == true) {
+			if (leftOrRight && main.map.keyListener.aPressed) {
 				if (main.getCollisionLeft() == true) {
 					return false;
 				}
-			} else {
+			} else if(leftOrRight == false && main.map.keyListener.dPressed){
 				if (main.getCollisionRight() == true) {
 					return false;
 				}
