@@ -4,6 +4,7 @@ import inventory.inventoryButton;
 
 
 
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import player.player;
 import block.block;
 import map.map;
 import save.getSavedStuff;
+import startScreen.startScreen;
 import userControl.keyControls.jump;
 
 public class main {
@@ -59,15 +61,29 @@ public class main {
 	public static Integer[] playerBounds; //The saved player location
 	public static inventoryButton[][] savedInventoryButtons; //The saved inventory stuff
 	public static inventoryButton[] savedInventoryBarButtons; //The saved inventory bar stuff
+	public static startScreen start;
+	public static String fileNamesSaveFile = "fileNames.txt";
 
 	/*
 	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
 
 	public static void main(String[] args) { // Creates the map
+		start = new startScreen();
+		start.pack();
+		start.setBounds(0, 0, screenWidth, screenHeight);
+		start.setVisible(true);
+		start.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		fileName = JOptionPane.showInputDialog("Enter the name of what you want the save file to be called: ");
+	}
+	
+	public static void startGame(String worldName) {
+		start.setVisible(false);
+		start.setFocusable(false);
+		start = null;
+		fileName = worldName + ".xml";
+		getSavedStuff.readFile();
 		currentScreen = getSavedStuff.getScreenNum();
 		playerBounds = getSavedStuff.getPlayerBounds();
 		savedChunk = getSavedStuff.getAllScreens();
