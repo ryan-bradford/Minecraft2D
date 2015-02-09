@@ -9,7 +9,7 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 	ArrayList<Integer> numShortWaitsPassed; // Counts the number of short waits that have passed for each task
 	Integer shortestWait; // The shortest wait of all the tasks
 	int load; // What is the total "load" gave by this thread (Is entireley arbritrary)
-	int id = (int)(Math.random()*100);
+	int id = (int) (Math.random() * 100);
 
 	public CPUCore(ArrayList<task> tasks1) { // Inits the core to a list of tasks, this task list is most commonly passed as null
 		load = 0;
@@ -23,10 +23,8 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 			for (int i = 0; i < tasks.size(); i++) { // Finds the shortest wait
 				waits.set(i, tasks.get(i).getWait());
 				numShortWaitsPassed.set(i, 0);
-				if (shortestWait == null || waits.get(i) < shortestWait) {
-					shortestWait = waits.get(i);
-				}
 			}
+			shortestWait = 1;
 		} catch (NullPointerException ex) {
 
 		}
@@ -60,20 +58,31 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 
 	public int addTask(task task1) { // Adds a task to the thread
 		tasks.add(task1);
-		for (int i = 0; i < tasks.size(); i++) { // Adds the wait to the list and finds the shortest wait
-			waits.add(1000);
-			waits.set(i, tasks.get(i).getWait());
-			numShortWaitsPassed.add(0);
-			if (shortestWait == null || waits.get(i) < shortestWait) {
-				shortestWait = waits.get(i);
-			}
-		}
+		waits.add(1000);
+		waits.set(waits.size() - 1, tasks.get(waits.size() - 1).getWait()-tasks.size()/2);
+		numShortWaitsPassed.add(0);
 		load = load + task1.getCPULoad();
 		return tasks.size();
 	}
 
 	public int getLoad() {
 		return load;
+	}
+
+	private static Integer gcd(Integer a, Integer b) {
+		while (b > 0) {
+			Integer temp = b;
+			b = a % b; // % is remainder
+			a = temp;
+		}
+		return a;
+	}
+
+	private static int gcd(Integer[] input) {
+		Integer result = input[0];
+		for (int i = 1; i < input.length; i++)
+			result = gcd(result, input[i]);
+		return result;
 	}
 
 }

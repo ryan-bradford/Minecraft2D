@@ -38,4 +38,9 @@ public class gravityTask extends task {
 		return 2;
 	}
 	
+	@Override
+	public int[] getData() {
+		return new int[] {3};
+	}
+	
 }

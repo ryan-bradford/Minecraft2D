@@ -44,9 +44,9 @@ public class main {
 	public static Boolean creative = false; //If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump
-	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the player will jump(Pixels per second)
-	public static int gravitySpeed = blockHeight * 4; // How fast the player will fall(Pixels per second)
-	public static int walkSpeed = blockHeight * 4;// How fast the player will walk(Pixels per second)
+	public static int jumpSpeed = (int) (blockHeight * 3); // How fast the player will jump(Pixels per second)
+	public static int gravitySpeed = (int) (blockHeight * 3.5); // How fast the player will fall(Pixels per second)
+	public static int walkSpeed = (int) (blockHeight * 3);// How fast the player will walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
 	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
 	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
