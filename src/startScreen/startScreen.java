@@ -95,14 +95,9 @@ public class startScreen extends JFrame {
 				int rowsNeeded = (savedGames.length / widthInButtons) + 1;
 				int counter = 0;
 				selectGame = new JButton[widthInButtons][heightInButtons];
-				System.out.println(widthInButtons);
-				System.out.println(rowsNeeded);
-				System.out.println(savedGames[counter].substring(0, savedGames[counter].length() - 4));
 				for (int i = 0; i < widthInButtons; i++) {
 					for (int x = 0; x < rowsNeeded; x++) {
-						if (!(counter + 1 > savedGames.length)) {
-							System.out.println(150 * i + 50);
-							System.out.println(100 * x + 50);							
+						if (!(counter + 1 > savedGames.length)) {						
 							selectGame[i][x] = new JButton(savedGames[counter].substring(0, savedGames[counter].length() - 4));
 							selectGame[i][x].setBounds(150 * i + 50, 100 * x + 50, 100, 50);
 							selectGame[i][x].addActionListener(new listenToGameButtons(counter));

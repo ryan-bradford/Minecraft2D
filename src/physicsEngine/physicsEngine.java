@@ -8,7 +8,6 @@ public class physicsEngine { // The physics engine
 	Boolean crative;
 
 	public Boolean getColisionLeft() { // Checks for colision on the left side
-
 		int playerLeftHighX = (int) (main.getPlayer().getPlayerWidth() * ((1 + 1 / 3) * .1) + main.getPlayer()
 				.getBounds().x);
 		int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.getPlayer().getBounds().x);

@@ -32,7 +32,15 @@ public class saveTask extends task {
 			}
 			File thisFile = new File(main.fileName);
 			if (!thisFile.exists()) {
-				fileNames.add(main.fileName);
+				Boolean canBeAdded = true;
+				for (int i = 0; i < fileNames.size(); i++) {
+					if(main.fileName.equals(fileNames.get(i))) {
+						canBeAdded = false;
+					}
+				}
+				if (canBeAdded) {
+					fileNames.add(main.fileName);
+				}
 			}
 		} else {
 			fileNames = new ArrayList<String>();
@@ -81,7 +89,7 @@ public class saveTask extends task {
 
 	@Override
 	public int getWait() {
-		return 1000;
+		return 15000;
 	}
 
 	@Override

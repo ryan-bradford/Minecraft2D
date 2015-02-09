@@ -2,7 +2,6 @@ package map;
 
 import javax.swing.JFrame;
 
-
 import physicsEngine.gravityTask;
 import physicsEngine.physicsEngine;
 import player.player;
@@ -90,40 +89,25 @@ public class map extends JFrame { // The main panel of display
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
-	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks,
-			int inventoryBlock, int inventoryGap, int inventoryExtra,
-			int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
-			Color selectedBoxColor, Color backgroundColor, Color textColor,
-			Color airColor, Color skinColor, Color pantsColor,
-			Color shirtColor, Color shoeColor, String[] imageFileNames,
-			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1,
-			int walkSpeed1, int mineBlockSpeed,
-			ArrayList<ArrayList<block[]>> chunk1,
-			inventoryButton[][] inventButtons,
-			inventoryButton[] inventBarButtons, Integer[] playerPosition,
-			int currentScreen1, String WorldType, int worldSeed) {
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames,
-				jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1,
-				currentScreen1, WorldType, worldSeed);
+	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
+			Color selectedBoxColor, Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames,
+			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1, inventoryButton[][] inventButtons,
+			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed) {
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
 		initTaskManager();
 		drawMap();
 		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
 		initPhysics();
 		startPhysics();
 		startUserControl(mineBlockSpeed);
-		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra,
-				inventoryHeight, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight,
-				inventButtons, inventBarButtons);
+		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventButtons,
+				inventBarButtons);
 		startSave();
 		System.out.println("The Game Has Begun!");
 	}
 
-	public void initVar(Boolean creativ, int blockHeight1,
-			int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1,
-			int walkSpeed1, ArrayList<ArrayList<block[]>> chunk1,
-			int currentScreen1, String WorldType, int worldSeed) {
+	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1,
+			ArrayList<ArrayList<block[]>> chunk1, int currentScreen1, String WorldType, int worldSeed) {
 		currentScreen = currentScreen1;
 		chunk = new ArrayList<ArrayList<block[]>>();
 		if (chunk1 != null) {
@@ -156,8 +140,7 @@ public class map extends JFrame { // The main panel of display
 		} catch (IndexOutOfBoundsException ex) {
 			chunk = new ArrayList<ArrayList<block[]>>();
 		}
-		System.out.println("Variables Initialized" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -210,8 +193,7 @@ public class map extends JFrame { // The main panel of display
 				}
 			}
 		}
-		System.out.println("Map Drawn" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -223,8 +205,7 @@ public class map extends JFrame { // The main panel of display
 		// PER COLUMN
 		for (int x = 0; x < mapWidth; x++) {
 			// generate surface block number
-			int surface = (int) ((int) seed * (currentScreen + 1) * Math
-					.sqrt((seed * (x + 1)) % 240)) % 100;
+			int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100;
 			// System.out.println("column " x " percentage of " surface
 			// " mapwidth " mapWidth);
 			if (surface < 2) { // unlikely scenario where floor is raised two
@@ -258,12 +239,10 @@ public class map extends JFrame { // The main panel of display
 				} else if (y > surface) {
 					blockID = 1;
 				}
-				chunk.get(currentScreen).get(y)[x] = (new block(
-						imageFileNames[blockID], blockID));
+				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID));
 				// System.out.println("Block " blockID " at x=" x " y=" y
 				// chunk.get(currentScreen).get(y).get(x));
-				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight),
-						((y) * blockHeight), blockHeight, blockHeight);
+				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(y)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(y)[x], 0);
 			}
@@ -274,10 +253,8 @@ public class map extends JFrame { // The main panel of display
 	public void drawDirt() { // Draws the dirt
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(currentScreen).get(i)[x] = (new block(
-						imageFileNames[1], 1));
-				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight),
-						((i) * blockHeight), blockHeight, blockHeight);
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1));
+				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
 			}
@@ -291,11 +268,8 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(currentScreen).get(rowID)[current] = (new block(
-					imageFileNames[2], 2));
-			chunk.get(currentScreen).get(rowID)[current].setBounds(
-					(x * blockHeight), ((rowID) * blockHeight), blockHeight,
-					blockHeight);
+			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2));
+			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
 			current++;
@@ -304,19 +278,16 @@ public class map extends JFrame { // The main panel of display
 		// startTime) + " Nanoseconds");
 	}
 
-	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor,
-			Color shoeColor, Integer[] playerPosition) { // Draws the player
+	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, Integer[] playerPosition) { // Draws the player
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
 		try {
-			player.setBounds(playerPosition[0], playerPosition[1],
-					player.getPlayerWidth(), player.getPlayerHeight());
+			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
 		} catch (NullPointerException ex) {
 			setPlayerPosition(false);
 		}
 		player.setOpaque(false);
 		add(player, 0);
-		System.out.println("Player Drawn" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Player Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -339,8 +310,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void placeNewBlock(int xRow, int yRow, String fileName) {
-		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected]
-				.getBlockID();
+		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID();
 		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you
 															// have in your
 															// inventory
@@ -349,22 +319,16 @@ public class map extends JFrame { // The main panel of display
 																		// block
 																		// is
 																		// there
-				&& inventoryBar.inventoryBarButtons[inventoryBar.selected]
-						.getAmount() > 0 // Checks if you have blocks to place
+				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your
 														// inventory is closed
-			chunk.get(currentScreen).get(yRow)[xRow] = (new block(
-					selectedBlockKind, id));
-			chunk.get(currentScreen).get(yRow)[xRow]
-					.setBounds(xRow * blockHeight, yRow * blockHeight,
-							blockHeight, blockHeight);
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id));
+			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
-				inventoryBar.inventoryBarButtons[inventoryBar.selected]
-						.subtractOne();
+				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
 			}
 			add(chunk.get(currentScreen).get(yRow)[xRow], 2);
-			if (inventoryBar.inventoryBarButtons[inventoryBar.selected]
-					.getAmount() <= 0) {
+			if (inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() <= 0) {
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the
 																	// block
 																	// from your
@@ -446,49 +410,33 @@ public class map extends JFrame { // The main panel of display
 		}
 	}
 
-	public void initAndDrawInventory(int inventoryBlock, int inventoryGap,
-			int inventoryExtra, int inventoryHeight, Color defaultBoxColor,
-			Color swapBoxColor, Color selectedBoxColor, Color backgroundColor,
-			Color textColor, int stackHeight,
-			inventoryButton[][] inventButtons,
-			inventoryButton[] inventBarButtons) { // Initializes and draws the
+	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
+			Color backgroundColor, Color textColor, int stackHeight, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons) { // Initializes and draws the
 		// inventory
-		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap,
-				inventoryExtra, defaultBoxColor, swapBoxColor,
-				selectedBoxColor, backgroundColor, textColor, stackHeight,
-				inventBarButtons);
+		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventBarButtons);
 		int width = inventoryBar.width;
 		int height = inventoryBar.height;
-		inventoryBar.setBounds((main.screenWidth / 2 - width / 2),
-				main.screenHeight - height * 3, width, height);
+		inventoryBar.setBounds((main.screenWidth / 2 - width / 2), main.screenHeight - height * 3, width, height);
 		add(inventoryBar, 0);
 		selectedBlockKind = inventoryBar.setSelected(0);
 		try {
-			inventory = new inventory(inventoryBlock, inventoryGap,
-					inventoryExtra, inventoryHeight, defaultBoxColor,
-					swapBoxColor, backgroundColor, textColor, stackHeight,
-					inventButtons);
+			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, backgroundColor, textColor, stackHeight, inventButtons);
 		} catch (NullPointerException ex) {
-			inventory = new inventory(inventoryBlock, inventoryGap,
-					inventoryExtra, inventoryHeight, defaultBoxColor,
-					swapBoxColor, backgroundColor, textColor, stackHeight, null);
+			inventory = new inventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, backgroundColor, textColor, stackHeight, null);
 		}
 		width = inventory.width;
 		height = inventory.height;
-		inventory.setBounds((main.screenWidth - inventory.width) / 2,
-				(main.screenHeight - inventory.height) / 2, width, height);
+		inventory.setBounds((main.screenWidth - inventory.width) / 2, (main.screenHeight - inventory.height) / 2, width, height);
 		inventory.setVisible(false);
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);
-		System.out.println("Inventory Drawn" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Inventory Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
 	public void initTaskManager() {
 		manager = new taskManager();
-		System.out.println("Task Manager Initialized " + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -496,8 +444,7 @@ public class map extends JFrame { // The main panel of display
 														// controls
 		startKeyControls();
 		startMouseControl(mineBlockSpeed);
-		System.out.println("User Controls Started" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -531,17 +478,14 @@ public class map extends JFrame { // The main panel of display
 
 	public void hideCursor() { // Hides the cursor, undecided if this should be
 								// done
-		BufferedImage cursorImg = new BufferedImage(16, 16,
-				BufferedImage.TYPE_INT_ARGB);
-		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-				cursorImg, new Point(0, 0), "blank cursor");
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
 		super.getContentPane().setCursor(blankCursor);
 	}
 
 	public void initPhysics() { // Initializes the physics
 		physics = new physicsEngine();
-		System.out.println("Physics Initalized" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Physics Initalized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -551,16 +495,14 @@ public class map extends JFrame { // The main panel of display
 			task thisTask = new gravityTask();
 			manager.addTask(thisTask, 1);
 		}
-		System.out.println("Physics Started" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
 	public void startSave() {
 		saveTask task = new saveTask();
 		manager.addTask(task);
-		System.out.println("Save Started" + " In "
-				+ (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Save Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
 	}
 
@@ -576,9 +518,12 @@ public class map extends JFrame { // The main panel of display
 		}
 	}
 
-	public block getBlock(int screenNum1, int i, int x) { // Gets the info of a
-															// block
-		return chunk.get(screenNum1).get(i)[x];
+	public block getBlock(int screenNum1, int i, int x) { // Gets the info of a block
+		try {
+			return chunk.get(screenNum1).get(i)[x];
+		} catch (IndexOutOfBoundsException ex) {
+			return null;
+		}
 	}
 
 	// The below methods should be self explanatory, ask for explanation if
@@ -676,11 +621,9 @@ public class map extends JFrame { // The main panel of display
 														// start
 		int playerLastY = player.getBounds().y;
 		if (endOrStart == false) {
-			player.setBounds(blockHeight, playerLastY, player.getPlayerWidth(),
-					player.getPlayerHeight());
+			player.setBounds(blockHeight/2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		} else {
-			player.setBounds(main.screenWidth - blockHeight, playerLastY,
-					player.getPlayerWidth(), player.getPlayerHeight());
+			player.setBounds(main.screenWidth - blockHeight/2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		}
 
 	}
