@@ -2,11 +2,14 @@ package main;
 
 import inventory.inventoryButton;
 
+
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import player.player;
 import block.block;
@@ -17,7 +20,7 @@ import userControl.keyControls.jump;
 public class main {
 
 	public static map map;
-	public static String fileName = "save.xml";
+	public static String fileName;
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height; // In pixels
 	public static int blockHeight = 64; // Height of a block
@@ -51,11 +54,11 @@ public class main {
 	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
 	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
-	public static int currentScreen = getSavedStuff.getScreenNum(); //The current viewed screen
-	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); //The saved blocks
-	public static Integer[] playerBounds = getSavedStuff.getPlayerBounds(); //The saved player location
-	public static inventoryButton[][] savedInventoryButtons = getSavedStuff.getInventoryButtons(); //The saved inventory stuff
-	public static inventoryButton[] savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons(); //The saved inventory bar stuff
+	public static int currentScreen; //The current viewed screen
+	public static ArrayList<ArrayList<block[]>> savedChunk; //The saved blocks
+	public static Integer[] playerBounds; //The saved player location
+	public static inventoryButton[][] savedInventoryButtons; //The saved inventory stuff
+	public static inventoryButton[] savedInventoryBarButtons; //The saved inventory bar stuff
 
 	/*
 	 * Block ID: 0 is blank 1 is dirt 2 is grass
@@ -64,6 +67,12 @@ public class main {
 	public static void main(String[] args) { // Creates the map
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+		fileName = JOptionPane.showInputDialog("Enter the name of what you want the save file to be called: ");
+		currentScreen = getSavedStuff.getScreenNum();
+		playerBounds = getSavedStuff.getPlayerBounds();
+		savedChunk = getSavedStuff.getAllScreens();
+		savedInventoryButtons = getSavedStuff.getInventoryButtons();
+		savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons();
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
