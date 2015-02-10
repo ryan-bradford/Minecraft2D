@@ -77,9 +77,9 @@ public class map extends JFrame { // The main panel of display
 	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
 			Color selectedBoxColor, Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames,
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, Chunk chunk1, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons,
-			Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed, Boolean paused) {
+			Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed, Boolean paused, int prevSurfaceLR, int prevSurfaceRL) {
 		setLayout(null);
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed, prevSurfaceLR, prevSurfaceRL);
 		if (!paused) {
 			initTaskManager();
 		}
@@ -107,8 +107,10 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, Chunk chunk1,
-			int currentScreen1, String WorldType, int worldSeed) {
+			int currentScreen1, String WorldType, int worldSeed, int prevSurfaceLR1, int prevSurfaceRL1) {
 		currentScreen = currentScreen1;
+		prevSurfaceLR = prevSurfaceLR1;
+		prevSurfaceRL = prevSurfaceRL1;
 		chunk = new Chunk();
 		if (chunk1 != null) {
 			for (int i = 0; i < chunk1.size(); i++) {

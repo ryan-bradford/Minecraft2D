@@ -61,6 +61,10 @@ public class saveTask extends task {
 			out.println(" ");
 			out.write(" " + main.map.currentScreen);
 			out.println(" ");
+			out.write(" " + main.map.prevSurfaceLR);
+			out.println(" ");
+			out.write(" " + main.map.prevSurfaceRL);
+			out.println(" ");
 			savePlayer(main.getPlayer());
 			for (int i = 0; i < main.map.chunk.size(); i++) { //ltr
 				saveChunk(main.map.chunk.get(i), i, true);

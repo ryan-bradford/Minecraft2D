@@ -61,6 +61,8 @@ public class main {
 	public static inventoryButton[] savedInventoryBarButtons; //The saved inventory bar stuff
 	public static String fileNamesSaveFile = "fileNames.txt";
 	public static startScreen start;
+	public static int prevSurfaceLR;
+	public static int prevSurfaceRL;
 	/*
 	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
@@ -80,11 +82,13 @@ public class main {
 		savedChunk = getSavedStuff.getAllScreens();
 		savedInventoryButtons = getSavedStuff.getInventoryButtons();
 		savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons();
+		prevSurfaceLR = getSavedStuff.getPrevSurfaceLR();
+		prevSurfaceRL = getSavedStuff.getPrevSurfaceRL();
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
 				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
-				playerBounds, currentScreen, WorldGen, worldSeed, false);
+				playerBounds, currentScreen, WorldGen, worldSeed, false, prevSurfaceLR, prevSurfaceRL);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);

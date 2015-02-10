@@ -65,7 +65,7 @@ public class Biome {
 		// TODO Auto-generated method stub
 		int surface = (int) ((int) worldSeed * (currentScreen + 1) * Math.sqrt((worldSeed * (x + 1)) % 240)) % 100;
 		// System.out.println("column " x " percentage of " surface " mapwidth " mapWidth);
-		System.out.println("x "+x+"surface "+surface);
+		//System.out.println("x "+x+"surface "+surface);
 		if (surface < 2) { // unlikely scenario where floor is raised two blocks
 			surface = -2;
 		} else if (surface < 20) { // floor is up 1 block

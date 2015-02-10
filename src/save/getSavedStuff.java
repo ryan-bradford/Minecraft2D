@@ -211,4 +211,20 @@ public class getSavedStuff {
 	public static void readFile() {
 		 text = getText();
 	}
+	
+	public static int getPrevSurfaceLR() {
+		try {
+		return Integer.parseInt(text[2].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
+	}
+	
+	public static int getPrevSurfaceRL() {
+		try {
+		return Integer.parseInt(text[3].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
+	}
 }

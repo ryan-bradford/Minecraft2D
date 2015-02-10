@@ -31,7 +31,7 @@ public class startScreen {
 	public startScreen() {
 		map1 = new map(false, 64, main.dirtHeightInBlocks, main.inventoryBlockNumber, main.inventoryGap, main.inventoryExtra, main.inventoryHeight, main.defaultBoxColor, main.swapBoxColor,
 				main.selectedBoxColor, main.backgroundColor, main.textColor, main.airColor, main.skinColor, main.pantsColor, main.shirtColor, main.shoeColor, main.imageFileNames, main.stackHeight,
-				main.jumpDistance, main.jumpSpeed, main.gravitySpeed, main.walkSpeed, main.mineBlockSpeed, null, null, null, null, 0, "normal", main.worldSeed, true);
+				main.jumpDistance, main.jumpSpeed, main.gravitySpeed, main.walkSpeed, main.mineBlockSpeed, null, null, null, null, 0, "normal", main.worldSeed, true, 0, 0);
 		map1.pack();
 		map1.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		map1.setVisible(true);
