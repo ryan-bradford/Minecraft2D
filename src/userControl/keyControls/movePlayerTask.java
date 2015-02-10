@@ -44,17 +44,17 @@ public class movePlayerTask extends task { // The task that moves the player
 		Boolean endOrBegining = null; // True is end
 		int currentScreen = main.map.currentScreen;
 		if (main.getPlayer().getBounds().x + xAmmount <= 0
-				&& currentScreen - 1 >= 0) {
+				/*&& currentScreen - 1 >= 0*/) {
 			whichDirectionToMove = -1;
 			endOrBegining = true;
 		} else if (main.getPlayer().getBounds().x + xAmmount >= main.screenWidth) {
 			whichDirectionToMove = 1;
 			endOrBegining = false;
 		}
-		if (currentScreen - 1 < 0
-				&& main.getPlayer().getBounds().x + xAmmount <= 0) {
+		/*if (currentScreen - 1 < 0
+				&& main.getPlayer().getBounds().x + xAmmount <= 0) { //I am confused; when would the second ever be true and the first, false? 
 			canBeMoved = false;
-		}
+		}*/
 //		if (canBeMoved == true && endOrBegining != null) {
 //			canBeMoved = true;
 //			try {

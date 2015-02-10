@@ -36,7 +36,7 @@ import java.util.Random;
  * */
 
 public class map extends JFrame { // The main panel of display
-	public ArrayList<ArrayList<block[]>> chunk; // Horizontal Row
+	public Chunk chunk; // Horizontal Row
 	public player player;
 	public selectorBlock selectMapBlock; // The blue outline that can be seen on placement area
 	public inventoryBar inventoryBar;
@@ -68,8 +68,8 @@ public class map extends JFrame { // The main panel of display
 	public Random rnd;
 	public int seed; // Randomly generates land
 	public int playerStartSpot;
-	public int prevSurface;
-	public int prevBiome;
+	public int prevSurfaceLR;
+	public int prevSurfaceRL;
 
 	// The long list of constructors, allows for easy customizability
 	// For all intensive porposes, this is the main class
@@ -77,7 +77,7 @@ public class map extends JFrame { // The main panel of display
 			int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
 			Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor,
 			Color shirtColor, Color shoeColor, String[] imageFileNames, int stackHeight, int jumpHeight, int jumpSpeed,
-			int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1,
+			int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, Chunk chunk1,
 			inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons, Integer[] playerPosition,
 			int currentScreen1, String WorldType, int worldSeed) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1,
@@ -96,13 +96,18 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1,
-			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, ArrayList<ArrayList<block[]>> chunk1,
+			int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, Chunk chunk1,
 			int currentScreen1, String WorldType, int worldSeed) {
 		currentScreen = currentScreen1;
-		chunk = new ArrayList<ArrayList<block[]>>();
+		chunk = new Chunk();
 		if (chunk1 != null) {
 			for (int i = 0; i < chunk1.size(); i++) {
 				chunk.add(chunk1.get(i));
+			}
+			if (chunk1.ChunkRL != null) {
+				for (int i = 1; i < chunk1.ChunkRL.size(); i++) {
+					chunk.ChunkRL.add(chunk1.get(-i));
+				}
 			}
 		}
 		jumping = false;
@@ -128,7 +133,7 @@ public class map extends JFrame { // The main panel of display
 		try {
 			chunk.get(0);
 		} catch (IndexOutOfBoundsException ex) {
-			chunk = new ArrayList<ArrayList<block[]>>();
+			chunk = new Chunk();
 		}
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		startTime = System.nanoTime();
@@ -145,7 +150,11 @@ public class map extends JFrame { // The main panel of display
 
 	public void drawMap() {
 		if (getDrawNewOrOld()) {
-			chunk.add(new ArrayList<block[]>());
+			if(currentScreen >= 0){
+				chunk.add(new ArrayList<block[]>());
+			}else{
+				chunk.ChunkRL.add(new ArrayList<block[]>());
+			}
 			for (int i = 0; i < mapHeight; i++) {
 				chunk.get(currentScreen).add(new block[mapWidth]);
 			}
@@ -155,8 +164,9 @@ public class map extends JFrame { // The main panel of display
 			} else if (WorldGen.toUpperCase().equals("NORMAL")) { // Environment varies
 				System.out.println("World generating with seed " + seed);
 				dirtRows = dirtRows + 5;
-				drawLand();
-				drawStructures();
+				Biome CurrentBiome = new Biome(seed, currentScreen, null);
+				drawLand(CurrentBiome);
+				drawStructures(CurrentBiome);
 			}
 		} else {
 			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
@@ -175,16 +185,16 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 	}
 
-	public void drawLand() {
+	public void drawLand(Biome CurrentBiome) {
 		// Draws the ground
 		if (currentScreen == 0) {
-			prevSurface = Math.max(dirtRows - 5, 3);
-			prevBiome = 0;
+			prevSurfaceLR = Math.max(dirtRows - 5, 3);
 		}
 		// PER COLUMN
 		for (int x = 0; x < mapWidth; x++) {
 			// generate surface block number
-			int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100;
+			int surface = CurrentBiome.genSurface(x, currentScreen, prevSurfaceLR);
+			/*int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100;
 			// System.out.println("column " x " percentage of " surface " mapwidth " mapWidth);
 			if (surface < 2) { // unlikely scenario where floor is raised two blocks
 				surface = -2;
@@ -194,13 +204,13 @@ public class map extends JFrame { // The main panel of display
 				surface = 0;
 			} else if (surface < 98) { // floor is down 1
 				surface = 1;
-			} else { // (surface <= 100) floor is down 2
+			} else { // (surface < 100) floor is down 2
 				surface = 2;
-			}
-			surface = prevSurface + surface;
-			surface = Math.min(surface, (mapHeight - 3));
-			surface = Math.max(surface, 3);
-			prevSurface = surface;
+			}*/
+			surface = prevSurfaceLR + surface;
+			surface = Math.min(surface, (mapHeight - CurrentBiome.maxBiomeHeight)); //will not go higher than mapHeight - maxBiomeHeight
+			surface = Math.max(surface, CurrentBiome.minBiomeHeight);//will not go less than minBiomeHeight
+			prevSurfaceLR = surface;
 			if (x == 1) {
 				playerStartSpot = surface;
 			}
@@ -208,7 +218,6 @@ public class map extends JFrame { // The main panel of display
 			for (int y = 0; y < mapHeight; y++) {
 				int blockID = 0;
 				if (y < surface) {
-					// System.out.println("null at x= " x " y=" y "  surface = " surface chunk.get(currentScreen).get(y).get(x));
 					continue;
 				} else if (y == surface) {
 					blockID = 2;
@@ -228,7 +237,7 @@ public class map extends JFrame { // The main panel of display
 
 	}
 	
-	public void drawStructures(){
+	public void drawStructures(Biome CurrentBiome){
 		
 	}
 	

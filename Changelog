@@ -1,5 +1,9 @@
 Change Log:
 
+Beta 0.6.2:
+	1. Finished Biome Generation- but still  only the one biome.
+	2. Changed chunk data storage- you may now explore infinitely in BOTH directions!
+
 Beta 0.6.1:
 	1. Added Stone
 	2. Added Stone Terrain Generation

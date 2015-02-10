@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import player.player;
 import block.block;
+import map.Chunk;
 import map.map;
 import save.getSavedStuff;
 import userControl.keyControls.jump;
@@ -52,7 +53,7 @@ public class main {
 	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
 	public static int currentScreen = getSavedStuff.getScreenNum(); //The current viewed screen
-	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); //The saved blocks
+	public static Chunk savedChunk = getSavedStuff.getAllScreens(); //The saved blocks
 	public static Integer[] playerBounds = getSavedStuff.getPlayerBounds(); //The saved player location
 	public static inventoryButton[][] savedInventoryButtons = getSavedStuff.getInventoryButtons(); //The saved inventory stuff
 	public static inventoryButton[] savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons(); //The saved inventory bar stuff

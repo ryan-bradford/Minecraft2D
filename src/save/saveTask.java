@@ -25,8 +25,11 @@ public class saveTask extends task {
 			out.write(" " + main.map.currentScreen);
 			out.println(" ");
 			savePlayer(main.getPlayer());
-			for (int i = 0; i < main.map.chunk.size(); i++) {
-				saveChunk(main.map.chunk.get(i), i);
+			for (int i = 0; i < main.map.chunk.size(); i++) { //ltr
+				saveChunk(main.map.chunk.get(i), i, true);
+			}
+			for (int i = 0; i < main.map.chunk.ChunkRL.size(); i++) { //rtl
+				saveChunk(main.map.chunk.get(-i), i, false);
 			}
 			saveInventory();
 			saveInventoryBar();
@@ -66,8 +69,12 @@ public class saveTask extends task {
 
 	}
 
-	public void saveChunk(ArrayList<block[]> chunk, int chunkNum) {
-		out.write("Chunk");
+	public void saveChunk(ArrayList<block[]> chunk, int chunkNum, boolean leftToRight) {
+		if(leftToRight){
+			out.write("Chunk");
+		}else{
+			out.write("-Chunk");
+		}
 		out.println(" ");
 		for (int i = 0; i < chunk.size(); i++) {
 			for (int x = 0; x < chunk.get(i).length; x++) {
