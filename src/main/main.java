@@ -7,17 +7,20 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import player.player;
 import block.block;
+import map.Chunk;
 import map.map;
 import save.getSavedStuff;
+import startScreen.startScreen;
 import userControl.keyControls.jump;
 
 public class main {
 
 	public static map map;
-	public static String fileName = "save.xml";
+	public static String fileName;
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width; // In pixels
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height; // In pixels
 	public static int blockHeight = 64; // Height of a block
@@ -44,36 +47,51 @@ public class main {
 	public static Boolean creative = false; // If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump
-	public static int jumpSpeed = (int) (blockHeight * 2.5); // How fast the player will jump(Pixels per second)
-	public static int gravitySpeed = blockHeight * 4; // How fast the player will fall(Pixels per second)
-	public static int walkSpeed = blockHeight * 4;// How fast the player will walk(Pixels per second)
+	public static int jumpSpeed = (int) (blockHeight * 3); // How fast the player will jump(Pixels per second)
+	public static int gravitySpeed = (int) (blockHeight * 3.5); // How fast the player will fall(Pixels per second)
+	public static int walkSpeed = blockHeight * 3;// How fast the player will walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
 	public static int mapHeight = screenHeight / blockHeight; // The height of the map in block measures
-	public static String WorldGen = "Flatworld"; // Can be either "Normal" or "Flatworld"- not case sensitive.
+	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
-	public static int currentScreen = getSavedStuff.getScreenNum(); // The current viewed screen
-	public static ArrayList<ArrayList<block[]>> savedChunk = getSavedStuff.getAllScreens(); // The saved blocks
-	public static Integer[] playerBounds = getSavedStuff.getPlayerBounds(); // The saved player location
-	public static inventoryButton[][] savedInventoryButtons = getSavedStuff.getInventoryButtons(); // The saved inventory stuff
-	public static inventoryButton[] savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons(); // The saved inventory bar stuff
-
+	public static int currentScreen; //The current viewed screen
+	public static Chunk savedChunk; //The saved blocks
+	public static Integer[] playerBounds; //The saved player location
+	public static inventoryButton[][] savedInventoryButtons; //The saved inventory stuff
+	public static inventoryButton[] savedInventoryBarButtons; //The saved inventory bar stuff
+	public static String fileNamesSaveFile = "fileNames.txt";
+	public static startScreen start;
 	/*
 	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
 
 	public static void main(String[] args) { // Creates the map
+		start = new startScreen();
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor,
-				textColor, airColor, skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed, gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk,
-				savedInventoryButtons, savedInventoryBarButtons, playerBounds, currentScreen, WorldGen, worldSeed);
+	}
+
+	public static void startGame(String worldName) {
+		start = null;
+		fileName = worldName;
+		getSavedStuff.readFile();
+		currentScreen = getSavedStuff.getScreenNum();
+		playerBounds = getSavedStuff.getPlayerBounds();
+		savedChunk = getSavedStuff.getAllScreens();
+		savedInventoryButtons = getSavedStuff.getInventoryButtons();
+		savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons();
+		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
+				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
+				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
+				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
+				playerBounds, currentScreen, WorldGen, worldSeed, false);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
 		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		map.getContentPane().setBackground(airColor);
 	}
-
+	
 	// From here:
 	public static block getBlock(int height, int x) {
 		return map.getBlock(height, x);

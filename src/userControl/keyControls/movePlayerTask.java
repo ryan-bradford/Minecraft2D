@@ -22,18 +22,18 @@ public class movePlayerTask extends task { // The task that moves the player
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null) {
 			if (upOrDown == true) {
-				yAmmount = +-1;
+				yAmmount = -1;
 			} else {
-				yAmmount = +1;
+				yAmmount = 1;
 			}
 		} else {
 			yAmmount = 0;
 		}
 		if (leftOrRight != null) {
 			if (leftOrRight == true) {
-				xAmmount = +-1;
+				xAmmount = -1;
 			} else {
-				xAmmount = +1;
+				xAmmount = 1;
 			}
 		} else {
 			xAmmount = 0;
@@ -42,66 +42,12 @@ public class movePlayerTask extends task { // The task that moves the player
 		int whichDirectionToMove = 0;
 		Boolean endOrBegining = null; // True is end
 		int currentScreen = main.map.currentScreen;
-		if (main.getPlayer().getBounds().x + xAmmount <= 0
-				&& currentScreen - 1 >= 0) {
+		if (main.getPlayer().getBounds().x + xAmmount <= 0) {
 			whichDirectionToMove = -1;
 			endOrBegining = true;
 		} else if (main.getPlayer().getBounds().x + xAmmount >= main.screenWidth) {
 			whichDirectionToMove = 1;
 			endOrBegining = false;
-		}
-		if (currentScreen - 1 < 0
-				&& main.getPlayer().getBounds().x + xAmmount <= 0) {
-			canBeMoved = false;
-		}
-		if (endOrBegining != null) {
-			if (endOrBegining == true) {
-				int playerRightHighX = (int) (main.getPlayer().getPlayerWidth()
-						* ((1 + 1 / 3) * .1) + main.screenWidth - main.blockHeight)
-						+ (int) (main.getPlayer().getPlayerWidth() / 1.2);
-				int playerRightLowX = (int) (main.getPlayer().getPlayerWidth() / 4 + main.screenWidth - main.blockHeight)
-						+ main.getPlayer().getPlayerWidth() / 2;
-				int playerHighY = (int) (main.getPlayer().getBounds().y);
-				int playerLowY = main.getPlayer().getBounds().y
-						+ (main.getPlayer().getHeight()) - 4;
-				int[] playerYs = new int[] { playerHighY,
-						(playerLowY + playerHighY) / 2 };
-				int[] playerXs = new int[] { playerRightHighX, playerRightLowX };
-				int thisCurrentScreen = currentScreen--;
-				for (int i = 0; i < playerYs.length; i++) {
-					if (main.map.getDrawNewOrOld(thisCurrentScreen) == false) {
-						if (main.map.getBlock(thisCurrentScreen, playerYs[i]
-								/ main.blockHeight, playerXs[i]
-								/ main.blockHeight) != null) {
-							xAmmount = 0;
-							endOrBegining = null;
-						}
-					}
-				}
-
-			} else if (endOrBegining == false) {
-				int playerLeftHighX = (int) (main.getPlayer().getPlayerWidth()
-						* ((1 + 1 / 3) * .1) + main.blockHeight);
-				int playerLeftLowX = (int) (main.getPlayer().getPlayerWidth()
-						/ 4 + main.blockHeight);
-				int playerHighY = (int) (main.getPlayer().getBounds().y);
-				int playerLowY = main.getPlayer().getBounds().y
-						+ (main.getPlayer().getHeight()) - 4;
-				int[] playerYs = new int[] { playerHighY,
-						(playerLowY + playerHighY) / 2 };
-				int[] playerXs = new int[] { playerLeftHighX, playerLeftLowX };
-				int thisCurrentScreen = currentScreen++;
-				for (int i = 0; i < playerYs.length; i++) {
-					if (main.map.getDrawNewOrOld(thisCurrentScreen) == false) {
-						if (main.map.getBlock(thisCurrentScreen, playerYs[i]
-								/ main.blockHeight, playerXs[i]
-								/ main.blockHeight) != null) {
-							xAmmount = 0;
-							endOrBegining = null;
-						}
-					}
-				}
-			}
 		}
 
 		if (canBeMoved == true) {
@@ -119,7 +65,7 @@ public class movePlayerTask extends task { // The task that moves the player
 			return false;
 		}
 		if (upOrDown != null) { // If the player is trying to move up, but touching the top, dont move up
-			if (upOrDown == true) {
+			if (upOrDown) {
 				if (main.getCollisionTop() == true) {
 					return false;
 				}
@@ -130,11 +76,11 @@ public class movePlayerTask extends task { // The task that moves the player
 			}
 		}
 		if (leftOrRight != null) { // Same rules as about apply
-			if (leftOrRight == true) {
+			if (leftOrRight && main.map.keyListener.aPressed) {
 				if (main.getCollisionLeft() == true) {
 					return false;
 				}
-			} else {
+			} else if (leftOrRight == false && main.map.keyListener.dPressed) {
 				if (main.getCollisionRight() == true) {
 					return false;
 				}

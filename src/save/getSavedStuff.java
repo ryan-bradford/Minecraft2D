@@ -10,19 +10,24 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import main.main;
+import map.Chunk;
 import block.block;
 
 public class getSavedStuff {
 	static int currentRow = 0;
 	static int lastChunkNum = 0;
-	static String[] text = getText();
+	static String[] text;
 	static Boolean runnable = true;
 
 	public static int getScreenNum() {
 		if (runnable) {
 			try {
 				if (new File(main.fileName).exists()) {
-					return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
+					try{
+						return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
+					}catch(NumberFormatException ex){
+						return Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
+					}
 				} else {
 					runnable = false;
 					return 0;
@@ -35,13 +40,20 @@ public class getSavedStuff {
 		return 0;
 	}
 
-	public static int getScreenNumAmmount() {
+	public static int getScreenNumAmmount(boolean leftToRight) {
 		if (runnable) {
 			int screenNum = 0;
 			if (new File(main.fileName).exists()) {
 				for (int i = 0; i < text.length; i++) {
-					if (text[i].equals("Chunk ")) {
-						screenNum++;
+					if(leftToRight){
+						if (text[i].equals("Chunk ")) {
+							screenNum++;
+						}
+					}else{
+						screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						if (text[i].equals("-Chunk ")) {
+							screenNum++;
+						}
 					}
 				}
 				return screenNum;
@@ -52,11 +64,14 @@ public class getSavedStuff {
 		return 0;
 	}
 
-	public static ArrayList<ArrayList<block[]>> getAllScreens() {
+	public static Chunk getAllScreens() {
 		if (runnable) {
-			ArrayList<ArrayList<block[]>> screens = new ArrayList<ArrayList<block[]>>();
-			for (int i = 0; i < getScreenNumAmmount(); i++) {
+			Chunk screens = new Chunk();
+			for (int i = 0; i < getScreenNumAmmount(true); i++) {
 				screens.add(getNextScreen());
+			}
+			for (int i = 0; i < getScreenNumAmmount(false); i++) {
+				screens.ChunkRL.add(getNextScreen());
 			}
 			return screens;
 		}
@@ -83,10 +98,13 @@ public class getSavedStuff {
 				screen.add(new block[main.screenWidth / main.blockHeight + 1]);
 			}
 			for (int i = chunkStart; i < chunkEnd; i = i + 4) {
-				block currentBlock = new block(main.getImageFileNames()[Integer.parseInt(text[i + 2].trim())], Integer.parseInt(text[i + 2].trim()));
+				block currentBlock = new block(main.getImageFileNames()[Integer.parseInt(text[i + 2].trim())],
+						Integer.parseInt(text[i + 2].trim()));
 				currentBlock.health = Integer.parseInt(text[i + 3].trim());
-				currentBlock.setBounds(Integer.parseInt(text[i].trim()), Integer.parseInt(text[i + 1].trim()), main.blockHeight, main.blockHeight);
-				screen.get(Integer.parseInt(text[i + 1].trim()) / main.blockHeight)[Integer.parseInt(text[i].trim()) / main.blockHeight] = (currentBlock);
+				currentBlock.setBounds(Integer.parseInt(text[i].trim()), Integer.parseInt(text[i + 1].trim()),
+						main.blockHeight, main.blockHeight);
+				screen.get(Integer.parseInt(text[i + 1].trim()) / main.blockHeight)[Integer.parseInt(text[i].trim())
+						/ main.blockHeight] = (currentBlock);
 			}
 			return screen;
 		}
@@ -100,7 +118,8 @@ public class getSavedStuff {
 				while (!text[currentRow].equals("Player ")) {
 					currentRow = currentRow + 1;
 				}
-				return new Integer[] { Integer.parseInt(text[currentRow + 1].trim()), Integer.parseInt(text[currentRow + 2].trim()) };
+				return new Integer[] { Integer.parseInt(text[currentRow + 1].trim()),
+						Integer.parseInt(text[currentRow + 2].trim()) };
 			} else {
 				return null;
 			}
@@ -132,7 +151,8 @@ public class getSavedStuff {
 				for (int x = 0; x < main.inventoryHeight; x++) {
 					Image currentBlock = null;
 					try {
-						currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer.parseInt(text[start + 1].trim())]));
+						currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer
+								.parseInt(text[start + 1].trim())]));
 					} catch (NumberFormatException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -140,7 +160,8 @@ public class getSavedStuff {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					buttons[i][x] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()), Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
+					buttons[i][x] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()),
+							Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
 					start = start + 2;
 				}
 			}
@@ -160,7 +181,8 @@ public class getSavedStuff {
 			for (int i = 0; i < main.inventoryBlockNumber; i++) {
 				Image currentBlock = null;
 				try {
-					currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer.parseInt(text[start + 1].trim())]));
+					currentBlock = ImageIO.read(new java.io.File(main.getImageFileNames()[Integer
+							.parseInt(text[start + 1].trim())]));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -168,11 +190,25 @@ public class getSavedStuff {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				buttons[i] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()), Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
-				start = start + 2;
-			}
+				buttons[i] = new inventoryButton(currentBlock, Integer.parseInt(text[start].trim()),
+						Integer.parseInt(text[start + 1].trim()), main.stackHeight, main.textColor);
+				start = start + 2;			
+				}
 			return buttons;
 		}
 		return null;
+	}
+	
+	public static String[] getWorldNames() {
+		try {
+			return FileArrayProvider.readLines(main.fileNamesSaveFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		return null;
+	}
+	
+	public static void readFile() {
+		 text = getText();
 	}
 }
