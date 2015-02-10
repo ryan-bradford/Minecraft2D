@@ -2,6 +2,7 @@ package userControl.keyControls;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import main.main;
 
 public class keyControls implements KeyListener { // The thing that controls the
@@ -30,10 +31,7 @@ public class keyControls implements KeyListener { // The thing that controls the
 			}
 		}
 		if (key == KeyEvent.VK_W && main.getCollisionTop() == false && main.getInventoryState() == false) {
-			if (main.getCreative() == false) { // Checks colision and moves
-												// also, if the player is in
-												// creative, he will not jump,
-												// but fly
+			if (main.getCreative() == false) { // Checks colision and moves also, if the player is in creative, he will not jump, but fly
 				if (main.getJumpingObject() == null && main.getJumping() == false && main.getCollisionBottom() == true) {
 					main.startjumping();
 				}
@@ -43,7 +41,7 @@ public class keyControls implements KeyListener { // The thing that controls the
 			}
 		}
 
-		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) { // Moves the block for selector placement
+		if (key == KeyEvent.VK_1 && main.getInventoryState() == false) { // Moves the block selector placment
 			main.setSelected(0);
 		}
 
@@ -89,27 +87,19 @@ public class keyControls implements KeyListener { // The thing that controls the
 		int key = e.getKeyCode();
 		if (key == KeyEvent.VK_W) {
 			wPressed = false;
-			if(wPressed == false && aPressed == false && dPressed == false && sPressed == false) {
-				nothingPressed = true;				
-			}
+			nothingPressed = true;
 		}
 		if (key == KeyEvent.VK_A) {
 			aPressed = false;
-			if(wPressed == false && aPressed == false && dPressed == false && sPressed == false) {
-				nothingPressed = true;				
-			}
+			nothingPressed = true;
 		}
 		if (key == KeyEvent.VK_D) {
 			dPressed = false;
-			if(wPressed == false && aPressed == false && dPressed == false && sPressed == false) {
-				nothingPressed = true;				
-			}
+			nothingPressed = true;
 		}
 		if (key == KeyEvent.VK_S) {
 			sPressed = false;
-			if(wPressed == false && aPressed == false && dPressed == false && sPressed == false) {
-				nothingPressed = true;				
-			}
+			nothingPressed = true;
 		}
 		if (key == KeyEvent.VK_W) {
 			if (main.getCreative() == false) {

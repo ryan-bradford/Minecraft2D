@@ -1,21 +1,12 @@
 package startScreen;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLayer;
-import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.plaf.LayerUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -40,7 +31,7 @@ public class startScreen {
 	public startScreen() {
 		map1 = new map(false, 64, main.dirtHeightInBlocks, main.inventoryBlockNumber, main.inventoryGap, main.inventoryExtra, main.inventoryHeight, main.defaultBoxColor, main.swapBoxColor,
 				main.selectedBoxColor, main.backgroundColor, main.textColor, main.airColor, main.skinColor, main.pantsColor, main.shirtColor, main.shoeColor, main.imageFileNames, main.stackHeight,
-				main.jumpDistance, main.jumpSpeed, main.gravitySpeed, main.walkSpeed, main.mineBlockSpeed, null, null, null, null, 0, "normal", main.worldSeed, true);
+				main.jumpDistance, main.jumpSpeed, main.gravitySpeed, main.walkSpeed, main.mineBlockSpeed, null, null, null, null, 0, "normal", main.worldSeed, true, 0, 0);
 		map1.pack();
 		map1.setBounds(0, 0, main.screenWidth, main.screenHeight);
 		map1.setVisible(true);
@@ -59,6 +50,7 @@ public class startScreen {
 		loadGame.setBounds(main.screenWidth / 2 + 100, 300, 200, 50);
 		map1.add(loadGame, 0);
 		loadGame.addActionListener(new listenToLoadGame());
+		map1.repaint();
 	}
 
 	public class listenToNewGame implements ActionListener {

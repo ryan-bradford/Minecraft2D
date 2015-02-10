@@ -1,7 +1,6 @@
 package physicsEngine;
 
 import main.main;
-
 import thread.task;
 
 public class gravityTask extends task {
@@ -37,11 +36,6 @@ public class gravityTask extends task {
 	@Override
 	public int getCPULoad() { //Returns the load
 		return 2;
-	}
-	
-	@Override
-	public int[] getData() {
-		return new int[] {3};
 	}
 	
 }

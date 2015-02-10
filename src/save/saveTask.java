@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import player.player;
 import main.main;
@@ -32,15 +31,7 @@ public class saveTask extends task {
 			}
 			File thisFile = new File(main.fileName);
 			if (!thisFile.exists()) {
-				Boolean canBeAdded = true;
-				for (int i = 0; i < fileNames.size(); i++) {
-					if(main.fileName.equals(fileNames.get(i))) {
-						canBeAdded = false;
-					}
-				}
-				if (canBeAdded) {
-					fileNames.add(main.fileName);
-				}
+				fileNames.add(main.fileName);
 			}
 		} else {
 			fileNames = new ArrayList<String>();
@@ -70,9 +61,16 @@ public class saveTask extends task {
 			out.println(" ");
 			out.write(" " + main.map.currentScreen);
 			out.println(" ");
+			out.write(" " + main.map.prevSurfaceLR);
+			out.println(" ");
+			out.write(" " + main.map.prevSurfaceRL);
+			out.println(" ");
 			savePlayer(main.getPlayer());
-			for (int i = 0; i < main.map.chunk.size(); i++) {
-				saveChunk(main.map.chunk.get(i), i);
+			for (int i = 0; i < main.map.chunk.size(); i++) { //ltr
+				saveChunk(main.map.chunk.get(i), i, true);
+			}
+			for (int i = 0; i < main.map.chunk.ChunkRL.size(); i++) { //rtl
+				saveChunk(main.map.chunk.get(-i), i, false);
 			}
 			saveInventory();
 			saveInventoryBar();
@@ -89,7 +87,7 @@ public class saveTask extends task {
 
 	@Override
 	public int getWait() {
-		return 15000;
+		return 1000;
 	}
 
 	@Override
@@ -112,34 +110,38 @@ public class saveTask extends task {
 
 	}
 
-	public void saveChunk(ArrayList<block[]> chunk, int chunkNum) {
-		out.write("Chunk");
+	public void saveChunk(ArrayList<block[]> chunk, int chunkNum, boolean leftToRight) {
+		if(leftToRight){
+			out.write("Chunk");
+		}else{
+			out.write("-Chunk");
+		}
 		out.println(" ");
 		for (int i = 0; i < chunk.size(); i++) {
 			for (int x = 0; x < chunk.get(i).length; x++) {
 				try {
-					out.write(Integer.toString(chunk.get(i)[x].getBounds().x));
-					out.println(" ");
-					out.write(Integer.toString(chunk.get(i)[x].getBounds().y));
-					out.println(" ");
-					out.write(Integer.toString(chunk.get(i)[x].id));
-					out.println(" ");
-					out.write(Integer.toString(chunk.get(i)[x].health));
-					out.println(" ");
-				} catch (NullPointerException ex) {
-
+				out.write(Integer.toString(chunk.get(i)[x].getBounds().x));
+				out.println(" ");
+				out.write(Integer.toString(chunk.get(i)[x].getBounds().y));
+				out.println(" ");
+				out.write(Integer.toString(chunk.get(i)[x].id));
+				out.println(" ");
+				out.write(Integer.toString(chunk.get(i)[x].health));
+				out.println(" ");
+				} catch(NullPointerException ex) {
+					
 				}
 			}
 		}
 		out.write("End");
-		out.println(" ");
+		out.println(" ");	
 	}
-
+	
 	public void saveInventory() {
 		out.write("Inventory");
 		out.println(" ");
-		for (int i = 0; i < main.map.inventory.inventoryButtons.length; i++) {
-			for (int x = 0; x < main.map.inventory.inventoryButtons[i].length; x++) {
+		for(int i = 0; i < main.map.inventory.inventoryButtons.length; i++) {
+			for(int x = 0; x < main.map.inventory.inventoryButtons[i].length; x++) {
 				out.write(Integer.toString(main.map.inventory.inventoryButtons[i][x].amount));
 				out.println(" ");
 				out.write(Integer.toString(main.map.inventory.inventoryButtons[i][x].blockID));
@@ -149,15 +151,15 @@ public class saveTask extends task {
 		out.write("End");
 		out.println(" ");
 	}
-
+	
 	public void saveInventoryBar() {
 		out.write("Inventory Bar");
 		out.println(" ");
-		for (int i = 0; i < main.map.inventoryBar.inventoryBarButtons.length; i++) {
-			out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].amount));
-			out.println(" ");
-			out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].blockID));
-			out.println(" ");
+		for(int i = 0; i < main.map.inventoryBar.inventoryBarButtons.length; i++) {
+				out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].amount));
+				out.println(" ");
+				out.write(Integer.toString(main.map.inventoryBar.inventoryBarButtons[i].blockID));
+				out.println(" ");
 		}
 		out.write("End");
 		out.println(" ");

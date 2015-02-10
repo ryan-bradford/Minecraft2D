@@ -69,20 +69,4 @@ public class CPUCore extends Thread { // A Single thread that handles a passed l
 		return load;
 	}
 
-	private static Integer gcd(Integer a, Integer b) {
-		while (b > 0) {
-			Integer temp = b;
-			b = a % b; // % is remainder
-			a = temp;
-		}
-		return a;
-	}
-
-	private static int gcd(Integer[] input) {
-		Integer result = input[0];
-		for (int i = 1; i < input.length; i++)
-			result = gcd(result, input[i]);
-		return result;
-	}
-
 }

@@ -2,9 +2,6 @@ package main;
 
 import inventory.inventoryButton;
 
-
-
-
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -14,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import player.player;
 import block.block;
+import map.Chunk;
 import map.map;
 import save.getSavedStuff;
 import startScreen.startScreen;
@@ -32,38 +30,39 @@ public class main {
 	public static int inventoryHeight = 4; // How many boxes there are in the veritcal of the inventory
 	public static int dirtHeightInBlocks = ((main.screenHeight) / blockHeight) / 2 - 1; // How much dirt
 	public static Color defaultBoxColor = Color.gray; // COLORS!
-	public static Color swapBoxColor = Color.yellow; //The color of the block selector in the inventory
-	public static Color selectedBoxColor = Color.blue; //The color of the block selector in the world
-	public static Color backgroundColor = Color.darkGray; //The background color in the inventory screen
-	public static Color textColor = Color.black; //The Color of Text in the Inventory
-	public static Color airColor = new Color(135, 206, 250); //The Color of the air
-	public static Color skinColor = new Color(139, 69, 19); //The Color of the players skin
-	public static Color pantsColor = new Color(25, 25, 112); //The color of the players pants
-	public static Color shirtColor = new Color(0, 155, 155); //The color of the players shirt
-	public static Color shoeColor = Color.darkGray; //The color of the players shoes
+	public static Color swapBoxColor = Color.yellow; // The color of the block selector in the inventory
+	public static Color selectedBoxColor = Color.blue; // The color of the block selector in the world
+	public static Color backgroundColor = Color.darkGray; // The background color in the inventory screen
+	public static Color textColor = Color.black; // The Color of Text in the Inventory
+	public static Color airColor = new Color(135, 206, 250); // The Color of the air
+	public static Color skinColor = new Color(139, 69, 19); // The Color of the players skin
+	public static Color pantsColor = new Color(25, 25, 112); // The color of the players pants
+	public static Color shirtColor = new Color(0, 155, 155); // The color of the players shirt
+	public static Color shoeColor = Color.darkGray; // The color of the players shoes
 	public static Boolean selected = false; // Whether a inventory box has alread been slected, True is yes
 	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
 	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
 	public static Boolean lastClickedInventOrBar = null; // Whether the last selected box was in the inventory or inventory bar
-	public static String[] imageFileNames = new String[] { "textures/blank.jpg", "textures/dirt.jpg", "textures/grass.jpg" }; // The block image file names
-	public static Boolean creative = false; //If the game is in creative or not
+	public static String[] imageFileNames = new String[] { "textures/blank.jpg", "textures/dirt.jpg", "textures/grass.jpg", "textures/stone.jpg" }; // The block image file names
+	public static Boolean creative = false; // If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump
 	public static int jumpSpeed = (int) (blockHeight * 3); // How fast the player will jump(Pixels per second)
 	public static int gravitySpeed = (int) (blockHeight * 3.5); // How fast the player will fall(Pixels per second)
-	public static int walkSpeed = (int) (blockHeight * 3);// How fast the player will walk(Pixels per second)
+	public static int walkSpeed = blockHeight * 3;// How fast the player will walk(Pixels per second)
 	public static int mineBlockSpeed = 100; // How many milliseconds per swing
-	public static int mapHeight = screenHeight / blockHeight; //The height of the map in block measures
+	public static int mapHeight = screenHeight / blockHeight; // The height of the map in block measures
 	public static String WorldGen = "normal"; // Can be either "Normal" or "Flatworld"- not case sensitive.
 	public static int worldSeed = 0; // Number used for world generation, '0' is random
 	public static int currentScreen; //The current viewed screen
-	public static ArrayList<ArrayList<block[]>> savedChunk; //The saved blocks
+	public static Chunk savedChunk; //The saved blocks
 	public static Integer[] playerBounds; //The saved player location
 	public static inventoryButton[][] savedInventoryButtons; //The saved inventory stuff
 	public static inventoryButton[] savedInventoryBarButtons; //The saved inventory bar stuff
-	public static startScreen start;
 	public static String fileNamesSaveFile = "fileNames.txt";
-
+	public static startScreen start;
+	public static int prevSurfaceLR;
+	public static int prevSurfaceRL;
 	/*
 	 * Block ID: 0 is blank 1 is dirt 2 is grass
 	 */
@@ -73,7 +72,7 @@ public class main {
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 	}
-	
+
 	public static void startGame(String worldName) {
 		start = null;
 		fileName = worldName;
@@ -83,18 +82,20 @@ public class main {
 		savedChunk = getSavedStuff.getAllScreens();
 		savedInventoryButtons = getSavedStuff.getInventoryButtons();
 		savedInventoryBarButtons = getSavedStuff.getInventoryBarButtons();
+		prevSurfaceLR = getSavedStuff.getPrevSurfaceLR();
+		prevSurfaceRL = getSavedStuff.getPrevSurfaceRL();
 		map = new map(creative, blockHeight, dirtHeightInBlocks, inventoryBlockNumber, inventoryGap, inventoryExtra,
 				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
 				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
-				playerBounds, currentScreen, WorldGen, worldSeed, false);
+				playerBounds, currentScreen, WorldGen, worldSeed, false, prevSurfaceLR, prevSurfaceRL);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);
 		map.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		map.getContentPane().setBackground(airColor);
 	}
-
+	
 	// From here:
 	public static block getBlock(int height, int x) {
 		return map.getBlock(height, x);
@@ -122,8 +123,7 @@ public class main {
 
 	public static void movePlayer(int x, int y) {
 		try {
-			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y,
-					map.player.getBounds().width, map.player.getBounds().height);
+			map.player.setBounds(map.player.getBounds().x + x, (map.player.getBounds().y) + y, map.player.getBounds().width, map.player.getBounds().height);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
@@ -294,8 +294,7 @@ public class main {
 		}
 	}
 
-	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX, Boolean lastClickedInventOrBar, int x,
-			int y, int blockID, Boolean selected) {
+	public static void handleLeftOver(int leftOver, int toAdd, int lastClickedX, Boolean lastClickedInventOrBar, int x, int y, int blockID, Boolean selected) {
 		if (leftOver == 0) { // If all of the amount could be passed, clear the
 								// button
 			if (lastClickedInventOrBar == false) {

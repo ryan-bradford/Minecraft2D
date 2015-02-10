@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import main.main;
+import map.Chunk;
 import block.block;
 
 public class getSavedStuff {
@@ -22,7 +23,11 @@ public class getSavedStuff {
 		if (runnable) {
 			try {
 				if (new File(main.fileName).exists()) {
-					return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
+					try{
+						return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
+					}catch(NumberFormatException ex){
+						return Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
+					}
 				} else {
 					runnable = false;
 					return 0;
@@ -35,13 +40,20 @@ public class getSavedStuff {
 		return 0;
 	}
 
-	public static int getScreenNumAmmount() {
+	public static int getScreenNumAmmount(boolean leftToRight) {
 		if (runnable) {
 			int screenNum = 0;
 			if (new File(main.fileName).exists()) {
 				for (int i = 0; i < text.length; i++) {
-					if (text[i].equals("Chunk ")) {
-						screenNum++;
+					if(leftToRight){
+						if (text[i].equals("Chunk ")) {
+							screenNum++;
+						}
+					}else{
+						screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						if (text[i].equals("-Chunk ")) {
+							screenNum++;
+						}
 					}
 				}
 				return screenNum;
@@ -52,11 +64,14 @@ public class getSavedStuff {
 		return 0;
 	}
 
-	public static ArrayList<ArrayList<block[]>> getAllScreens() {
+	public static Chunk getAllScreens() {
 		if (runnable) {
-			ArrayList<ArrayList<block[]>> screens = new ArrayList<ArrayList<block[]>>();
-			for (int i = 0; i < getScreenNumAmmount(); i++) {
+			Chunk screens = new Chunk();
+			for (int i = 0; i < getScreenNumAmmount(true); i++) {
 				screens.add(getNextScreen());
+			}
+			for (int i = 0; i < getScreenNumAmmount(false); i++) {
+				screens.ChunkRL.add(getNextScreen());
 			}
 			return screens;
 		}
@@ -195,5 +210,21 @@ public class getSavedStuff {
 	
 	public static void readFile() {
 		 text = getText();
+	}
+	
+	public static int getPrevSurfaceLR() {
+		try {
+		return Integer.parseInt(text[2].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
+	}
+	
+	public static int getPrevSurfaceRL() {
+		try {
+		return Integer.parseInt(text[3].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
 	}
 }

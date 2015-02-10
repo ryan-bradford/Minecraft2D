@@ -77,9 +77,7 @@ public class moveSelectorBlockTask extends task {
 	}
 
 	@Override
-	public Boolean returnRunnable() { // Always runnable(Stops when the inveory
-										// is open somehow....(Don't rememmber
-										// how I did that))
+	public Boolean returnRunnable() { // Always runnable(Stops when the inveory is open somehow....(Don't rememmber how I did that))
 		return true;
 	}
 
