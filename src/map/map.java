@@ -107,7 +107,8 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, Chunk chunk1,
-			int currentScreen1, String WorldType, int worldSeed, int prevSurfaceLR1, int prevSurfaceRL1) {
+			int currentScreen1, String WorldType, int worldSeed, int prevSurfaceLR1, int prevSurfaceRL1) {   //
+		startTime = System.nanoTime();
 		currentScreen = currentScreen1;
 		prevSurfaceLR = prevSurfaceLR1;
 		prevSurfaceRL = prevSurfaceRL1;
@@ -148,7 +149,6 @@ public class map extends JFrame { // The main panel of display
 			chunk = new Chunk();
 		}
 		System.out.println("Variables Initialized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public boolean getDrawNewOrOld() { // True is new, false is old
@@ -171,6 +171,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void drawMap() {
+		startTime = System.nanoTime();
 		if (getDrawNewOrOld()) {
 			if(currentScreen >= 0){
 				chunk.add(new ArrayList<block[]>());
@@ -204,10 +205,10 @@ public class map extends JFrame { // The main panel of display
 			}
 		}
 		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void drawLand(Biome CurrentBiome) {
+		startTime = System.nanoTime();
 		// Draws the ground
 		if (currentScreen == 0) {
 			prevSurfaceLR = Math.max(dirtRows - 5, 3);
@@ -256,7 +257,8 @@ public class map extends JFrame { // The main panel of display
 				add(chunk.get(currentScreen).get(y)[x], 0);
 			}
 		}
-
+		System.out.println("Land Drawn" + " In " + (System.nanoTime() -
+				 startTime) + " Nanoseconds");
 	}
 	
 	public void drawStructures(Biome CurrentBiome){
@@ -264,6 +266,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void drawDirt() { // Draws the dirt
+		startTime = System.nanoTime();
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
 				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1));
@@ -273,11 +276,12 @@ public class map extends JFrame { // The main panel of display
 			}
 
 		}
-		// System.out.println("Dirt Drawn" + " In " + (System.nanoTime() -
-		// startTime) + " Nanoseconds");
+		System.out.println("Dirt Drawn" + " In " + (System.nanoTime() -
+		 startTime) + " Nanoseconds");
 	}
 
 	public void drawGrass() { // Draws the grass
+		startTime = System.nanoTime();
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
@@ -287,10 +291,11 @@ public class map extends JFrame { // The main panel of display
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
 			current++;
 		}
-		// System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		System.out.println("Grass Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawPlayer(Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, Integer[] playerPosition) { // Draws the player
+		startTime = System.nanoTime();
 		player = new player(skinColor, pantsColor, shirtColor, shoeColor);
 		try {
 			player.setBounds(playerPosition[0], playerPosition[1], player.getPlayerWidth(), player.getPlayerHeight());
@@ -300,10 +305,10 @@ public class map extends JFrame { // The main panel of display
 		player.setOpaque(false);
 		add(player, 0);
 		System.out.println("Player Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void mouseClicked(int xRow, int yRow, String fileName) {
+		startTime = System.nanoTime();
 		Boolean blockExists = false;
 		int blockNum = 0;
 		try {
@@ -319,9 +324,12 @@ public class map extends JFrame { // The main panel of display
 		} catch (IndexOutOfBoundsException ex) {
 
 		}
+		System.out.println("Mouse Event" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+		
 	}
 
 	public void placeNewBlock(int xRow, int yRow, String fileName) {
+		startTime = System.nanoTime();
 		int id = inventoryBar.inventoryBarButtons[inventoryBar.selected].getBlockID();
 		selectedBlockKind = main.getImageFileNames()[id]; // Gets what block you have in your inventory
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
@@ -337,12 +345,15 @@ public class map extends JFrame { // The main panel of display
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar
 			}
 		}
+		System.out.println("Block Placed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public int removeBlock(int xRow, int yRow) {
+		startTime = System.nanoTime();
 		int id = chunk.get(currentScreen).get(yRow)[xRow].id;
 		chunk.get(currentScreen).get(yRow)[xRow].setVisible(false);
 		chunk.get(currentScreen).get(yRow)[xRow] = null;
+		System.out.println("Block Removed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		return id;
 	}
 
@@ -351,6 +362,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void mineBlockAt(int xRow, int yRow) {
+		startTime = System.nanoTime();
 		int id = removeBlock(xRow, yRow);
 		Boolean needsToBeRun = true;
 		for (int i = 0; i < inventoryBar.inventoryBarButtons.length; i++) {
@@ -404,6 +416,7 @@ public class map extends JFrame { // The main panel of display
 			}
 		}
 		mine.stopRunning();
+		System.out.println("Block Mined" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void stopMining() {
@@ -414,6 +427,7 @@ public class map extends JFrame { // The main panel of display
 
 	public void initAndDrawInventory(int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor, Color selectedBoxColor,
 			Color backgroundColor, Color textColor, int stackHeight, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons) { // Initializes and draws the
+		startTime = System.nanoTime();
 		// inventory
 		inventoryBar = new inventoryBar(inventoryBlock, inventoryGap, inventoryExtra, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventBarButtons);
 		int width = inventoryBar.width;
@@ -433,33 +447,35 @@ public class map extends JFrame { // The main panel of display
 		inventoryBar.setFocusable(false);
 		add(inventory, 0);
 		System.out.println("Inventory Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void initTaskManager() {
+		startTime = System.nanoTime();
 		manager = new taskManager();
 		System.out.println("Task Manager Initialized " + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void startUserControl(int mineBlockSpeed) { // Starts the user
 														// controls
+		startTime = System.nanoTime();
 		startKeyControls();
 		startMouseControl(mineBlockSpeed);
 		System.out.println("User Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void startKeyControls() { // Adds the key listner
+		startTime = System.nanoTime();
 		keyListener = new keyControls();
 		this.addKeyListener(keyListener);
 		movePlayerTask move = new movePlayerTask();
 		manager.addTask(move, 1);
 		this.setLayout(null);
+		System.out.println("Kay Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void startMouseControl(int mineBlockSpeed) { // Starts the thread that moves the block selector
 		// hideCursor();
+		startTime = System.nanoTime();
 		selectMapBlock = new selectorBlock();
 		selectMapBlock.setBounds(128, 128, blockHeight, blockHeight);
 		selectMapBlock.setOpaque(false);
@@ -473,6 +489,7 @@ public class map extends JFrame { // The main panel of display
 		this.addMouseListener(placer);
 		mine = new mineBlockTask(mineBlockSpeed);
 		manager.addTask(mine);
+		System.out.println("Mouse Controls Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 
 	}
 
@@ -483,26 +500,26 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initPhysics() { // Initializes the physics
+		startTime = System.nanoTime();
 		physics = new physicsEngine();
 		System.out.println("Physics Initalized" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void startPhysics() { // Starts the physics
+		startTime = System.nanoTime();
 		physics.start();
 		if (creative == false) {
 			task thisTask = new gravityTask();
 			manager.addTask(thisTask, 1);
 		}
 		System.out.println("Physics Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void startSave() {
+		startTime = System.nanoTime();
 		saveTask task = new saveTask();
 		manager.addTask(task);
 		System.out.println("Save Started" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		startTime = System.nanoTime();
 	}
 
 	public void doneJumping() { // Called when the jump thread is done excuting
@@ -588,6 +605,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void clearMap() {
+		startTime = System.nanoTime();
 		for (int y = 0; y < chunk.get(currentScreen).size(); y++) {
 			for (int x = 0; x < chunk.get(currentScreen).get(y).length; x++) {
 				if (chunk.get(currentScreen).get(y)[x] == null) {
@@ -597,9 +615,11 @@ public class map extends JFrame { // The main panel of display
 				remove(chunk.get(currentScreen).get(y)[x]);
 			}
 		}
+		System.out.println("Map Cleard" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public int changeCurrentScreen(Boolean backwardsOrForwards) {
+		startTime = System.nanoTime();
 		clearMap();
 		if (backwardsOrForwards) {
 			currentScreen--;
@@ -608,6 +628,7 @@ public class map extends JFrame { // The main panel of display
 		}
 		drawMap();
 		repaintObjects();
+		System.out.println("Screen Changed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		return 0;
 	}
 
@@ -622,6 +643,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void repaintObjects() {
+		startTime = System.nanoTime();
 		remove(player);
 		add(player, 0);
 		remove(inventoryBar);
@@ -631,6 +653,7 @@ public class map extends JFrame { // The main panel of display
 		remove(selectMapBlock);
 		add(selectMapBlock, 1);
 		repaint();
+		System.out.println("Objects Repainted" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 }
