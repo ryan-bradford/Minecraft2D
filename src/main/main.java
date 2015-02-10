@@ -70,17 +70,11 @@ public class main {
 
 	public static void main(String[] args) { // Creates the map
 		start = new startScreen();
-		start.pack();
-		start.setBounds(0, 0, screenWidth, screenHeight);
-		start.setVisible(true);
-		start.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 	}
 	
 	public static void startGame(String worldName) {
-		start.setVisible(false);
-		start.setFocusable(false);
 		start = null;
 		fileName = worldName;
 		getSavedStuff.readFile();
@@ -93,7 +87,7 @@ public class main {
 				inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, airColor,
 				skinColor, pantsColor, shirtColor, shoeColor, imageFileNames, stackHeight, jumpDistance, jumpSpeed,
 				gravitySpeed, walkSpeed, mineBlockSpeed, savedChunk, savedInventoryButtons, savedInventoryBarButtons,
-				playerBounds, currentScreen, WorldGen, worldSeed);
+				playerBounds, currentScreen, WorldGen, worldSeed, false);
 		map.pack();
 		map.setBounds(0, 0, screenWidth, screenHeight);
 		map.setVisible(true);

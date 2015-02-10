@@ -92,17 +92,31 @@ public class map extends JFrame { // The main panel of display
 	public map(Boolean creative, int blockHeight1, int dirtHeightInBlocks, int inventoryBlock, int inventoryGap, int inventoryExtra, int inventoryHeight, Color defaultBoxColor, Color swapBoxColor,
 			Color selectedBoxColor, Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames,
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1, inventoryButton[][] inventButtons,
-			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed) {
+			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed, Boolean paused) {
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
-		initTaskManager();
+		if (!paused) {
+			initTaskManager();
+		}
 		drawMap();
-		drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
-		initPhysics();
-		startPhysics();
-		startUserControl(mineBlockSpeed);
-		initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight, inventButtons,
-				inventBarButtons);
-		startSave();
+		if (!paused) {
+			drawPlayer(skinColor, pantsColor, shirtColor, shoeColor, playerPosition);
+		}
+		if (!paused) {
+			initPhysics();
+		}
+		if (!paused) {
+			startPhysics();
+		}
+		if (!paused) {
+			startUserControl(mineBlockSpeed);
+		}
+		if (!paused) {
+			initAndDrawInventory(inventoryBlock, inventoryGap, inventoryExtra, inventoryHeight, defaultBoxColor, swapBoxColor, selectedBoxColor, backgroundColor, textColor, stackHeight,
+					inventButtons, inventBarButtons);
+		}
+		if (!paused) {
+			startSave();
+		}
 		System.out.println("The Game Has Begun!");
 	}
 
@@ -621,9 +635,9 @@ public class map extends JFrame { // The main panel of display
 														// start
 		int playerLastY = player.getBounds().y;
 		if (endOrStart == false) {
-			player.setBounds(blockHeight/2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
+			player.setBounds(blockHeight / 2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		} else {
-			player.setBounds(main.screenWidth - blockHeight/2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
+			player.setBounds(main.screenWidth - blockHeight / 2, playerLastY, player.getPlayerWidth(), player.getPlayerHeight());
 		}
 
 	}
