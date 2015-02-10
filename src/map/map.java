@@ -93,6 +93,7 @@ public class map extends JFrame { // The main panel of display
 			Color selectedBoxColor, Color backgroundColor, Color textColor, Color airColor, Color skinColor, Color pantsColor, Color shirtColor, Color shoeColor, String[] imageFileNames,
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, ArrayList<ArrayList<block[]>> chunk1, inventoryButton[][] inventButtons,
 			inventoryButton[] inventBarButtons, Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed, Boolean paused) {
+		setLayout(null);
 		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed);
 		if (!paused) {
 			initTaskManager();
@@ -467,7 +468,6 @@ public class map extends JFrame { // The main panel of display
 		this.addKeyListener(keyListener);
 		movePlayerTask move = new movePlayerTask();
 		manager.addTask(move, 1);
-		this.setLayout(null);
 	}
 
 	public void startMouseControl(int mineBlockSpeed) { // Starts the thread
