@@ -4,10 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.print.Doc;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 
 import save.getSavedStuff;
@@ -27,6 +30,8 @@ public class startScreen {
 	String[] savedGames;
 	SimpleAttributeSet center;
 	map map1;
+	Style s;      
+	ImageIcon icUf;
 
 	public startScreen() {
 		map1 = new map(false, 64, main.dirtHeightInBlocks, main.inventoryBlockNumber, main.inventoryGap, main.inventoryExtra, main.inventoryHeight, main.defaultBoxColor, main.swapBoxColor,
@@ -64,11 +69,11 @@ public class startScreen {
 			map1.remove(loadGame);
 			message = new JTextPane();
 			message.setText("Type the Name of Your World");
-			message.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 200, 200, 25);
+			message.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 200, 200, 18);
 			message.setParagraphAttributes(center, true);
 			map1.add(message);
 			enterWorldName = new JTextPane();
-			enterWorldName.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 100, 200, 25);
+			enterWorldName.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 100, 200, 18);
 			enterWorldName.setParagraphAttributes(center, true);
 			map1.add(enterWorldName);
 			map1.repaint();
