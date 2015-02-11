@@ -19,13 +19,13 @@ import map.map;
 
 public class startScreen {
 
-	JButton newGame;
-	JButton loadGame;
-	JButton[][] selectGame;
+	texturedButton newGame;
+	texturedButton loadGame;
+	texturedButton[][] selectGame;
+	texturedButton done;
 	JTextPane message;
 	JTextPane enterWorldName;
 	JTextPane noSavedGames;
-	JButton done;
 	Boolean newOrOld;
 	String[] savedGames;
 	SimpleAttributeSet center;
@@ -47,11 +47,11 @@ public class startScreen {
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		map1.setLayout(null);
 		savedGames = getSavedStuff.getWorldNames();
-		newGame = new JButton("New/Overwrite Game");
+		newGame = new texturedButton("New/Overwrite Game", 200, 50);
 		newGame.setBounds(main.screenWidth / 2 - 300, 300, 200, 50);
 		map1.add(newGame, 0);
 		newGame.addActionListener(new listenToNewGame());
-		loadGame = new JButton("Load Game");
+		loadGame = new texturedButton("Load Game", 200, 50);
 		loadGame.setBounds(main.screenWidth / 2 + 100, 300, 200, 50);
 		map1.add(loadGame, 0);
 		loadGame.addActionListener(new listenToLoadGame());
@@ -111,11 +111,11 @@ public class startScreen {
 				int heightInButtons = main.screenHeight / 50;
 				int rowsNeeded = (savedGames.length / widthInButtons) + 1;
 				int counter = 0;
-				selectGame = new JButton[widthInButtons][heightInButtons];
+				selectGame = new texturedButton[widthInButtons][heightInButtons];
 				for (int i = 0; i < widthInButtons; i++) {
 					for (int x = 0; x < rowsNeeded; x++) {
 						if (!(counter + 1 > savedGames.length)) {
-							selectGame[i][x] = new JButton(savedGames[counter].substring(0, savedGames[counter].length() - 4));
+							selectGame[i][x] = new texturedButton(savedGames[counter].substring(0, savedGames[counter].length() - 4), 100, 50);
 							selectGame[i][x].setBounds(150 * i + 50, 100 * x + 50, 100, 50);
 							selectGame[i][x].addActionListener(new listenToGameButtons(counter));
 							map1.add(selectGame[i][x]);
@@ -157,7 +157,7 @@ public class startScreen {
 	}
 
 	public void initDone() {
-		done = new JButton("Done");
+		done = new texturedButton("Done", 200, 50);
 		done.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 300, 200, 50);
 		map1.add(done);
 		done.addActionListener(new listenToDone());
