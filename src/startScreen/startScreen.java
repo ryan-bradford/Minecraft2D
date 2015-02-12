@@ -107,23 +107,25 @@ public class startScreen {
 				map1.add(enterWorldName);
 				map1.repaint();
 			} else {
-				int widthInButtons = main.screenWidth / 100;
+				int widthInButtons = main.screenWidth / 250;
+				System.out.println(widthInButtons);
 				int heightInButtons = main.screenHeight / 50;
 				int rowsNeeded = (savedGames.length / widthInButtons) + 1;
 				int counter = 0;
 				selectGame = new texturedButton[widthInButtons][heightInButtons];
-				for (int i = 0; i < widthInButtons; i++) {
-					for (int x = 0; x < rowsNeeded; x++) {
+				for (int i = 0; i < rowsNeeded; i++) {
+					for (int x = 0; x < widthInButtons; x++) {
 						if (!(counter + 1 > savedGames.length)) {
-							selectGame[i][x] = new texturedButton(savedGames[counter].substring(0, savedGames[counter].length() - 4), 100, 50);
-							selectGame[i][x].setBounds(150 * i + 50, 100 * x + 50, 100, 50);
-							selectGame[i][x].addActionListener(new listenToGameButtons(counter));
-							map1.add(selectGame[i][x]);
+							selectGame[x][i] = new texturedButton(savedGames[counter].substring(0, savedGames[counter].length() - 4), 200, 50);
+							selectGame[x][i].setBounds(250 * x + 50, 100 * i + 50, 200, 50);
+							selectGame[x][i].addActionListener(new listenToGameButtons(counter));
+							map1.add(selectGame[x][i], 0);
 							map1.repaint();
 							counter++;
 						}
 					}
 				}
+				map1.repaint();
 			}
 		}
 	}
