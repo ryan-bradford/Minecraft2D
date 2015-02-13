@@ -129,7 +129,7 @@ public class startScreen {
 		done = new texturedButton("Done", 200, 50);
 		done.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 300,
 				200, 50);
-		map1.add(done);
+		map1.add(done, 0);
 		done.addActionListener(new listenToDone());
 	}
 
@@ -144,7 +144,7 @@ public class startScreen {
 			noSavedGames.setText("You have no saved games");
 			noSavedGames.setBounds(main.screenWidth / 2 - 100, 50, 200, 25);
 			noSavedGames.setParagraphAttributes(center, true);
-			map1.add(noSavedGames);
+			map1.add(noSavedGames, 0);
 			newOrOld = true;
 			initDone();
 			message = new JTextPane();
@@ -152,12 +152,13 @@ public class startScreen {
 			message.setBounds(main.screenWidth / 2 - 100,
 					main.screenHeight / 2 - 200, 200, 25);
 			message.setParagraphAttributes(center, true);
-			map1.add(message);
+			map1.add(message, 0);
 			enterWorldName = new JTextPane();
 			enterWorldName.setBounds(main.screenWidth / 2 - 100,
 					main.screenHeight / 2 - 100, 200, 25);
 			enterWorldName.setParagraphAttributes(center, true);
-			map1.add(enterWorldName);
+			enterWorldName.addKeyListener(new keyControls());
+			map1.add(enterWorldName, 0);
 			map1.repaint();
 		} else {
 			int widthInButtons = main.screenWidth / 250;
@@ -201,13 +202,12 @@ public class startScreen {
 		message.setBounds(main.screenWidth / 2 - 100,
 				main.screenHeight / 2 - 200, 200, 18);
 		message.setParagraphAttributes(center, true);
-		map1.add(message);
+		map1.add(message, 0);
 		enterWorldName = new JTextPane();
 		enterWorldName.setBounds(main.screenWidth / 2 - 100,
 				main.screenHeight / 2 - 100, 200, 18);
 		enterWorldName.setParagraphAttributes(center, true);
-		map1.add(enterWorldName);
-		//map1.addKeyListener(new keyControls());
+		map1.add(enterWorldName, 0);
 		enterWorldName.addKeyListener(new keyControls());
 		map1.repaint();
 		map1.setFocusable(true);
