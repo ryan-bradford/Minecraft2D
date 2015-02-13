@@ -26,7 +26,7 @@ public class getSavedStuff {
 					try{
 						return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
 					}catch(NumberFormatException ex){
-						return Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
+						return -1*Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
 					}
 				} else {
 					runnable = false;
@@ -50,7 +50,9 @@ public class getSavedStuff {
 							screenNum++;
 						}
 					}else{
-						screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						if(i == 0){
+							screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						}
 						if (text[i].equals("-Chunk ")) {
 							screenNum++;
 						}
@@ -68,22 +70,26 @@ public class getSavedStuff {
 		if (runnable) {
 			Chunk screens = new Chunk();
 			for (int i = 0; i < getScreenNumAmmount(true); i++) {
-				screens.add(getNextScreen());
+				screens.add(getNextScreen(true));
 			}
 			for (int i = 0; i < getScreenNumAmmount(false); i++) {
-				screens.ChunkRL.add(getNextScreen());
+				screens.ChunkRL.add(getNextScreen(false));
 			}
 			return screens;
 		}
 		return null;
 	}
 
-	public static ArrayList<block[]> getNextScreen() {
+	public static ArrayList<block[]> getNextScreen(boolean leftToRight) {
 		if (runnable) {
 			int chunkStart = 0;
 			int chunkEnd = 0;
 			ArrayList<block[]> screen = new ArrayList<block[]>();
-			while (!(text[currentRow].equals("Chunk "))) {
+			String TextToFind = "Chunk ";
+			if(!leftToRight){
+				TextToFind = "-Chunk ";
+			}
+			while (!(text[currentRow].equals(TextToFind))) {
 				currentRow++;
 			}
 			currentRow++;

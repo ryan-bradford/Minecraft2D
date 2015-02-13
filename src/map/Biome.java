@@ -12,7 +12,7 @@ public class Biome {
 	public int biomeLength;
 	public int maxBiomeLength = 16;
 	public int minBiomeHeight = 3;
-	public int maxBiomeHeight = 3; //calculated from tope of screen, i. e., 3 with a height of 40 means max height is 37
+	public int maxBiomeHeight = 3; //calculated from top of screen, i. e., 3 with a height of 40 means max height is 37
 	public byte surfaceGen; //Varied Random, Rolling Hills, Short Hills, etc. Used to calculate the surface. 
 	public byte environmentGen; //Grassland, Desert, Forest, etc. Also will be to calculate temperature and mob types.
 	
@@ -63,7 +63,7 @@ public class Biome {
 
 	public int genSurface(int x, int currentScreen, int prevSurface) {
 		// TODO Auto-generated method stub
-		int surface = (int) ((int) worldSeed * (currentScreen + 1) * Math.sqrt((worldSeed * (x + 1)) % 240)) % 100;
+		int surface = Math.abs((int) ((int) worldSeed * (Math.abs(currentScreen) + 1) * Math.sqrt((worldSeed * (x + 1)) % 240)) % 100);
 		// System.out.println("column " x " percentage of " surface " mapwidth " mapWidth);
 		System.out.println("x "+x+"surface "+surface);
 		if (surface < 2) { // unlikely scenario where floor is raised two blocks
