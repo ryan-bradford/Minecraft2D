@@ -2,6 +2,8 @@ package startScreen;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 
 import javax.print.Doc;
@@ -57,6 +59,7 @@ public class startScreen {
 		map1.setLayout(null);
 		savedGames = getSavedStuff.getWorldNames();
 		startLoadScreen();
+		map1.repaint();
 	}
 
 	public class listenToNewGame implements ActionListener {
@@ -204,7 +207,10 @@ public class startScreen {
 				main.screenHeight / 2 - 100, 200, 18);
 		enterWorldName.setParagraphAttributes(center, true);
 		map1.add(enterWorldName);
+		//map1.addKeyListener(new keyControls());
+		enterWorldName.addKeyListener(new keyControls());
 		map1.repaint();
+		map1.setFocusable(true);
 		stage = 3;
 	}
 
@@ -250,4 +256,29 @@ public class startScreen {
 		map1.repaint();
 	}
 
+	public class keyControls implements KeyListener { // The thing that controls
+														// the keys
+		@Override
+		public void keyPressed(KeyEvent e) {
+			int key = e.getKeyCode();
+			if (key == KeyEvent.VK_ENTER) {
+				System.out.println("Pressed");
+				if (stage == 3) {
+					runDone();
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+	}
 }
