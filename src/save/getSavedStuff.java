@@ -16,7 +16,7 @@ import block.block;
 public class getSavedStuff {
 	static int currentRow = 0;
 	static int lastChunkNum = 0;
-	static String[] text = getText();
+	static String[] text;
 	static Boolean runnable = true;
 
 	public static int getScreenNum() {
@@ -203,5 +203,34 @@ public class getSavedStuff {
 			return buttons;
 		}
 		return null;
+	}
+	
+	public static String[] getWorldNames() {
+		try {
+			return FileArrayProvider.readLines(main.fileNamesSaveFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+		}
+		return null;
+	}
+	
+	public static void readFile() {
+		 text = getText();
+	}
+	
+	public static int getPrevSurfaceLR() {
+		try {
+		return Integer.parseInt(text[2].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
+	}
+	
+	public static int getPrevSurfaceRL() {
+		try {
+		return Integer.parseInt(text[3].trim());
+		} catch(NullPointerException ex) {
+			return 0;
+		}
 	}
 }
