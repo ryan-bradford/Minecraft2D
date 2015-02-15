@@ -1,7 +1,11 @@
 Change Log:
 
+Beta 0.7.4:
+	1. Fixed bug where screens occasionally generate flat, but have not finished improving surface generation
+	2. Fixed bug where you cannot load after moving left, past the first screen
+
 Beta 0.6.2:
-	1. Finished Biome Generation- but still  only the one biome.
+	1. Finished Biome Generation- but still only the one biome.
 	2. Changed chunk data storage- you may now explore infinitely in BOTH directions!
 
 Beta 0.6.1:

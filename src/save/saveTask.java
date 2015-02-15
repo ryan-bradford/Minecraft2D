@@ -1,6 +1,7 @@
 package save;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,42 @@ import thread.task;
 
 public class saveTask extends task {
 	PrintWriter out;
+	ArrayList<String> fileNames;
+
+	public saveTask() {
+		File savedFiles = new File(main.fileNamesSaveFile);
+		if (savedFiles.exists()) {
+			try {
+				fileNames = new ArrayList<String>();
+				String[] fileNames1 = FileArrayProvider.readLines(main.fileNamesSaveFile);
+				for (int i = 0; i < fileNames1.length; i++) {
+					fileNames.add(fileNames1[i]);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			File thisFile = new File(main.fileName);
+			if (!thisFile.exists()) {
+				fileNames.add(main.fileName);
+			}
+		} else {
+			fileNames = new ArrayList<String>();
+			fileNames.add(main.fileName);
+		}
+		try {
+			FileWriter fr = new FileWriter(main.fileNamesSaveFile);
+			BufferedWriter br = new BufferedWriter(fr);
+			PrintWriter out1 = new PrintWriter(br);
+			for (int i = 0; i < fileNames.size(); i++) {
+				out1.println(fileNames.get(i));
+			}
+			out1.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void runTask() {
@@ -23,6 +60,10 @@ public class saveTask extends task {
 			out.write("Head");
 			out.println(" ");
 			out.write(" " + main.map.currentScreen);
+			out.println(" ");
+			out.write(" " + main.map.prevSurfaceLR);
+			out.println(" ");
+			out.write(" " + main.map.prevSurfaceRL);
 			out.println(" ");
 			savePlayer(main.getPlayer());
 			for (int i = 0; i < main.map.chunk.size(); i++) { //ltr

@@ -4,6 +4,9 @@ package map;
 
 public class Biome {
 	//@author JayBT
+	public static String[] enabledBiomes = {"grassland", "desert"}; //string consisting of enabled biomes; position corresponds
+																	//to biomeRarity, must be all lower case
+	public static int[] biomeRarity = {1,-1}; //0 is average rarity, greater means greater and less means less
 	
 	public int worldSeed;
 	public int biomeSeed;
@@ -53,12 +56,7 @@ public class Biome {
 			
 		}
 		//generates biome information
-		environmentGen = (byte) biomeSeed;
-		environmentGen ^= (environmentGen << 21);
-		environmentGen ^= (environmentGen >>> 35);
-		environmentGen ^= (environmentGen << 4);
-		
-		
+		genBiomeData(true,true);
 	}
 
 	public int genSurface(int x, int currentScreen, int prevSurface) {
@@ -79,5 +77,24 @@ public class Biome {
 		}
 		return surface;
 	}
-	
+	//TODO finish this!
+	public void genBiomeData(boolean genEnvironmentGen, boolean genSurfaceGen){
+		if (genEnvironmentGen){
+			environmentGen = (byte) ((biomeSeed) * (Math.abs(chunkNum)+1));
+			environmentGen ^= (environmentGen << 21);
+			environmentGen ^= (environmentGen >>> 35);
+			environmentGen ^= (environmentGen << 4);
+			//reduce environmentGen
+			for(int i = 0; i < enabledBiomes.length; i++){
+				if(environmentGen < biomeRarity[i]){
+					
+				}
+			}
+		}if (genSurfaceGen){
+			
+		}
+		
+		
+		
+	}
 }
