@@ -26,6 +26,8 @@ public class block extends JPanel {
     public int health = 100;
     public java.io.File f = null;  
     public int id;
+    public Integer light;
+    public int lightToSubtract;
     public boolean notBackground;
     public boolean notDiggable;
     
@@ -45,7 +47,10 @@ public class block extends JPanel {
     protected void paintComponent(Graphics g) { //Draws the texture of the block
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters 
-        g.setColor(new Color(0, 0, 0, 0));
+        if(light != null) {
+        	g.setColor(new Color(0, 0, 0, 255*light/100));
+        }
+    	g.setColor(new Color(0, 0, 0, 0));
         g.fillRect(0, 0, 64, 64);
     } 
 

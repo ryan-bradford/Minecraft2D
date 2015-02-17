@@ -204,6 +204,7 @@ public class map extends JFrame { // The main panel of display
 				}
 			}
 		}
+		chunk.get(currentScreen).get(0)[0].light = 100;
 		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
@@ -241,7 +242,7 @@ public class map extends JFrame { // The main panel of display
 			for (int y = 0; y < mapHeight; y++) {
 				int blockID = 0;
 				if (y < surface) {
-					continue;
+
 				} else if (y == surface) {
 					blockID = 2;
 				} else if (y <= surface+3) {
@@ -249,7 +250,7 @@ public class map extends JFrame { // The main panel of display
 				} else if(y > surface+3){
 					blockID = 3;
 				}
-				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, true, false));
+				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, main.blockIDNotBackground[blockID], main.blockIDNotDiggable[blockID]));
 				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
 				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight,
 						blockHeight);
@@ -269,7 +270,7 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, true, false));
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, main.blockIDNotBackground[1], main.blockIDNotDiggable[1]));
 				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
@@ -285,7 +286,7 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, true, false));
+			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, main.blockIDNotBackground[2], main.blockIDNotDiggable[2]));
 			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
@@ -335,7 +336,7 @@ public class map extends JFrame { // The main panel of display
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, true, false));
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, main.blockIDNotBackground[id], main.blockIDNotDiggable[id]));
 			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
@@ -654,6 +655,39 @@ public class map extends JFrame { // The main panel of display
 		add(selectMapBlock, 1);
 		repaint();
 		System.out.println("Objects Repainted" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
+	}
+	
+	public void updateLighting() {
+		for(int i = 0; i < chunk.get(currentScreen).size(); i++) {
+			for(int x = 0; x < chunk.get(currentScreen).get(i).length; x++) {
+				int greatestLight = 0;
+				if(chunk.get(currentScreen).get(i)[x-1] != null && chunk.get(currentScreen).get(i)[x-1].light != null) {
+					greatestLight += chunk.get(currentScreen).get(i)[x-1].light;
+					if(chunk.get(currentScreen).get(i)[x-1].light > greatestLight) {
+						greatestLight = chunk.get(currentScreen).get(i)[x-1].light;
+					}
+				}
+				if(chunk.get(currentScreen).get(i)[x+1] != null && chunk.get(currentScreen).get(i)[x+1].light != null) {
+					if(chunk.get(currentScreen).get(i)[x+1].light > greatestLight) {
+						greatestLight = chunk.get(currentScreen).get(i)[x+1].light;
+					}
+				}
+				if(chunk.get(currentScreen).get(i)[x-1] != null && chunk.get(currentScreen).get(i-1)[x].light != null) {
+					greatestLight += chunk.get(currentScreen).get(i-1)[x].light;
+					if(chunk.get(currentScreen).get(i-1)[x].light > greatestLight) {
+						greatestLight = chunk.get(currentScreen).get(i-1)[x].light;
+					}
+				}
+				if(chunk.get(currentScreen).get(i)[x+1] != null && chunk.get(currentScreen).get(i+1)[x].light != null) {
+					if(chunk.get(currentScreen).get(i+1)[x].light > greatestLight) {
+						greatestLight = chunk.get(currentScreen).get(i+1)[x].light;
+					}
+				}
+				chunk.get(currentScreen).get(i)[x].light = greatestLight - chunk.get(currentScreen).get(i)[x].lightToSubtract;
+				chunk.get(currentScreen).get(i)[x].repaint();
+			}
+		}
+		repaint();
 	}
 
 }
