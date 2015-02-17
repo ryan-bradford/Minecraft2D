@@ -72,7 +72,7 @@ public class getSavedStuff {
 			for (int i = 0; i < getScreenNumAmmount(true); i++) {
 				screens.add(getNextScreen(true));
 			}
-			for (int i = 0; i < getScreenNumAmmount(false); i++) {
+			for (int i = 0; i < getScreenNumAmmount(false)+1; i++) {
 				screens.ChunkRL.add(getNextScreen(false));
 			}
 			return screens;

@@ -127,7 +127,7 @@ public class map extends JFrame { // The main panel of display
 		imageFileNames = imageFileNames1;
 		inventoryOpen = false;
 		blockHeight = blockHeight1; // Sets Block Pixel Height
-		mapWidth = (main.screenWidth) / blockHeight;
+		mapWidth = (main.screenWidth) / blockHeight + 1;
 		mapHeight = (main.screenHeight) / blockHeight;
 		dirtRows = dirtHeightInBlocks - 1;
 		jumpSpeed = jumpSpeed1;// Pixels per Second

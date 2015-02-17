@@ -23,18 +23,18 @@ public class movePlayerTask extends task { // The task that moves the player
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null) {
 			if (upOrDown == true) {
-				yAmmount = +-1;
+				yAmmount = -1;
 			} else {
-				yAmmount = +1;
+				yAmmount = 1;
 			}
 		} else {
 			yAmmount = 0;
 		}
 		if (leftOrRight != null) {
 			if (leftOrRight == true) {
-				xAmmount = +-1;
+				xAmmount = -1;
 			} else {
-				xAmmount = +1;
+				xAmmount = 1;
 			}
 		} else {
 			xAmmount = 0;
@@ -43,51 +43,13 @@ public class movePlayerTask extends task { // The task that moves the player
 		int whichDirectionToMove = 0;
 		Boolean endOrBegining = null; // True is end
 		int currentScreen = main.map.currentScreen;
-		if (main.getPlayer().getBounds().x + xAmmount <= 0
-				/*&& currentScreen - 1 >= 0*/) {
+		if (main.getPlayer().getBounds().x + xAmmount <= 0) {
 			whichDirectionToMove = -1;
 			endOrBegining = true;
 		} else if (main.getPlayer().getBounds().x + xAmmount >= main.screenWidth) {
 			whichDirectionToMove = 1;
 			endOrBegining = false;
 		}
-		/*if (currentScreen - 1 < 0
-				&& main.getPlayer().getBounds().x + xAmmount <= 0) { //I am confused; when would the second ever be true and the first, false? 
-			canBeMoved = false;
-		}*/
-//		if (canBeMoved == true && endOrBegining != null) {
-//			canBeMoved = true;
-//			try {
-//				ArrayList<block> blocks = main.getBlocks(currentScreen
-//						+ whichDirectionToMove, main.getPlayer().getBounds().y);
-//				System.out.println(blocks.get(0).getBounds().y
-//						+ " " + main.getPlayer().getBounds().y);
-//				if (!blocks.equals(null)) {
-//					for (int i = 0; i < blocks.size(); i++) {
-//						System.out.println(blocks.get(i).getBounds().y + " "
-//								+ main.getPlayer().getBounds().y);
-//						if (!blocks.get(i).equals(null)) {
-//							System.out.println(blocks.get(i).getBounds().y
-//									+ " " + main.getPlayer().getBounds().y);
-//							if (endOrBegining == true) {
-//								if (blocks.get(i).getBounds().x == main.blockHeight) {
-//									canBeMoved = false;
-//									System.out.println("Can't Move Left");
-//								}
-//							} else {
-//								if (blocks.get(i).getBounds().x == main.screenWidth
-//										- main.blockHeight) {
-//									canBeMoved = false;
-//									System.out.println("Can't Move Right");
-//								}
-//							}
-//						}
-//					}
-//				}
-//			} catch (IndexOutOfBoundsException ex) {
-//				System.out.println("Caught 3");
-//			}
-//		}
 
 		if (canBeMoved == true) {
 			main.movePlayer(xAmmount, yAmmount);
@@ -100,29 +62,26 @@ public class movePlayerTask extends task { // The task that moves the player
 
 	@Override
 	public Boolean returnRunnable() {
-		if (main.map.inventoryOpen == true) { // If the inventory is open, dont
-												// run
+		if (main.map.inventoryOpen == true) { // If the inventory is open, dont run
 			return false;
 		}
-		if (upOrDown != null) { // If the player is trying to move up, but
-								// touching the top, dont move up
-			if (upOrDown == true) {
+		if (upOrDown != null) { // If the player is trying to move up, but touching the top, dont move up
+			if (upOrDown) {
 				if (main.getCollisionTop() == true) {
 					return false;
 				}
-			} else { // If the player is trying to move down, but touching the
-						// bottom, dont move down
+			} else { // If the player is trying to move down, but touching the bottom, dont move down
 				if (main.getCollisionBottom() == true) {
 					return false;
 				}
 			}
 		}
 		if (leftOrRight != null) { // Same rules as about apply
-			if (leftOrRight == true) {
+			if (leftOrRight && main.map.keyListener.aPressed) {
 				if (main.getCollisionLeft() == true) {
 					return false;
 				}
-			} else {
+			} else if (leftOrRight == false && main.map.keyListener.dPressed) {
 				if (main.getCollisionRight() == true) {
 					return false;
 				}
