@@ -79,7 +79,8 @@ public class map extends JFrame { // The main panel of display
 			int stackHeight, int jumpHeight, int jumpSpeed, int gravitySpeed1, int walkSpeed1, int mineBlockSpeed, Chunk chunk1, inventoryButton[][] inventButtons, inventoryButton[] inventBarButtons,
 			Integer[] playerPosition, int currentScreen1, String WorldType, int worldSeed, Boolean paused, int prevSurfaceLR, int prevSurfaceRL) {
 		setLayout(null);
-		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed, prevSurfaceLR, prevSurfaceRL);
+		initVar(creative, blockHeight1, dirtHeightInBlocks, imageFileNames, jumpHeight, jumpSpeed, gravitySpeed1, walkSpeed1, chunk1, currentScreen1, WorldType, worldSeed, prevSurfaceLR,
+				prevSurfaceRL);
 		if (!paused) {
 			initTaskManager();
 		}
@@ -107,7 +108,7 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void initVar(Boolean creativ, int blockHeight1, int dirtHeightInBlocks, String[] imageFileNames1, int jumpDistance1, int jumpSpeed1, int gravitySpeed1, int walkSpeed1, Chunk chunk1,
-			int currentScreen1, String WorldType, int worldSeed, int prevSurfaceLR1, int prevSurfaceRL1) {   //
+			int currentScreen1, String WorldType, int worldSeed, int prevSurfaceLR1, int prevSurfaceRL1) { //
 		startTime = System.nanoTime();
 		currentScreen = currentScreen1;
 		prevSurfaceLR = prevSurfaceLR1;
@@ -173,9 +174,9 @@ public class map extends JFrame { // The main panel of display
 	public void drawMap() {
 		startTime = System.nanoTime();
 		if (getDrawNewOrOld()) {
-			if(currentScreen >= 0){
+			if (currentScreen >= 0) {
 				chunk.add(new ArrayList<block[]>());
-			}else{
+			} else {
 				chunk.ChunkRL.add(new ArrayList<block[]>());
 			}
 			for (int i = 0; i < mapHeight; i++) {
@@ -205,6 +206,8 @@ public class map extends JFrame { // The main panel of display
 			}
 		}
 		chunk.get(currentScreen).get(0)[0].light = 100;
+		updateLighting();
+		repaint();
 		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
@@ -218,22 +221,14 @@ public class map extends JFrame { // The main panel of display
 		for (int x = 0; x < mapWidth; x++) {
 			// generate surface block number
 			int surface = CurrentBiome.genSurface(x, currentScreen, prevSurfaceLR);
-			/*int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100;
-			// System.out.println("column " x " percentage of " surface " mapwidth " mapWidth);
-			if (surface < 2) { // unlikely scenario where floor is raised two blocks
-				surface = -2;
-			} else if (surface < 20) { // floor is up 1 block
-				surface = -1;
-			} else if (surface < 80) { // floor is dirtRows
-				surface = 0;
-			} else if (surface < 98) { // floor is down 1
-				surface = 1;
-			} else { // (surface < 100) floor is down 2
-				surface = 2;
-			}*/
+			/*
+			 * int surface = (int) ((int) seed * (currentScreen + 1) * Math.sqrt((seed * (x + 1)) % 240)) % 100; // System.out.println("column " x " percentage of " surface " mapwidth " mapWidth); if
+			 * (surface < 2) { // unlikely scenario where floor is raised two blocks surface = -2; } else if (surface < 20) { // floor is up 1 block surface = -1; } else if (surface < 80) { // floor
+			 * is dirtRows surface = 0; } else if (surface < 98) { // floor is down 1 surface = 1; } else { // (surface < 100) floor is down 2 surface = 2; }
+			 */
 			surface = prevSurfaceLR + surface;
-			surface = Math.min(surface, (mapHeight - CurrentBiome.maxBiomeHeight)); //will not go higher than mapHeight - maxBiomeHeight
-			surface = Math.max(surface, CurrentBiome.minBiomeHeight);//will not go less than minBiomeHeight
+			surface = Math.min(surface, (mapHeight - CurrentBiome.maxBiomeHeight)); // will not go higher than mapHeight - maxBiomeHeight
+			surface = Math.max(surface, CurrentBiome.minBiomeHeight);// will not go less than minBiomeHeight
 			prevSurfaceLR = surface;
 			if (x == 1) {
 				playerStartSpot = surface;
@@ -245,40 +240,37 @@ public class map extends JFrame { // The main panel of display
 
 				} else if (y == surface) {
 					blockID = 2;
-				} else if (y <= surface+3) {
+				} else if (y <= surface + 3) {
 					blockID = 1;
-				} else if(y > surface+3){
+				} else if (y > surface + 3) {
 					blockID = 3;
 				}
-				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, main.blockIDNotBackground[blockID], main.blockIDNotDiggable[blockID]));
+				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, main.blockIDNotBackground[blockID], main.blockIDDiggable[blockID]));
 				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
-				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight,
-						blockHeight);
+				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(y)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(y)[x], 0);
 			}
 		}
-		System.out.println("Land Drawn" + " In " + (System.nanoTime() -
-				 startTime) + " Nanoseconds");
+		System.out.println("Land Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
-	
-	public void drawStructures(Biome CurrentBiome){
-		
+
+	public void drawStructures(Biome CurrentBiome) {
+
 	}
 
 	public void drawDirt() { // Draws the dirt
 		startTime = System.nanoTime();
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, main.blockIDNotBackground[1], main.blockIDNotDiggable[1]));
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, main.blockIDNotBackground[1], main.blockIDDiggable[1]));
 				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
 			}
 
 		}
-		System.out.println("Dirt Drawn" + " In " + (System.nanoTime() -
-		 startTime) + " Nanoseconds");
+		System.out.println("Dirt Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public void drawGrass() { // Draws the grass
@@ -286,7 +278,7 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, main.blockIDNotBackground[2], main.blockIDNotDiggable[2]));
+			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, main.blockIDNotBackground[2], main.blockIDDiggable[2]));
 			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
@@ -319,6 +311,8 @@ public class map extends JFrame { // The main panel of display
 			}
 			if (blockExists == false) {
 				placeNewBlock(xRow, yRow, fileName);
+			} else if (!chunk.get(currentScreen).get(yRow)[xRow].diggable) {
+				placeNewBlock(xRow, yRow, fileName);
 			} else {
 				startToMineBlock(xRow, yRow);
 			}
@@ -326,7 +320,7 @@ public class map extends JFrame { // The main panel of display
 
 		}
 		System.out.println("Mouse Event" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
-		
+
 	}
 
 	public void placeNewBlock(int xRow, int yRow, String fileName) {
@@ -336,7 +330,7 @@ public class map extends JFrame { // The main panel of display
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, main.blockIDNotBackground[id], main.blockIDNotDiggable[id]));
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, main.blockIDNotBackground[id], main.blockIDDiggable[id]));
 			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
@@ -352,8 +346,11 @@ public class map extends JFrame { // The main panel of display
 	public int removeBlock(int xRow, int yRow) {
 		startTime = System.nanoTime();
 		int id = chunk.get(currentScreen).get(yRow)[xRow].id;
-		chunk.get(currentScreen).get(yRow)[xRow].setVisible(false);
-		chunk.get(currentScreen).get(yRow)[xRow] = null;
+		chunk.get(currentScreen).get(yRow)[xRow] = new block(main.getImageFileNames()[0], 0, main.blockIDNotBackground[0], main.blockIDDiggable[0]);
+		chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * main.blockHeight, yRow * main.blockHeight, main.blockHeight, main.blockHeight);
+		add(chunk.get(currentScreen).get(yRow)[xRow], 1);
+		repaint();
+		repaintObjects();
 		System.out.println("Block Removed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		return id;
 	}
@@ -656,32 +653,56 @@ public class map extends JFrame { // The main panel of display
 		repaint();
 		System.out.println("Objects Repainted" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
-	
+
 	public void updateLighting() {
-		for(int i = 0; i < chunk.get(currentScreen).size(); i++) {
-			for(int x = 0; x < chunk.get(currentScreen).get(i).length; x++) {
+		for (int i = 0; i < chunk.get(currentScreen).size(); i++) {
+			for (int x = 0; x < chunk.get(currentScreen).get(i).length; x++) {
 				int greatestLight = 0;
-				if(chunk.get(currentScreen).get(i)[x-1] != null && chunk.get(currentScreen).get(i)[x-1].light != null) {
-					greatestLight += chunk.get(currentScreen).get(i)[x-1].light;
-					if(chunk.get(currentScreen).get(i)[x-1].light > greatestLight) {
-						greatestLight = chunk.get(currentScreen).get(i)[x-1].light;
+				try {
+					if (chunk.get(currentScreen).get(i)[x - 1] != null && chunk.get(currentScreen).get(i)[x - 1].light != null) {
+						greatestLight += chunk.get(currentScreen).get(i)[x - 1].light;
+						if (chunk.get(currentScreen).get(i)[x - 1].light > greatestLight) {
+							greatestLight = chunk.get(currentScreen).get(i)[x - 1].light;
+						}
 					}
+				} catch (ArrayIndexOutOfBoundsException ex) {
+
+				} catch(IndexOutOfBoundsException ex) {
+					
 				}
-				if(chunk.get(currentScreen).get(i)[x+1] != null && chunk.get(currentScreen).get(i)[x+1].light != null) {
-					if(chunk.get(currentScreen).get(i)[x+1].light > greatestLight) {
-						greatestLight = chunk.get(currentScreen).get(i)[x+1].light;
+				try {
+					if (chunk.get(currentScreen).get(i)[x + 1] != null && chunk.get(currentScreen).get(i)[x + 1].light != null) {
+						if (chunk.get(currentScreen).get(i)[x + 1].light > greatestLight) {
+							greatestLight = chunk.get(currentScreen).get(i)[x + 1].light;
+						}
 					}
+				} catch (ArrayIndexOutOfBoundsException ex) {
+
+				} catch(IndexOutOfBoundsException ex) {
+					
 				}
-				if(chunk.get(currentScreen).get(i)[x-1] != null && chunk.get(currentScreen).get(i-1)[x].light != null) {
-					greatestLight += chunk.get(currentScreen).get(i-1)[x].light;
-					if(chunk.get(currentScreen).get(i-1)[x].light > greatestLight) {
-						greatestLight = chunk.get(currentScreen).get(i-1)[x].light;
+				try {
+					if (chunk.get(currentScreen).get(i)[x - 1] != null && chunk.get(currentScreen).get(i - 1)[x].light != null) {
+						greatestLight += chunk.get(currentScreen).get(i - 1)[x].light;
+						if (chunk.get(currentScreen).get(i - 1)[x].light > greatestLight) {
+							greatestLight = chunk.get(currentScreen).get(i - 1)[x].light;
+						}
 					}
+				} catch (ArrayIndexOutOfBoundsException ex) {
+
+				} catch(IndexOutOfBoundsException ex) {
+					
 				}
-				if(chunk.get(currentScreen).get(i)[x+1] != null && chunk.get(currentScreen).get(i+1)[x].light != null) {
-					if(chunk.get(currentScreen).get(i+1)[x].light > greatestLight) {
-						greatestLight = chunk.get(currentScreen).get(i+1)[x].light;
+				try {
+					if (chunk.get(currentScreen).get(i)[x + 1] != null && chunk.get(currentScreen).get(i + 1)[x].light != null) {
+						if (chunk.get(currentScreen).get(i + 1)[x].light > greatestLight) {
+							greatestLight = chunk.get(currentScreen).get(i + 1)[x].light;
+						}
 					}
+				} catch (ArrayIndexOutOfBoundsException ex) {
+
+				} catch(IndexOutOfBoundsException ex) {
+					
 				}
 				chunk.get(currentScreen).get(i)[x].light = greatestLight - chunk.get(currentScreen).get(i)[x].lightToSubtract;
 				chunk.get(currentScreen).get(i)[x].repaint();

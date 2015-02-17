@@ -15,7 +15,7 @@ public class mineBlockTask extends task {
 
 	@Override
 	public void runTask() {
-		if (!main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].notDiggable) {
+		if (main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].diggable) {
 			main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].deductHealth(100);
 			if (main.map.chunk.get(main.map.currentScreen).get(yRow)[xCord].health <= 0) {
 				main.map.mineBlockAt(xCord, yRow);

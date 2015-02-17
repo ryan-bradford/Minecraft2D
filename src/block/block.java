@@ -8,9 +8,6 @@ package block;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
-import main.main;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -28,10 +25,10 @@ public class block extends JPanel {
     public int id;
     public Integer light;
     public int lightToSubtract;
-    public boolean notBackground;
-    public boolean notDiggable;
+    public boolean notBackground = false;
+    public boolean diggable = true;
     
-    public block(String file, int id1, boolean notBackground, boolean notDiggable) {
+    public block(String file, int id1, boolean notBackground, boolean diggable) {
         f = new java.io.File(file); //Reads in the file
         try {
             image = ImageIO.read(f );
@@ -39,7 +36,7 @@ public class block extends JPanel {
             // handle exception...
         }
         this.notBackground = notBackground;
-        this.notDiggable = notDiggable;
+        this.diggable = diggable;
         id = id1;
     }
 
