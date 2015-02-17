@@ -22,14 +22,16 @@ public class block extends JPanel {
     public int health = 100;
     public java.io.File f = null;  
     public int id;
+    public boolean notBackground;
     
-    public block(String file, int id1) {
+    public block(String file, int id1, boolean notBackground) {
         f = new java.io.File(file); //Reads in the file
         try {
             image = ImageIO.read(f );
         } catch (IOException ex) {
             // handle exception...
         }
+        this.notBackground = notBackground;
         id = id1;
     }
 
