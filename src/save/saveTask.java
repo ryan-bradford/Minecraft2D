@@ -17,42 +17,49 @@ public class saveTask extends task {
 	ArrayList<String> fileNames;
 	Boolean canBeSaved = true;
 
-	
-		public saveTask() {
-			File savedFiles = new File(main.fileNamesSaveFile);
-			if (savedFiles.exists()) {
-				try {
-					fileNames = new ArrayList<String>();
-					String[] fileNames1 = FileArrayProvider.readLines(main.fileNamesSaveFile);
-					for (int i = 0; i < fileNames1.length; i++) {
-						fileNames.add(fileNames1[i]);
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				File thisFile = new File(main.fileName);
-				if (!thisFile.exists()) {
-					fileNames.add(main.fileName);
-				}
-			} else {
-				fileNames = new ArrayList<String>();
-				fileNames.add(main.fileName);
-			}
+	public saveTask() {
+		File savedFiles = new File(main.fileNamesSaveFile);
+		String[] fileNames1 = null;
+		if (savedFiles.exists()) {
 			try {
-				FileWriter fr = new FileWriter(main.fileNamesSaveFile);
-				BufferedWriter br = new BufferedWriter(fr);
-				PrintWriter out1 = new PrintWriter(br);
-				for (int i = 0; i < fileNames.size(); i++) {
-					out1.println(fileNames.get(i));
+				fileNames = new ArrayList<String>();
+				fileNames1 = FileArrayProvider.readLines(main.fileNamesSaveFile);
+				for (int i = 0; i < fileNames1.length; i++) {
+					fileNames.add(fileNames1[i]);
 				}
-				out1.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			File thisFile = new File(main.fileName);
+			if (!thisFile.exists()) {
+				for(int i = 0; i < fileNames1.length; i++) {
+					if(main.fileName.equals(fileNames1[i])) {
+						canBeSaved = false;
+					}
+				}
+				if(canBeSaved) {
+				fileNames.add(main.fileName);
+				}
+			}
+		} else {
+			fileNames = new ArrayList<String>();
+			fileNames.add(main.fileName);
 		}
-	
+		try {
+			FileWriter fr = new FileWriter(main.fileNamesSaveFile);
+			BufferedWriter br = new BufferedWriter(fr);
+			PrintWriter out1 = new PrintWriter(br);
+			for (int i = 0; i < fileNames.size(); i++) {
+				out1.println(fileNames.get(i));
+			}
+			out1.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void runTask() {
 		try {
@@ -71,7 +78,7 @@ public class saveTask extends task {
 			for (int i = 0; i < main.map.chunk.size(); i++) { // ltr
 				saveChunk(main.map.chunk.get(i), i, true);
 			}
-			for (int i = 0; i < main.map.chunk.ChunkRL.size(); i++) { // rtl
+			for (int i = 1; i < main.map.chunk.ChunkRL.size(); i++) { // rtl
 				saveChunk(main.map.chunk.get(-i), i, false);
 			}
 			saveInventory();

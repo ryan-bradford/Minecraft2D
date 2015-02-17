@@ -17,7 +17,7 @@ public class physicsEngine { // The physics engine
 		int[] playerYs = new int[] { playerHighY, playerLowY, (playerLowY + playerHighY) / 2 };
 		int[] playerXs = new int[] { playerLeftHighX, playerLeftLowX, playerLeftLowX };
 		for (int i = 0; i < playerYs.length; i++) {
-			if (main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight) != null && main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight).notBackground) {
+			if (main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight) != null) {
 				return true;
 			}
 		}
@@ -36,7 +36,7 @@ public class physicsEngine { // The physics engine
 		int[] playerYs = new int[] { playerHighY, playerLowY, (playerLowY + playerHighY) / 2 };
 		int[] playerXs = new int[] { playerRightHighX, playerRightLowX, playerRightLowX };
 		for (int i = 0; i < playerYs.length; i++) {
-			if (main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight) != null && main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight).notBackground) {
+			if (main.getBlock(playerYs[i] / main.blockHeight, playerXs[i] / main.blockHeight) != null) {
 				return true;
 			}
 		}
@@ -52,7 +52,7 @@ public class physicsEngine { // The physics engine
 				+ main.getPlayer().getPlayerWidth() / 2;
 		int playerLowY = (int) (main.getPlayer().getBounds().y) + (main.getPlayer().getHeight()) - 2;
 		if (main.getBlock(playerLowY / main.getBlockHeight(), (playerRightLowX + playerLeftLowX) / 2
-				/ main.blockHeight) != null && main.getBlock(playerLowY / main.blockHeight, (playerRightLowX + playerLeftLowX)/ 2 / main.blockHeight).notBackground) {
+				/ main.blockHeight) != null) {
 			return true;
 		}
 
@@ -67,7 +67,7 @@ public class physicsEngine { // The physics engine
 				+ main.getPlayer().getPlayerWidth() / 2;
 		int playerHighY = (int) (main.getPlayer().getBounds().y);
 		if (main.getBlock(playerHighY / main.getBlockHeight(), (playerRightLowX + playerLeftLowX) / 2
-				/ main.blockHeight) != null && main.getBlock(playerHighY / main.blockHeight,  (playerRightLowX + playerLeftLowX) / 2 / main.blockHeight).notBackground) {
+				/ main.blockHeight) != null) {
 			return true;
 		}
 

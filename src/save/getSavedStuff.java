@@ -26,7 +26,7 @@ public class getSavedStuff {
 					try{
 						return Integer.parseInt(String.valueOf(text[1].toCharArray()[1]));
 					}catch(NumberFormatException ex){
-						return Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
+						return -1*Integer.parseInt(String.valueOf(text[1].toCharArray()[2]));
 					}
 				} else {
 					runnable = false;
@@ -50,7 +50,9 @@ public class getSavedStuff {
 							screenNum++;
 						}
 					}else{
-						screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						if(i == 0){
+							screenNum--;//there is automatically going to be an extra null screen, which this prevents
+						}
 						if (text[i].equals("-Chunk ")) {
 							screenNum++;
 						}
@@ -68,22 +70,26 @@ public class getSavedStuff {
 		if (runnable) {
 			Chunk screens = new Chunk();
 			for (int i = 0; i < getScreenNumAmmount(true); i++) {
-				screens.add(getNextScreen());
+				screens.add(getNextScreen(true));
 			}
-			for (int i = 0; i < getScreenNumAmmount(false); i++) {
-				screens.ChunkRL.add(getNextScreen());
+			for (int i = 0; i < getScreenNumAmmount(false)+1; i++) {
+				screens.ChunkRL.add(getNextScreen(false));
 			}
 			return screens;
 		}
 		return null;
 	}
 
-	public static ArrayList<block[]> getNextScreen() {
+	public static ArrayList<block[]> getNextScreen(boolean leftToRight) {
 		if (runnable) {
 			int chunkStart = 0;
 			int chunkEnd = 0;
 			ArrayList<block[]> screen = new ArrayList<block[]>();
-			while (!(text[currentRow].equals("Chunk "))) {
+			String TextToFind = "Chunk ";
+			if(!leftToRight){
+				TextToFind = "-Chunk ";
+			}
+			while (!(text[currentRow].equals(TextToFind))) {
 				currentRow++;
 			}
 			currentRow++;
@@ -99,7 +105,7 @@ public class getSavedStuff {
 			}
 			for (int i = chunkStart; i < chunkEnd; i = i + 4) {
 				block currentBlock = new block(main.getImageFileNames()[Integer.parseInt(text[i + 2].trim())],
-						Integer.parseInt(text[i + 2].trim()), main.blockIDNotBackground[Integer.parseInt(text[i + 2].trim())], main.blockIDNotDiggable[Integer.parseInt(text[i + 2].trim())]);
+						Integer.parseInt(text[i + 2].trim()), true);
 				currentBlock.health = Integer.parseInt(text[i + 3].trim());
 				currentBlock.setBounds(Integer.parseInt(text[i].trim()), Integer.parseInt(text[i + 1].trim()),
 						main.blockHeight, main.blockHeight);
