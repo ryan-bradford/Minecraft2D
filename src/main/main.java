@@ -16,6 +16,7 @@ import map.map;
 import save.getSavedStuff;
 import startScreen.startScreen;
 import userControl.keyControls.jump;
+import mobs.cow;
 
 public class main {
 
@@ -39,6 +40,7 @@ public class main {
 	public static Color pantsColor = new Color(25, 25, 112); // The color of the players pants
 	public static Color shirtColor = new Color(0, 155, 155); // The color of the players shirt
 	public static Color shoeColor = Color.darkGray; // The color of the players shoes
+	public static Color cowMain = new Color(19,63,45); // Cow's main color
 	public static Boolean selected = false; // Whether a inventory box has alread been slected, True is yes
 	public static Integer lastClickedX = null; // The previously selected box, by the mouse, for movement in the inventory
 	public static Integer lastClickedY = null; // The previously selected box, by the mouse, for movement in the inventory(Not used for the inventory bar)
