@@ -99,7 +99,7 @@ public class getSavedStuff {
 			}
 			for (int i = chunkStart; i < chunkEnd; i = i + 4) {
 				block currentBlock = new block(main.getImageFileNames()[Integer.parseInt(text[i + 2].trim())],
-						Integer.parseInt(text[i + 2].trim()), main.blockIDNotBackground[Integer.parseInt(text[i + 2].trim())]);
+						Integer.parseInt(text[i + 2].trim()), main.blockIDNotBackground[Integer.parseInt(text[i + 2].trim())], main.blockIDNotDiggable[Integer.parseInt(text[i + 2].trim())]);
 				currentBlock.health = Integer.parseInt(text[i + 3].trim());
 				currentBlock.setBounds(Integer.parseInt(text[i].trim()), Integer.parseInt(text[i + 1].trim()),
 						main.blockHeight, main.blockHeight);

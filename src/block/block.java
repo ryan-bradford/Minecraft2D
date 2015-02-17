@@ -6,10 +6,14 @@
 
 package block;
 
+import java.awt.Color;
 import java.awt.Graphics;
+
+import main.main;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -23,8 +27,9 @@ public class block extends JPanel {
     public java.io.File f = null;  
     public int id;
     public boolean notBackground;
+    public boolean notDiggable;
     
-    public block(String file, int id1, boolean notBackground) {
+    public block(String file, int id1, boolean notBackground, boolean notDiggable) {
         f = new java.io.File(file); //Reads in the file
         try {
             image = ImageIO.read(f );
@@ -32,13 +37,16 @@ public class block extends JPanel {
             // handle exception...
         }
         this.notBackground = notBackground;
+        this.notDiggable = notDiggable;
         id = id1;
     }
 
     @Override
     protected void paintComponent(Graphics g) { //Draws the texture of the block
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters    
+        g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters 
+        g.setColor(new Color(0, 0, 0, 0));
+        g.fillRect(0, 0, 64, 64);
     } 
 
     public void deductHealth(int amount) {
