@@ -249,7 +249,7 @@ public class map extends JFrame { // The main panel of display
 				} else if(y > surface+3){
 					blockID = 3;
 				}
-				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID));
+				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, true));
 				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
 				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight,
 						blockHeight);
@@ -269,7 +269,7 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1));
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, true));
 				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
@@ -285,7 +285,7 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2));
+			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, true));
 			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
@@ -335,7 +335,7 @@ public class map extends JFrame { // The main panel of display
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id));
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, true));
 			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();

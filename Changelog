@@ -1,5 +1,9 @@
 Change Log:
 
+Beta 0.6.8.2:
+	1. Merged with Ryan's branch (again)
+	2. That means background blocks added.
+
 Beta 0.6.8:
 	1. Merged with Ryan's branch
 	2. Fixed save/load bug

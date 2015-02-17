@@ -17,8 +17,7 @@ public class movePlayerTask extends task { // The task that moves the player
 	}
 
 	@Override
-	public void runTask() { // Detirmines what direction to move the player in
-							// and moves it that way
+	public void runTask() { // Detirmines what direction to move the player in and moves it that way
 		leftOrRight = main.map.getLeftOrRight();
 		upOrDown = main.map.getUpOrDown();
 		if (upOrDown != null) {
