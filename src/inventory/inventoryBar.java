@@ -58,7 +58,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 				e.printStackTrace();
 			} catch (NullPointerException ex) {
 				try {
-					inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+					inventoryBarButtons[i] = new inventoryButton(ImageIO.read(new java.io.File("textures/inventoryBlankButton.png")), 0, 0, stackHeight, textColor);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
