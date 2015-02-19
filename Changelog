@@ -1,5 +1,12 @@
 Change Log:
 
+Beta 0.6.9
+	1. Added a lighting engine.
+	2. Changed the way the air is drawn.
+	3. Added lighting refresh points.
+	4. Fixed some inventory bugs.
+	5. Unsure about how well it will work with multiple light sources.
+
 Beta 0.6.8.2:
 	1. Merged with Ryan's branch (again)
 	2. That means background blocks added.
