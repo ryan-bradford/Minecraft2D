@@ -23,12 +23,14 @@ public class block extends JPanel {
     public int health = 100;
     public java.io.File f = null;  
     public int id;
-    public Integer light;
-    public int lightToSubtract;
+    public Integer light = 0;
+    public int lightToSubtract = 0;
+    public int lightToPass = 0;
     public boolean notBackground = false;
     public boolean diggable = true;
+    public boolean lightSource = false;
     
-    public block(String file, int id1, boolean notBackground, boolean diggable) {
+    public block(String file, int id1, boolean notBackground, boolean diggable, int lightToSubtract) {
         f = new java.io.File(file); //Reads in the file
         try {
             image = ImageIO.read(f );
@@ -37,6 +39,7 @@ public class block extends JPanel {
         }
         this.notBackground = notBackground;
         this.diggable = diggable;
+        this.lightToSubtract = lightToSubtract;
         id = id1;
     }
 
@@ -45,13 +48,20 @@ public class block extends JPanel {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters 
         if(light != null) {
-        	g.setColor(new Color(0, 0, 0, 255*light/100));
+        	g.setColor(new Color(0, 0, 0, 255*(100-light)/100));
+        } else {
+        	g.setColor(new Color(0, 0, 0, 0));
         }
-    	g.setColor(new Color(0, 0, 0, 0));
         g.fillRect(0, 0, 64, 64);
     } 
 
     public void deductHealth(int amount) {
     	health= health - amount;
+    }
+    
+    public void setLight(int light) {
+    	this.light = light;
+    	lightToPass = light - lightToSubtract;
+    	repaint();
     }
 }

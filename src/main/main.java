@@ -46,6 +46,7 @@ public class main {
 	public static String[] imageFileNames = new String[] { "textures/blank.png", "textures/dirt.jpg", "textures/grass.jpg", "textures/stone.jpg" }; // The block image file names
 	public static boolean[] blockIDNotBackground = new boolean[] { false, true, true, true};
 	public static boolean[] blockIDDiggable = new boolean[] { false, true, true, true};
+	public static int[] blockIDLightToSubtract = new int [] { 1, 35, 35, 45};
 	public static Boolean creative = false; // If the game is in creative or not
 	public static int stackHeight = 64; // How many blocks can go in one "stack" in the inventory
 	public static int jumpDistance = 2; // How many blocks the player can jump

@@ -51,14 +51,19 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		for (int x = 0; x < blockNumber; x++) {
 			for (int y = 0; y < inventoryHeight; y++) {
 				try {
-					inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[buttons1[x][y].blockID])), buttons1[x][y].amount, buttons1[x][y].blockID,
-							stackHeight, textColor);
+					if (buttons1[x][y].blockID != 0) {
+						inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[buttons1[x][y].blockID])), buttons1[x][y].amount, buttons1[x][y].blockID,
+								stackHeight, textColor);
+					} else {
+						inventoryButtons[x][y] = new inventoryButton(ImageIO.read(new java.io.File("textures/inventoryBlankButton.png")), buttons1[x][y].amount, buttons1[x][y].blockID, stackHeight,
+								textColor);
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NullPointerException ex) {
 					try {
-						inventoryButtons[x][y] = new inventoryButton((ImageIO.read(new java.io.File(main.getImageFileNames()[0]))), 0, 0, stackHeight, textColor);
+						inventoryButtons[x][y] = new inventoryButton((ImageIO.read(new java.io.File("textures/inventoryBlankButton.png"))), 0, 0, stackHeight, textColor);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -105,7 +110,11 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		int blockID = inventoryButtons[idX][idY].getBlockID();
 		Image icon;
 		try {
-			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
+			if (blockID != 0) {
+				icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
+			} else {
+				icon = ImageIO.read(new java.io.File("inventoryBlankButton.png"));
+			}
 			inventoryButtons[idX][idY] = new inventoryButton(icon, amount, blockID, stackHeight, textColor);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -119,7 +128,7 @@ public class inventory extends JPanel { // Same as the inventoryBar, except this
 		remove(inventoryButtons[idX][idY]);
 		inventoryButtons[idX][idY].setVisible(false);
 		try {
-			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+			inventoryButtons[idX][idY] = new inventoryButton(ImageIO.read(new java.io.File("textures/inventoryBlankButton.png")), 0, 0, stackHeight, textColor);
 		} catch (IOException e) {
 
 			e.printStackTrace();

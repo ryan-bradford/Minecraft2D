@@ -47,7 +47,11 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		images = new Image[blockNumber];
 		for (int i = 0; i < blockNumber; i++) {
 			try {
-				images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[buttons[i].blockID]));
+				if (buttons[i].blockID != 0) {
+					images[i] = ImageIO.read(new java.io.File(main.getImageFileNames()[buttons[i].blockID]));
+				} else {
+					images[i] = ImageIO.read(new java.io.File("textures/inventoryBlankButton.png"));
+				}
 				inventoryBarButtons[i] = new inventoryButton(images[i], buttons[i].amount, buttons[i].blockID, stackHeight, textColor);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -111,7 +115,11 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		int blockID = inventoryBarButtons[id].getBlockID();
 		Image icon;
 		try {
-			icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
+			if (blockID != 0) {
+				icon = ImageIO.read(new java.io.File(main.getImageFileNames()[blockID]));
+			} else {
+				icon = ImageIO.read(new java.io.File("inventoryBlankButton.png"));
+			}
 			inventoryBarButtons[id] = new inventoryButton(icon, amount, blockID, stackHeight, textColor);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -125,7 +133,7 @@ public class inventoryBar extends JPanel { // This is the bar you see on the bot
 		remove(inventoryBarButtons[id]);
 		inventoryBarButtons[id].setVisible(false);
 		try {
-			inventoryBarButtons[id] = new inventoryButton(ImageIO.read(new java.io.File(main.getImageFileNames()[0])), 0, 0, stackHeight, textColor);
+			inventoryBarButtons[id] = new inventoryButton(ImageIO.read(new java.io.File("textures/inventoryBlankButton.png")), 0, 0, stackHeight, textColor);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

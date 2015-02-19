@@ -27,6 +27,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /* Notes: 
@@ -205,7 +207,8 @@ public class map extends JFrame { // The main panel of display
 				}
 			}
 		}
-		chunk.get(currentScreen).get(0)[0].light = 100;
+		chunk.get(currentScreen).get(0)[0].setLight(100);
+		chunk.get(currentScreen).get(0)[0].lightSource = true;
 		updateLighting();
 		repaint();
 		System.out.println("Map Drawn" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
@@ -245,7 +248,8 @@ public class map extends JFrame { // The main panel of display
 				} else if (y > surface + 3) {
 					blockID = 3;
 				}
-				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, main.blockIDNotBackground[blockID], main.blockIDDiggable[blockID]));
+				chunk.get(currentScreen).get(y)[x] = (new block(imageFileNames[blockID], blockID, main.blockIDNotBackground[blockID], main.blockIDDiggable[blockID],
+						main.blockIDLightToSubtract[blockID]));
 				// System.out.println("Block " blockID " at x=" x " y=" y chunk.get(currentScreen).get(y).get(x));
 				chunk.get(currentScreen).get(y)[x].setBounds((x * blockHeight), ((y) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(y)[x].setOpaque(false);
@@ -263,7 +267,7 @@ public class map extends JFrame { // The main panel of display
 		startTime = System.nanoTime();
 		for (int i = Math.abs(dirtRows - mapHeight); i < mapHeight; i++) {
 			for (int x = 0; x < mapWidth; x++) {
-				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, main.blockIDNotBackground[1], main.blockIDDiggable[1]));
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[1], 1, main.blockIDNotBackground[1], main.blockIDDiggable[1], main.blockIDLightToSubtract[1]));
 				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
 				chunk.get(currentScreen).get(i)[x].setOpaque(false);
 				add(chunk.get(currentScreen).get(i)[x], 0);
@@ -278,7 +282,7 @@ public class map extends JFrame { // The main panel of display
 		int current = 0;
 		int rowID = Math.abs(dirtRows - mapHeight) - 1;
 		for (int x = 0; x < mapWidth; x++) {
-			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, main.blockIDNotBackground[2], main.blockIDDiggable[2]));
+			chunk.get(currentScreen).get(rowID)[current] = (new block(imageFileNames[2], 2, main.blockIDNotBackground[2], main.blockIDDiggable[2], main.blockIDLightToSubtract[2]));
 			chunk.get(currentScreen).get(rowID)[current].setBounds((x * blockHeight), ((rowID) * blockHeight), blockHeight, blockHeight);
 			chunk.get(currentScreen).get(rowID)[current].setOpaque(false);
 			add(chunk.get(currentScreen).get(rowID)[current], 1);
@@ -330,7 +334,7 @@ public class map extends JFrame { // The main panel of display
 		if (!selectedBlockKind.equals(new String(imageFileNames[0])) // Checks if a block is there
 				&& inventoryBar.inventoryBarButtons[inventoryBar.selected].getAmount() > 0 // Checks if you have blocks to place
 				&& main.getInventoryState() == false) { // Checks if your inventory is closed
-			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, main.blockIDNotBackground[id], main.blockIDDiggable[id]));
+			chunk.get(currentScreen).get(yRow)[xRow] = (new block(selectedBlockKind, id, main.blockIDNotBackground[id], main.blockIDDiggable[id], main.blockIDLightToSubtract[id]));
 			chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * blockHeight, yRow * blockHeight, blockHeight, blockHeight);
 			if (creative == false) {
 				inventoryBar.inventoryBarButtons[inventoryBar.selected].subtractOne();
@@ -340,17 +344,19 @@ public class map extends JFrame { // The main panel of display
 				inventoryBar.removeButton(inventoryBar.selected); // Removes the block from your hotbar
 			}
 		}
+		updateLighting();
 		System.out.println("Block Placed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 	}
 
 	public int removeBlock(int xRow, int yRow) {
 		startTime = System.nanoTime();
+		remove(chunk.get(currentScreen).get(yRow)[xRow]);
 		int id = chunk.get(currentScreen).get(yRow)[xRow].id;
-		chunk.get(currentScreen).get(yRow)[xRow] = new block(main.getImageFileNames()[0], 0, main.blockIDNotBackground[0], main.blockIDDiggable[0]);
+		chunk.get(currentScreen).get(yRow)[xRow] = new block(main.getImageFileNames()[0], 0, main.blockIDNotBackground[0], main.blockIDDiggable[0], main.blockIDLightToSubtract[0]);
 		chunk.get(currentScreen).get(yRow)[xRow].setBounds(xRow * main.blockHeight, yRow * main.blockHeight, main.blockHeight, main.blockHeight);
 		add(chunk.get(currentScreen).get(yRow)[xRow], 1);
-		repaint();
 		repaintObjects();
+		updateLighting();
 		System.out.println("Block Removed" + " In " + (System.nanoTime() - startTime) + " Nanoseconds");
 		return id;
 	}
@@ -655,57 +661,133 @@ public class map extends JFrame { // The main panel of display
 	}
 
 	public void updateLighting() {
+		int light = 0;
+		List<Integer> lightSourcesX = new LinkedList<Integer>();
+		List<Integer> lightSourcesY = new LinkedList<Integer>();
 		for (int i = 0; i < chunk.get(currentScreen).size(); i++) {
 			for (int x = 0; x < chunk.get(currentScreen).get(i).length; x++) {
-				int greatestLight = 0;
-				try {
-					if (chunk.get(currentScreen).get(i)[x - 1] != null && chunk.get(currentScreen).get(i)[x - 1].light != null) {
-						greatestLight += chunk.get(currentScreen).get(i)[x - 1].light;
-						if (chunk.get(currentScreen).get(i)[x - 1].light > greatestLight) {
-							greatestLight = chunk.get(currentScreen).get(i)[x - 1].light;
+				if (chunk.get(currentScreen).get(i)[x].lightSource) {
+					lightSourcesX.add(x);
+					lightSourcesY.add(i);
+				} else {
+					chunk.get(currentScreen).get(i)[x].light = 0;
+				}
+			}
+		}
+		for (int z = 0; z < lightSourcesX.size(); z++) {
+			for (int i = lightSourcesX.get(z); i >= 0; i--) {
+				for (int x = lightSourcesY.get(z); x >= 0; x--) {
+					if (i == lightSourcesX.get(z) && x == lightSourcesY.get(z)) {
+
+					} else {
+						if (x != lightSourcesY.get(z)) {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x + 1)[i].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
+						} else {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x)[i + 1].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
 						}
 					}
-				} catch (ArrayIndexOutOfBoundsException ex) {
-
-				} catch(IndexOutOfBoundsException ex) {
-					
 				}
-				try {
-					if (chunk.get(currentScreen).get(i)[x + 1] != null && chunk.get(currentScreen).get(i)[x + 1].light != null) {
-						if (chunk.get(currentScreen).get(i)[x + 1].light > greatestLight) {
-							greatestLight = chunk.get(currentScreen).get(i)[x + 1].light;
+				for (int x = lightSourcesY.get(z) + 1; x < mapHeight - 1; x++) {
+					if (x == lightSourcesY.get(z) + 1 && i == lightSourcesX.get(z)) {
+						light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x - 1)[i].lightToPass;
+						if (light < 0) {
+							chunk.get(currentScreen).get(x)[i].setLight(0);
+						} else if ((light < 100)) {
+							chunk.get(currentScreen).get(x)[i].setLight(light);
+						} else {
+							chunk.get(currentScreen).get(x)[i].setLight(100);
+						}
+					} else {
+						if (x == lightSourcesY.get(z) + 1) {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x)[i + 1].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
+						} else {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x - 1)[i].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
 						}
 					}
-				} catch (ArrayIndexOutOfBoundsException ex) {
-
-				} catch(IndexOutOfBoundsException ex) {
-					
 				}
-				try {
-					if (chunk.get(currentScreen).get(i)[x - 1] != null && chunk.get(currentScreen).get(i - 1)[x].light != null) {
-						greatestLight += chunk.get(currentScreen).get(i - 1)[x].light;
-						if (chunk.get(currentScreen).get(i - 1)[x].light > greatestLight) {
-							greatestLight = chunk.get(currentScreen).get(i - 1)[x].light;
+			}
+			for (int i = lightSourcesX.get(z) + 1; i < mapWidth; i++) {
+				for (int x = lightSourcesY.get(z); x >= 0; x--) {
+					if (x == lightSourcesY.get(z)) {
+						light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x)[i - 1].lightToPass;
+						if (light < 0) {
+							chunk.get(currentScreen).get(x)[i].setLight(0);
+						} else if ((light < 100)) {
+							chunk.get(currentScreen).get(x)[i].setLight(light);
+						} else {
+							chunk.get(currentScreen).get(x)[i].setLight(100);
+						}
+					} else {
+						light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x + 1)[i].lightToPass;
+						if (light < 0) {
+							chunk.get(currentScreen).get(x)[i].setLight(0);
+						} else if ((light < 100)) {
+							chunk.get(currentScreen).get(x)[i].setLight(light);
+						} else {
+							chunk.get(currentScreen).get(x)[i].setLight(100);
 						}
 					}
-				} catch (ArrayIndexOutOfBoundsException ex) {
-
-				} catch(IndexOutOfBoundsException ex) {
-					
 				}
-				try {
-					if (chunk.get(currentScreen).get(i)[x + 1] != null && chunk.get(currentScreen).get(i + 1)[x].light != null) {
-						if (chunk.get(currentScreen).get(i + 1)[x].light > greatestLight) {
-							greatestLight = chunk.get(currentScreen).get(i + 1)[x].light;
+				for (int x = lightSourcesY.get(z) + 1; x < mapHeight; x++) {
+					if (x == lightSourcesY.get(z) + 1 && i == lightSourcesX.get(z)) {
+						light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x - 1)[i].lightToPass;
+						if (light < 0) {
+							chunk.get(currentScreen).get(x)[i].setLight(0);
+						} else if ((light < 100)) {
+							chunk.get(currentScreen).get(x)[i].setLight(light);
+						} else {
+							chunk.get(currentScreen).get(x)[i].setLight(100);
+						}
+					} else {
+						if (x == lightSourcesY.get(z) + 1) {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x)[i - 1].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
+						} else {
+							light = chunk.get(currentScreen).get(x)[i].light + chunk.get(currentScreen).get(x - 1)[i].lightToPass;
+							if (light < 0) {
+								chunk.get(currentScreen).get(x)[i].setLight(0);
+							} else if ((light < 100)) {
+								chunk.get(currentScreen).get(x)[i].setLight(light);
+							} else {
+								chunk.get(currentScreen).get(x)[i].setLight(100);
+							}
 						}
 					}
-				} catch (ArrayIndexOutOfBoundsException ex) {
-
-				} catch(IndexOutOfBoundsException ex) {
-					
 				}
-				chunk.get(currentScreen).get(i)[x].light = greatestLight - chunk.get(currentScreen).get(i)[x].lightToSubtract;
-				chunk.get(currentScreen).get(i)[x].repaint();
 			}
 		}
 		repaint();
