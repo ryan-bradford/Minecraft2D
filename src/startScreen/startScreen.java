@@ -83,8 +83,13 @@ public class startScreen {
 
 			} else if (stage == 2) {
 				startLoadScreen();
+				stage = 1;
 			} else if (stage == 3) {
 				startLoadScreen();
+				stage = 1;
+			} else if (stage == 4) {
+				startLoadScreen();
+				stage = 1;
 			}
 		}
 	}
@@ -160,9 +165,9 @@ public class startScreen {
 			enterWorldName.addKeyListener(new keyControls());
 			map1.add(enterWorldName, 0);
 			map1.repaint();
+			stage = 4;
 		} else {
 			int widthInButtons = main.screenWidth / 250;
-			System.out.println(widthInButtons);
 			int heightInButtons = main.screenHeight / 50;
 			int rowsNeeded = (savedGames.length / widthInButtons) + 1;
 			int counter = 0;
@@ -262,8 +267,7 @@ public class startScreen {
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_ENTER) {
-				System.out.println("Pressed");
-				if (stage == 3) {
+				if (stage == 3 || stage == 4) {
 					runDone();
 				}
 			}
