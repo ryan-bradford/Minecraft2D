@@ -187,6 +187,7 @@ public class map extends JFrame { // The main panel of display
 			}
 			if (WorldGen.toUpperCase().equals("FLATWORLD")) { // Flat world generation I didn't touch
 				drawDirt();
+				drawAir();
 				drawGrass();
 			} else if (WorldGen.toUpperCase().equals("NORMAL")) { // Environment varies
 				System.out.println("World generating with seed " + seed);
@@ -274,6 +275,17 @@ public class map extends JFrame { // The main panel of display
 
 		}
 		System.out.println("Dirt Drawn" + " In " + (System.currentTimeMillis() - startTime) + " Milliseconds");
+	}
+	
+	public void drawAir() {
+		for (int i = 0; i < Math.abs(dirtRows - mapHeight); i++) {
+			for (int x = 0; x < mapWidth; x++) {
+				chunk.get(currentScreen).get(i)[x] = (new block(imageFileNames[0], 1, main.blockIDNotBackground[0], main.blockIDDiggable[0], main.blockIDLightToSubtract[0]));
+				chunk.get(currentScreen).get(i)[x].setBounds((x * blockHeight), ((i) * blockHeight), blockHeight, blockHeight);
+				chunk.get(currentScreen).get(i)[x].setOpaque(false);
+				add(chunk.get(currentScreen).get(i)[x], 0);
+			}
+		}
 	}
 
 	public void drawGrass() { // Draws the grass
