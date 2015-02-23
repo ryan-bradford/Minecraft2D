@@ -198,8 +198,8 @@ public class map extends JFrame { // The main panel of display
 			for (int x = 0; x < chunk.get(currentScreen).size(); x++) {
 				for (int y = 0; y < chunk.get(currentScreen).get(x).length; y++) {
 					try {
-						add(chunk.get(currentScreen).get(x)[y]);
 						chunk.get(currentScreen).get(x)[y].setVisible(true);
+						add(chunk.get(currentScreen).get(x)[y], 0);
 						repaint();
 					} catch (NullPointerException ex) {
 
