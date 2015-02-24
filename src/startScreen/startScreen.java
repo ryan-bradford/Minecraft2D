@@ -26,6 +26,7 @@ public class startScreen {
 	texturedButton[][] selectGame;
 	texturedButton done;
 	texturedButton back;
+	splashScreen splash;
 	JTextPane message;
 	JTextPane enterWorldName;
 	JTextPane noSavedGames;
@@ -54,6 +55,9 @@ public class startScreen {
 		map1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		map1.getContentPane().setBackground(main.airColor);
 		map1.setLayout(null);
+		splash = new splashScreen();
+		splash.setBounds(main.screenWidth/2 - 250, 0, 500, 280);
+		map1.add(splash, 0);
 		center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		map1.setLayout(null);
@@ -132,7 +136,7 @@ public class startScreen {
 
 	public void initDone() {
 		done = new texturedButton("Done", 200, 50);
-		done.setBounds(main.screenWidth / 2 - 100, main.screenHeight / 2 - 300,
+		done.setBounds(main.screenWidth / 2 - 100, 400,
 				200, 50);
 		map1.add(done, 0);
 		done.addActionListener(new listenToDone());
