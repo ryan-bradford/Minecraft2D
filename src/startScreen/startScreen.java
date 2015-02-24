@@ -56,7 +56,7 @@ public class startScreen {
 		map1.getContentPane().setBackground(main.airColor);
 		map1.setLayout(null);
 		splash = new splashScreen();
-		splash.setBounds(main.screenWidth/2 - 250, 0, 500, 280);
+		splash.setBounds(main.screenWidth/2 - 250, 0, 1000, 1000);
 		map1.add(splash, 0);
 		center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
