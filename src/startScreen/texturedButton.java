@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
+import main.main;
+
 public class texturedButton extends JButton {
 
 	int width;
@@ -18,6 +20,8 @@ public class texturedButton extends JButton {
 	Graphics g1;
 	private BufferedImage image;
 	public java.io.File f = null;
+	int xWidth = 0;
+	int yWidth = 0;
 
 	public texturedButton(String text1, int width1, int height1) {
 		f = new java.io.File("textures/button.png");
@@ -35,6 +39,16 @@ public class texturedButton extends JButton {
 		g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters
 		g.setColor(Color.WHITE);
 		g.drawString(text, (int) (width / 2 - text.length() * 3), height / 2);
+		g.fillRect(0, 0, xWidth, yWidth);
 	}
+	
+	public void setClicked() {
+		xWidth = 100;
+		yWidth = 100;
+		repaint();
+		main.start.map1.repaint();
+	}
+	
+	
 
 }

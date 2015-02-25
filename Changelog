@@ -1,5 +1,27 @@
 Change Log:
 
+Beta 0.6.9.6.1
+	1. Adjusted the timing of the splash text.
+
+Beta 0.6.9.6
+	1. Added a splash screen!
+
+Beta 0.6.9.5
+	1. Added the minecraft logo to the start screen.
+
+Beta 0.6.9.4
+	1. Fixed flatworld generation.
+
+Beta 0.6.9.3
+	1. Changed the way time information is printed to the console, added
+	   further functionality to the start screen.
+
+Beta 0.6.9.2
+	1. Fixed a bug where blocks will disappear upon switching screens.
+
+Beta 0.6.9.1
+	1. Fixed a bug where the inventory bar would be drawn oddly.
+
 Beta 0.6.9
 	1. Added a lighting engine.
 	2. Changed the way the air is drawn.
